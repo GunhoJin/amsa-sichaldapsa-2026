@@ -494,21 +494,8 @@ const ZONES=[
 
 const ORDER=[0,1,2,3,4,7,5,6];
 
-// ── per-zone checklists ───────────────
+// ── per-zone checklists (02·07만 사용) ──
 const CL={
-  '01':[
-    {group:'교통 및 집결',items:[
-      '대형 버스 주차 공간이 충분히 확보되어 있는가?',
-      'KTX·버스 환승 동선이 단체에 적합한가?',
-      '전 인원 집결·대기할 공간이 있는가?',
-      '짐 보관 또는 임시 적재 공간이 있는가?'
-    ]},
-    {group:'편의 시설',items:[
-      '화장실 위치 및 수량이 단체 이용에 충분한가?',
-      '인근 편의점·식당 등 편의시설이 있는가?',
-      '우천·폭염 시 대기할 실내 공간이 있는가?'
-    ]}
-  ],
   '02':[
     {group:'실내 시설',items:[
       '남·여학생 및 교사 숙소가 적절히 분리되어 있는가?',
@@ -540,61 +527,6 @@ const CL={
       '전기 콘센트 수량이 충분한가?'
     ]}
   ],
-  '03':[
-    {group:'대중교통 이용',items:[
-      '단체 탑승 가능한 버스 노선이 있는가?',
-      '배차 간격이 단체 이동에 적합한가?',
-      '정류장 대기 공간이 인원 수용에 충분한가?',
-      '우천 시 대피할 지붕·쉼터가 있는가?'
-    ]}
-  ],
-  '04':[
-    {group:'피정·영성 시설',items:[
-      '성당·경당 또는 미사 공간이 갖춰져 있는가?',
-      '묵상·고해·성체조배 공간이 있는가?',
-      '조별 나눔 및 소그룹 공간이 충분한가?',
-      '마이크·스피커·영상 장비가 정상 작동하는가?'
-    ]},
-    {group:'숙박 시설',items:[
-      '남·여학생 및 교사 숙소가 적절히 분리되어 있는가?',
-      '화장실·샤워실 개수가 인원 대비 충분하며 청결한가?',
-      '에어컨 가동 여부와 성능이 충분한가?',
-      '침구류 수량과 청결 상태가 양호한가?'
-    ]},
-    {group:'식사 및 활동',items:[
-      '전 인원 식사 공간이 확보되어 있는가?',
-      '취사 시설 또는 외부 급식 연계가 가능한가?',
-      '야외 활동 공간이 충분히 확보되어 있는가?'
-    ]},
-    {group:'안전 및 교통',items:[
-      '소화기·완강기 등 안전 시설이 갖춰져 있는가?',
-      '대형 버스 진입 및 주차가 가능한가?',
-      '인근 응급 병원 접근 경로를 확인하였는가?'
-    ]}
-  ],
-  '05':[
-    {group:'미사 및 단체 활동',items:[
-      '단체 미사 참례가 가능하며 수용 인원이 충분한가?',
-      '성체조배실·고해소 이용이 가능한가?',
-      '신앙 교육 또는 나눔 공간으로 활용 가능한가?'
-    ]},
-    {group:'접근성',items:[
-      '대형 버스 주차 또는 근거리 주차장이 있는가?',
-      '인근 식당 등 단체 식사 연계가 가능한가?'
-    ]}
-  ],
-  '06':[
-    {group:'미사 및 신앙 활동',items:[
-      '단체 미사 참례가 가능하며 수용 인원이 충분한가?',
-      '성지·역사 관련 교육 콘텐츠로 활용 가능한가?',
-      '단체 관람 가이드 요청이 가능한가?'
-    ]},
-    {group:'한옥마을 연계',items:[
-      '인근 한옥마을 체험 프로그램과 연계 가능한가?',
-      '단체 이동 동선이 안전하고 편리한가?',
-      '단체 식사 가능한 인근 식당이 있는가?'
-    ]}
-  ],
   '07':[
     {group:'야외 활동 공간',items:[
       '전 인원이 활동하기에 충분한 야외 공간인가?',
@@ -610,18 +542,6 @@ const CL={
       '계곡·낭떠러지 등 위험 지형이 없는가?',
       '야간 조명 및 안전 통제가 가능한가?',
       '응급 상황 시 차량 접근이 용이한가?'
-    ]}
-  ],
-  '08':[
-    {group:'문화 체험 연계',items:[
-      '단체 한옥 체험 프로그램 예약이 가능한가?',
-      '신앙·역사 교육 콘텐츠와 연계할 수 있는가?',
-      '단체 이동 동선이 안전하고 효율적인가?'
-    ]},
-    {group:'편의 시설',items:[
-      '단체 식사 가능한 식당이 인근에 있는가?',
-      '화장실 이용이 편리한가?',
-      '단체 기념 사진 촬영 공간이 있는가?'
     ]}
   ]
 };
@@ -692,7 +612,7 @@ ZONES.forEach(z=>{
   card.className='zone-card';
   card.style.borderLeftColor=z.color;
 
-  // checklist html (per-zone)
+  // checklist html (02·07만)
   const clData=CL[z.num];
   const clHtml=clData
     ? clData.map(g=>`
@@ -707,7 +627,9 @@ ZONES.forEach(z=>{
             </label>`).join('')}
         </div>
       </div>`).join('')
-    : `<p style="color:#a0aec0;font-size:13px;padding:8px 0">체크리스트 항목 없음</p>`;
+    : '';
+  const clTab=clData?`<div class="tab" onclick="switchTab(this,'check-${z.num}','${z.num}')">답사 체크리스트</div>`:'';
+  const clPane=clData?`<div class="tab-pane" id="check-${z.num}">${clHtml}</div>`:'';
 
   card.innerHTML=`
     <div class="zh">
@@ -719,13 +641,13 @@ ZONES.forEach(z=>{
     </div>
     <div class="tabs">
       <div class="tab active" onclick="switchTab(this,'photos-${z.num}','${z.num}')">사진</div>
-      <div class="tab" onclick="switchTab(this,'check-${z.num}','${z.num}')">시설 체크리스트</div>
+      ${clTab}
       <div class="tab" onclick="switchTab(this,'memo-${z.num}','${z.num}')">메모</div>
     </div>
     <div class="tab-pane active" id="photos-${z.num}">
       <div class="pgrid" id="g${z.num}"></div>
     </div>
-    <div class="tab-pane" id="check-${z.num}">${clHtml}</div>
+    ${clPane}
     <div class="tab-pane" id="memo-${z.num}">
       <div class="mlabel">시설 점검 의견 / 특이사항</div>
       <textarea class="memo" placeholder="이 장소에 대한 세부 의견을 입력하세요…"></textarea>
