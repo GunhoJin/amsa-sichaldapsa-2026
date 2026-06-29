@@ -464,7 +464,7 @@ const ZONES=[
      vid('02_Snail_Hideout',14),vid('02_Snail_Hideout',15),
      ...rng(16,19).map(n=>img('02_Snail_Hideout',n)),
      vid('02_Snail_Hideout',20),
-     ...rng(21,33).map(n=>img('02_Snail_Hideout',n))
+     ...rng(21,31).map(n=>img('02_Snail_Hideout',n))
    ]},
 
   {num:'03',name:'Snail Hideout Bustop',ko:'달팽이 아지트 버스정류장',
@@ -473,7 +473,8 @@ const ZONES=[
 
   {num:'04',name:'Yunho Joseph Retreat Center',ko:'윤호 요셉 피정의 집',
    color:'#805ad5',lat:35.888666,lng:127.257713,time:'06/27  13:46',
-   media:rng(1,10).map(n=>img('04_Yunho_Joseph_Retreat_Center',n))},
+   media:[...rng(1,10).map(n=>img('04_Yunho_Joseph_Retreat_Center',n)),
+           img('02_Snail_Hideout',32),img('02_Snail_Hideout',33)]},
 
   {num:'05',name:'Jeonju Central Cathedral',ko:'전주 중앙성당',
    color:'#d69e2e',lat:35.824344,lng:127.144233,time:'06/27  오전',
