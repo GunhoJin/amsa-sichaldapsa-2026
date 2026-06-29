@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>중고등부 사전답사 보고서</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#f0f2f5;color:#2d3748;font-size:14px}
+
+/* ── header ─────────────────────────── */
+header{background:linear-gradient(135deg,#1a365d 0%,#2b6cb0 100%);color:white;padding:36px 48px}
+header h1{font-size:22px;font-weight:700;margin-bottom:6px}
+header .sub{font-size:13px;opacity:.8;line-height:2}
+
+/* ── layout ─────────────────────────── */
+.wrap{max-width:1200px;margin:0 auto;padding:32px 24px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+
+/* ── card ────────────────────────────── */
+.card{background:white;border-radius:16px;padding:28px;margin-bottom:24px;
+      box-shadow:0 1px 6px rgba(0,0,0,.08)}
+.card-title{font-size:16px;font-weight:700;color:#1a365d;padding-bottom:12px;
+            border-bottom:2px solid #e2e8f0;margin-bottom:18px;display:flex;
+            align-items:center;gap:8px}
+.card-title .icon{font-size:18px}
+
+/* ── 개요 grid ───────────────────────── */
+.overview-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ov-item label{display:block;font-size:12px;font-weight:600;color:#718096;margin-bottom:4px}
+.ov-item input,.ov-item textarea{width:100%;border:1px solid #e2e8f0;border-radius:8px;
+  padding:8px 12px;font-size:14px;color:#2d3748;font-family:inherit;background:#f7fafc}
+.ov-item input:focus,.ov-item textarea:focus{outline:none;border-color:#4299e1;background:white}
+.ov-item.full{grid-column:1/-1}
+
+/* ── 종합평가 ────────────────────────── */
+.eval-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.eval-box{border-radius:10px;padding:14px}
+.eval-box.good{background:#f0fff4;border:1px solid #9ae6b4}
+.eval-box.warn{background:#fffaf0;border:1px solid #fbd38d}
+.eval-box.rating{background:#ebf8ff;border:1px solid #90cdf4}
+.eval-box h4{font-size:12px;font-weight:700;margin-bottom:8px;color:#4a5568}
+.eval-box textarea{width:100%;border:none;background:transparent;resize:vertical;
+  font-size:13px;font-family:inherit;color:#2d3748;min-height:70px}
+.eval-box textarea:focus{outline:none}
+.rating-btns{display:flex;gap:6px;flex-wrap:wrap}
+.rbtn{padding:5px 12px;border-radius:20px;border:1.5px solid #bee3f8;background:white;
+      font-size:12px;font-weight:600;cursor:pointer;color:#2b6cb0;transition:.15s}
+.rbtn:hover,.rbtn.active{background:#2b6cb0;color:white;border-color:#2b6cb0}
+
+/* ── map ─────────────────────────────── */
+#map{height:500px;border-radius:12px;margin-bottom:14px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:4px}
+.leg-item{display:flex;align-items:center;gap:7px;font-size:12px;color:#4a5568}
+.leg-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;
+         justify-content:center;color:white;font-size:10px;font-weight:700;flex-shrink:0}
+
+/* ── timeline table ──────────────────── */
+table.tl{width:100%;border-collapse:collapse;font-size:13px}
+table.tl th{background:#edf2f7;padding:9px 14px;text-align:left;font-weight:600}
+table.tl td{padding:9px 14px;border-bottom:1px solid #e2e8f0;vertical-align:middle}
+table.tl tr:last-child td{border-bottom:none}
+table.tl tr:hover td{background:#f7fafc}
+.tbadge{display:inline-block;background:#e2e8f0;border-radius:5px;padding:2px 8px;
+        font-size:11px;font-weight:600;color:#4a5568}
+
+/* ── zone card ───────────────────────── */
+.zone-card{background:white;border-radius:16px;padding:28px;margin-bottom:24px;
+           box-shadow:0 1px 6px rgba(0,0,0,.08);border-left:4px solid}
+.zh{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.znum{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;
+      justify-content:center;color:white;font-weight:700;font-size:14px;flex-shrink:0}
+.ztitle{font-size:17px;font-weight:700}
+.zmeta{font-size:12px;color:#718096;margin-top:3px}
+
+/* ── tabs ────────────────────────────── */
+.tabs{display:flex;gap:0;border-bottom:2px solid #e2e8f0;margin-bottom:16px}
+.tab{padding:8px 18px;font-size:13px;font-weight:600;color:#718096;cursor:pointer;
+     border-bottom:2px solid transparent;margin-bottom:-2px;transition:.15s}
+.tab.active{color:#2b6cb0;border-bottom-color:#2b6cb0}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* ── checklist ───────────────────────── */
+.cl-group{margin-bottom:14px}
+.cl-group-title{font-size:12px;font-weight:700;color:#4a5568;margin-bottom:8px;
+                padding:4px 10px;background:#edf2f7;border-radius:6px}
+.cl-items{display:flex;flex-direction:column;gap:6px}
+.cl-item{display:flex;align-items:center;gap:10px;padding:6px 10px;
+         border-radius:8px;cursor:pointer;transition:.1s}
+.cl-item:hover{background:#f7fafc}
+.cl-item input[type=checkbox]{width:16px;height:16px;accent-color:#2b6cb0;cursor:pointer;flex-shrink:0}
+.cl-item .ci-label{flex:1;font-size:13px}
+.cl-item .ci-remark{font-size:11px;color:#a0aec0;margin-left:auto;min-width:80px;
+  border:none;background:transparent;font-family:inherit;text-align:right}
+.cl-item .ci-remark:focus{outline:none;color:#2d3748}
+.cl-item .ci-x{color:#e53e3e;font-weight:700;font-size:13px;margin-left:auto;min-width:20px;text-align:center}
+
+/* ── memo ────────────────────────────── */
+.mlabel{font-size:12px;font-weight:600;color:#718096;margin-bottom:5px}
+textarea.memo{width:100%;min-height:70px;border:1px dashed #cbd5e0;border-radius:8px;
+  padding:9px 12px;resize:vertical;font-size:13px;color:#2d3748;background:#f7fafc;font-family:inherit}
+textarea.memo:focus{outline:none;border-color:#4299e1;background:white}
+
+/* ── photos ──────────────────────────── */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:7px}
+.mi{position:relative;border-radius:9px;overflow:hidden;aspect-ratio:4/3;
+    background:#e2e8f0;cursor:pointer}
+.mi img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .2s}
+.mi:hover img{transform:scale(1.05)}
+.vnb{position:absolute;inset:0;background:rgba(0,0,0,.58);display:flex;
+     flex-direction:column;align-items:center;justify-content:center;border-radius:9px}
+.play{width:0;height:0;border-style:solid;border-width:14px 0 14px 24px;
+      border-color:transparent transparent transparent white;margin-bottom:7px}
+.vlabel{color:rgba(255,255,255,.85);font-size:10px;max-width:90%;text-align:center;word-break:break-all}
+.nbadge{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.5);color:white;
+        font-size:10px;border-radius:4px;padding:1px 5px}
+
+/* ── safety / schedule ───────────────── */
+.info-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.info-box{background:#f7fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px}
+.info-box h4{font-size:12px;font-weight:700;color:#4a5568;margin-bottom:8px}
+.info-box textarea{width:100%;border:none;background:transparent;resize:vertical;
+  font-size:13px;font-family:inherit;color:#2d3748;min-height:80px}
+.info-box textarea:focus{outline:none}
+
+/* ── schedule list ───────────────────── */
+.sched-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.sched-list li{display:flex;align-items:center;gap:10px}
+.sched-list li input[type=checkbox]{width:15px;height:15px;accent-color:#38a169;flex-shrink:0}
+.sched-list li input[type=text]{flex:1;border:none;border-bottom:1px solid #e2e8f0;
+  padding:4px 6px;font-size:13px;font-family:inherit;background:transparent;color:#2d3748}
+.sched-list li input[type=text]:focus{outline:none;border-bottom-color:#4299e1}
+.add-btn{margin-top:10px;padding:6px 14px;background:#edf2f7;border:none;border-radius:8px;
+  font-size:12px;font-weight:600;color:#4a5568;cursor:pointer}
+.add-btn:hover{background:#e2e8f0}
+
+/* ── lightbox ────────────────────────── */
+.lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:9999;
+    align-items:center;justify-content:center;flex-direction:column}
+.lb.open{display:flex}
+.lb img{max-width:92vw;max-height:88vh;object-fit:contain;border-radius:8px}
+.lbclose{position:absolute;top:16px;right:26px;color:white;font-size:36px;cursor:pointer;user-select:none}
+.lbcap{color:rgba(255,255,255,.65);font-size:13px;margin-top:10px}
+
+/* ── print ───────────────────────────── */
+@media print{
+  .tab-pane{display:block!important}
+  .lb{display:none!important}
+}
+@media(max-width:700px){
+  .two-col,.eval-grid,.info-grid{grid-template-columns:1fr}
+  .overview-grid{grid-template-columns:1fr}
+  .wrap{padding:16px 12px}
+  header{padding:24px 18px}
+  .card{padding:18px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>암사동성당 주일학교 — 중고등부 여름캠프 사전답사 보고서</h1>
+  <div class="sub">
+    작성자 : 진건호 토마스 &nbsp;|&nbsp;
+    답사일 : 2026년 6월 27일 (토) &nbsp;|&nbsp;
+    작성일 : 2026년 6월 29일
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ① 답사 개요 ───────────────────────────────── -->
+<div class="card">
+  <div class="card-title"><span class="icon">📋</span> 1. 답사 개요</div>
+  <div class="overview-grid">
+    <div class="ov-item">
+      <label>답사 목적</label>
+      <input type="text" value="중고등부 여름캠프 대상지 시설 점검, 안전성 평가 및 프로그램 실행 가능성 검토"/>
+    </div>
+    <div class="ov-item">
+      <label>답사 일시</label>
+      <input type="text" value="2026년 6월 27일 (토)"/>
+    </div>
+    <div class="ov-item">
+      <label>답사자</label>
+      <input type="text" value="교사 진건호 토마스, 이민경 루시아 (총 2명)"/>
+    </div>
+    <div class="ov-item">
+      <label>주요 답사 장소</label>
+      <input type="text" value="전주시 일원 — 달팽이 은신처, 윤호 요셉 피정의 집, 전주역, 전동성당, 고덕 외"/>
+    </div>
+    <div class="ov-item full">
+      <label>특이사항</label>
+      <textarea style="min-height:48px" placeholder="답사 중 발생한 특이사항을 입력하세요…"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ② 종합 평가 ────────────────────────────────── -->
+<div class="card">
+  <div class="card-title"><span class="icon">⭐</span> 2. 답사지 종합 평가</div>
+  <div class="eval-grid">
+    <div class="eval-box rating">
+      <h4>적합성 판정</h4>
+      <div class="rating-btns">
+        <button class="rbtn" onclick="toggleRating(this)">매우 적합</button>
+        <button class="rbtn" onclick="toggleRating(this)">적합</button>
+        <button class="rbtn" onclick="toggleRating(this)">보통</button>
+        <button class="rbtn" onclick="toggleRating(this)">부적합</button>
+      </div>
+    </div>
+    <div class="eval-box good">
+      <h4>✅ 선정 사유 및 장점</h4>
+      <textarea placeholder="장점 및 선정 사유를 입력하세요…"></textarea>
+    </div>
+    <div class="eval-box warn">
+      <h4>⚠️ 우려 사항 및 보완점</h4>
+      <textarea placeholder="우려 사항 및 보완점을 입력하세요…"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ③ 이동 경로 지도 ─────────────────────────── -->
+<div class="card">
+  <div class="card-title"><span class="icon">🗺️</span> 3. 이동 경로 지도</div>
+  <div id="map"></div>
+  <div class="legend" id="legend"></div>
+</div>
+
+<!-- ④ 방문 시간표 ──────────────────────────────── -->
+<div class="card">
+  <div class="card-title"><span class="icon">🕐</span> 4. 방문 시간표</div>
+  <table class="tl">
+    <thead><tr><th>순서</th><th>장소</th><th>시각</th><th>수량</th><th>비고</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<!-- ⑤ 구역별 시설 점검 ─────────────────────────── -->
+<div class="card" style="padding-bottom:8px">
+  <div class="card-title"><span class="icon">🏠</span> 5. 구역별 시설 점검 결과</div>
+</div>
+<div id="zones"></div>
+
+<!-- ⑥ 안전 및 비상대응 ─────────────────────────── -->
+<div class="card">
+  <div class="card-title"><span class="icon">🚑</span> 6. 안전 및 비상대응 계획</div>
+  <div class="info-grid">
+    <div class="info-box">
+      <h4>원내 안전 관리</h4>
+      <textarea placeholder="비상 대기 인원, 소화기 위치, 야간 통제 방침 등…"></textarea>
+    </div>
+    <div class="info-box">
+      <h4>인근 의료기관</h4>
+      <textarea placeholder="1차: 보건지소&#10;응급: 인근 종합병원 (차량 약 __)&#10;중증: 권역센터 (차량 약 __)"></textarea>
+    </div>
+    <div class="info-box">
+      <h4>위험 구역 현황</h4>
+      <textarea placeholder="계곡, 경사지, 출입 제한 구역 등…"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ⑦ 대관 조건 및 행정 ─────────────────────────── -->
+<div class="card">
+  <div class="card-title"><span class="icon">📝</span> 7. 대관 조건 및 행정 사항</div>
+  <div class="two-col">
+    <div class="overview-grid">
+      <div class="ov-item">
+        <label>대관 요금</label>
+        <input type="text" placeholder="총액 / 계약금 / 잔금"/>
+      </div>
+      <div class="ov-item">
+        <label>입·퇴실 시간</label>
+        <input type="text" placeholder="입실 __ : 00  /  퇴실 __ : 00"/>
+      </div>
+      <div class="ov-item">
+        <label>야간 소음 제한</label>
+        <input type="text" placeholder="__ : 00 이후"/>
+      </div>
+      <div class="ov-item">
+        <label>쓰레기 분리배출</label>
+        <input type="text" placeholder="분리수거장 위치"/>
+      </div>
+      <div class="ov-item full">
+        <label>펜션 측 협조 요청 사항</label>
+        <input type="text" placeholder="추가 이불, 풋살장, 바베큐 그릴 등…"/>
+      </div>
+    </div>
+    <div>
+      <div class="mlabel" style="margin-bottom:8px">기타 행정 메모</div>
+      <textarea class="memo" style="min-height:140px" placeholder="계약 관련 메모, 연락처 등…"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ⑧ 향후 일정 ──────────────────────────────── -->
+<div class="card">
+  <div class="card-title"><span class="icon">📅</span> 8. 향후 일정 및 준비사항</div>
+  <ul class="sched-list" id="sched-list">
+    <li><input type="checkbox"/><input type="text" value="답사 결과 공유 및 교사 회의"/></li>
+    <li><input type="checkbox"/><input type="text" value="캠프 세부 시간표 및 준비물 목록 확정"/></li>
+    <li><input type="checkbox"/><input type="text" value="참가 신청 접수"/></li>
+    <li><input type="checkbox"/><input type="text" placeholder="항목 추가…"/></li>
+  </ul>
+  <button class="add-btn" onclick="addSched()">+ 항목 추가</button>
+</div>
+
+</div><!-- /wrap -->
+
+<!-- lightbox -->
+<div class="lb" id="lb" onclick="closeLb()">
+  <span class="lbclose">&times;</span>
+  <img id="lbimg" src="" alt=""/>
+  <div class="lbcap" id="lbcap"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// ── helpers ───────────────────────────
+function pad(n){return String(n).padStart(3,'0')}
+const DRIVE={
+  '01_Jeonju_Station_001.jpg':'1CDQmBn5PZ5UhJ8xW4YsWwC8CIYe1fhwu',
+  '01_Jeonju_Station_002.jpg':'1Waw8_ah0QhOFJscVbqEOuRT6ai9v1jYJ',
+  '01_Jeonju_Station_003.jpg':'1kgHpp4mgqO7W7JcjZIv3GZQrmPCQ3ecY',
+  '01_Jeonju_Station_004.jpg':'1uzjpAsHKei-prZHiw9_on2jo92uStF6k',
+  '01_Jeonju_Station_005.jpg':'1gbArWbEVn3GKplGr2AX1SsN-x0oVgiRZ',
+  '01_Jeonju_Station_006.jpg':'1OMePW9vINY-Ss0SKSaNnWX9ps9JLyFab',
+  '01_Jeonju_Station_007.jpg':'10tnrKgG5fkyoD56PCB-ZUt6FJ7EYJnCe',
+  '01_Jeonju_Station_008.jpg':'1x_u1RfUvpx1tzZQtFy8EjSRXA7pPiDm1',
+  '01_Jeonju_Station_009.jpg':'1p7oFSfwYebfJ8ktzh-OIv6FW-V_oacn9',
+  '01_Jeonju_Station_010.jpg':'11NjEuuBHJMX6H0YbZVcQ9sAhE-p2wdTS',
+  '01_Jeonju_Station_011.jpg':'1MAD0Ngt1mzjPVcjz5V17J9b8ML3XpFdy',
+  '01_Jeonju_Station_012.jpg':'1uIG7IT-yA9OJU5elJts27cbCCuQ7Q47E',
+  '01_Jeonju_Station_013.jpg':'19yrqxvU_ruLb_zhKzJplTOBF7TeK33dG',
+  '01_Jeonju_Station_014.jpg':'1NQKjgmpZm49kq1U1VGggcNllxq10CIx8',
+  '01_Jeonju_Station_015.jpg':'1mFi8jhCuu2tSO2ZF71uCQkJA_hI0TVS0',
+  '01_Jeonju_Station_016.jpg':'1CWKOOM05PgocmkdMaOArwzyXjgb2A1CG',
+  '01_Jeonju_Station_017.jpg':'1TySk8HUX4MUUOPsVlcKOi6YqxPWfWsqO',
+  '01_Jeonju_Station_018.jpg':'1WaJkqdO6jU-6NYmeY9hvhxUoIuUo2iuE',
+  '01_Jeonju_Station_019.jpg':'1Y92Qug9nME8OlKYLIlLyokGI8ecr66jB',
+  '01_Jeonju_Station_020.jpg':'17S9-6UNjg-t_z3uLZO1tLfebLPUt1zYz',
+  '01_Jeonju_Station_021.jpg':'1PDvNvOwhapwcrFiVAyleUqeXPeK7kEr7',
+  '01_Jeonju_Station_022.jpg':'1dltB1uTQsukFqN3C_0zk_5dw6SidYoOl',
+  '01_Jeonju_Station_023.jpg':'1xodo2UcszDfHvHuDyzYp7yuLQAQTm-Ud',
+  '01_Jeonju_Station_024.jpg':'1zOnsCTc8VvEYdXp0wm8iRulAOoyyLCem',
+  '01_Jeonju_Station_025.jpg':'14mTQ32kwpDuRG5zQnExd-sM2ekfUUoRx',
+  '01_Jeonju_Station_026.jpg':'1mKsDqYRVNnaPFZX0o95Y4EohJgpyKOPS',
+  '01_Jeonju_Station_027.jpg':'1nGle8_6TCwce8nMwwGV7BXqlG9Si1yVL',
+  '01_Jeonju_Station_028.jpg':'12L6SikMX1j7or_bMXplrua9i1UHA8stp',
+  '01_Jeonju_Station_029.jpg':'1rltMTimpKZTGqJf6Es4bJSftNuL5NrhK',
+  '01_Jeonju_Station_030.jpg':'1NHRjyKIftK5uCrpH2nXp2kTRn8MkBFTl',
+  '01_Jeonju_Station_031.jpg':'1xGK-r9aojnbi7zEaEpRZqc-66ab9t3X0',
+  '01_Jeonju_Station_032.jpg':'1tgoIq_jaXRhclrGCh0TghuNW3XR-FEUQ',
+  '01_Jeonju_Station_033.jpg':'1a8m_BgLubRgp3OEADFtaO609l_wEB8sJ',
+  '01_Jeonju_Station_034.jpg':'1QMZAXH89AqSCy6WWzcWEVIpWY3nr2Pth',
+  '02_Snail_Hideout_001.jpg':'1cAZi5JSPGOH_8ndrFCDnbGO3KGvHa-Ay',
+  '02_Snail_Hideout_002.jpg':'1fcYWYNM1G1AG8nnp4pDu5u3W7w_03qjb',
+  '02_Snail_Hideout_003.jpg':'1iKi75avMcLBh5Kt-8sxNmpuV-WPMYCrE',
+  '02_Snail_Hideout_004.jpg':'1D2kvddp1MU22RLfKCrLepD0RVs82JLws',
+  '02_Snail_Hideout_005.jpg':'1wU1kZdvMxgC6HtnhfHNpZ2hl3hMBocDy',
+  '02_Snail_Hideout_006.jpg':'1bqKfhC1r5zIljavh3Hu1vHL9MDx-MOvC',
+  '02_Snail_Hideout_007.jpg':'1oTs2gUHva9sr1vAJmwq5TVQtqRoHoMI_',
+  '02_Snail_Hideout_008.jpg':'1Tp8KHdBn7IGFz9MuOYwMOShNdAs7TQpY',
+  '02_Snail_Hideout_009.jpg':'1RxXsvqm6crnMDdYhWGYQqq-BbvGTWMSY',
+  '02_Snail_Hideout_010.jpg':'1vhjG2KxU_jTKr2S0rTlLLYBhnfWnSxLk',
+  '02_Snail_Hideout_011.jpg':'1YUlArNCs0IxedmTvN_CxV7oy9NEwC7T7',
+  '02_Snail_Hideout_012.jpg':'1tplxPLj0dXsf_6w69qW7eblnOELWnkPU',
+  '02_Snail_Hideout_013.jpg':'1sSAmPjCp0FWwesj2iAFuOnftgxPWBMAx',
+  '02_Snail_Hideout_014.mp4':'1IzKE3obhqoVMQFDyWiq7FammhneR1F1R',
+  '02_Snail_Hideout_015.mp4':'1RuxT1VYQ4g9s_f8V4kGNbYFNB5ft9CNs',
+  '02_Snail_Hideout_016.jpg':'1mqR0z2Z7Ap4QSINgPZRDG9qGrOzYbE4f',
+  '02_Snail_Hideout_017.jpg':'1q-_6WWMXTEde66Ki8UFmmRuHfdRofoVz',
+  '02_Snail_Hideout_018.jpg':'1rOt1WTDMoChrJ6OVtWtdkO8fGywpqGd7',
+  '02_Snail_Hideout_019.jpg':'1PY0ApJX7HsE2IITS70lIlLmVunMZ4Lwn',
+  '02_Snail_Hideout_020.mp4':'1z_pTRiQpRJDgpHiZqQ5OZ6aBq2ra1fZp',
+  '02_Snail_Hideout_021.jpg':'1XBWJC33NwEd8BK4TCULFJLJxAF7o-SHu',
+  '02_Snail_Hideout_022.jpg':'1OuaWLTvqaAI0tvoE0c2SSYZUPRfdfr97',
+  '02_Snail_Hideout_023.jpg':'1HQAKZST1_2MzllqkYJFiiPox9hpIjeph',
+  '02_Snail_Hideout_024.jpg':'1KPDRFOv0aKjUfbnli9od_yptyxiwqwjz',
+  '02_Snail_Hideout_025.jpg':'1ACY24_FxKyB1u9VmAiexV_sgpXfnfA9N',
+  '02_Snail_Hideout_026.jpg':'14AFbO7nMfjYAD5wVoxw00Rx7KmwLYVy6',
+  '02_Snail_Hideout_027.jpg':'15ggZWun8ql_ABI0a20w1mAXEiR6w8_YS',
+  '02_Snail_Hideout_028.jpg':'16m-_ks-qKHdZ8jxXZjR5fi7e6RLBvkI5',
+  '02_Snail_Hideout_029.jpg':'1XZrLdUVEtrf5h7F2L8Wbf-wxbiHaEK0N',
+  '02_Snail_Hideout_030.jpg':'1Y4TTYS4j3GNZxHEqF-GinLkeA3t8cfj0',
+  '02_Snail_Hideout_031.jpg':'1k9IdHXax6_R5TXXyuRG9uefZeZC2jK-f',
+  '02_Snail_Hideout_032.jpg':'19UZxsU5oqS21g21m3EnwTol2P47okllN',
+  '02_Snail_Hideout_033.jpg':'1zk4JEDbgNDlA7G7JgY4Aj2YEdfaxqtIr',
+  '03_Snail_Hideout_Bustop_001.mp4':'17vh6vz482sE279V0FU86RRnblbgPqlMM',
+  '03_Snail_Hideout_Bustop_002.jpg':'1fu-lICgNNSFG7NmzFmcy9yG0MB-T9m6n',
+  '03_Snail_Hideout_Bustop_003.jpg':'1WztB5aeK3d2EPxnT_cJ57Yz6LByh6yiL',
+  '03_Snail_Hideout_Bustop_004.jpg':'1LgChfOnty1sBz8rXV6OtVUZ1V07igSCc',
+  '03_Snail_Hideout_Bustop_005.jpg':'1dnSZCGLdN0tMIlLdI1_RM0O8c5bj1uJw',
+  '03_Snail_Hideout_Bustop_006.jpg':'1AP3Koo-GewmYppwW2liSL7wM0WheiH2k',
+  '03_Snail_Hideout_Bustop_007.jpg':'1zZDS9bcFthOMRV7kmsTHjGM6lF7nMaBI',
+  '03_Snail_Hideout_Bustop_008.jpg':'1qaG_M_m3zF5zhAA1X3J320azN0mGpag-',
+  '03_Snail_Hideout_Bustop_009.jpg':'1UcDDcffMPejDkLoZiOZ3jhfJQalbbBMc',
+  '03_Snail_Hideout_Bustop_010.jpg':'1V65jF57jJ4_qM72zF6iVt8raXz27yw_t',
+  '04_Yunho_Joseph_Retreat_Center_001.jpg':'1DwHqhJSjIQ_eW-lXi8Bn-SrifEUvYV6Z',
+  '04_Yunho_Joseph_Retreat_Center_002.jpg':'1hwxmzS4TVXRs7-0wNlMYvwfJ_38j78d8',
+  '04_Yunho_Joseph_Retreat_Center_003.jpg':'1vqzzwDTeyZSwME_HlCCbJz_VpQZX5lRg',
+  '04_Yunho_Joseph_Retreat_Center_004.jpg':'1F-MBuLG7UwCb2S6CD_5PjStPVWyiuLD9',
+  '04_Yunho_Joseph_Retreat_Center_005.jpg':'1FgyQbeV7dp71_XdPRkOwDXc-FqL-yjlN',
+  '04_Yunho_Joseph_Retreat_Center_006.jpg':'131as3VSBW1TFe6SCjkpZ-O9hiGjhSy80',
+  '04_Yunho_Joseph_Retreat_Center_007.jpg':'1cAQSJMP4Eyigxc5mwpywhY0LN3eu80Uz',
+  '04_Yunho_Joseph_Retreat_Center_008.jpg':'1WBTsjh6XieGAPZh6ZuvwZpb3U-NOqsYr',
+  '05_Jeonju_Central_Cathedral_001.jpg':'1XbAhPhJDGcTDWEc-ftGTmqfJf8MkVo0p',
+  '05_Jeonju_Central_Cathedral_002.jpg':'11ifWp-sdK_w-XjViMhAqTqV63H7A0FBW',
+  '05_Jeonju_Central_Cathedral_003.jpg':'14MeC8fBmd5-O-6UoYIs4bZ1qAKf9yVh6',
+  '06_Jeondong_Cathedral_001.jpg':'120IWuMvYwUI-WEmJPEhFUT1Nr5SMiTF6',
+  '06_Jeondong_Cathedral_002.jpg':'1GP7rhU7lAUqUJtT8bT4XLbldU-yVpUGo',
+  '06_Jeondong_Cathedral_003.jpg':'1x7KzjfAjKea9C4WdL8zVYlwP6JMIxoZT',
+  '06_Jeondong_Cathedral_004.jpg':'1F8c1r7c1g-oSJ8U6iBrX7JZbvMV57Q_f',
+  '06_Jeondong_Cathedral_005.jpg':'1HEzA9kvNEELhgMdpcCtrg9ZWhm0hAIGQ',
+  '06_Jeondong_Cathedral_006.jpg':'1jbcEE2sFWGTA9CF2FR8E6lEXm9L6_--l',
+  '06_Jeondong_Cathedral_007.jpg':'1HfHPtxaHzytoXpZjnJMzW55Y9zx6NIar',
+  '07_Godeok_001.jpg':'13DrHVfalmDxxPE2trsyAsi0_ON19IhrF',
+  '07_Godeok_002.jpg':'1yuy95hSVhbn76xjvSrj0AjhCTTfAa0ta',
+  '07_Godeok_003.jpg':'1uTQpasRa7KbnxMh8pJo1QwMoISBfeO5O',
+  '07_Godeok_004.jpg':'1YnmPI6sewjAS2ICUYt4Fubuyxpyi0A7G',
+  '07_Godeok_005.jpg':'1xrX5IiFEEC1TK2ZiubPpH5qQr1GHDH0u',
+  '07_Godeok_006.jpg':'145Fz5DNZZTVqYlyC0_maup-o87hIx9PW',
+  '07_Godeok_007.jpg':'1x33ULcgsVx06QDq4Jw-7i9-ctkFJjtZl',
+  '07_Godeok_008.jpg':'1IC5pDZFw9lS5OBZGAxZnEASOJxGYBG7z',
+  '07_Godeok_009.jpg':'1qU3J3UFiGr5oxulRiOiEto84xO6yjKsr',
+  '07_Godeok_010.jpg':'1kGF_Q8XNtUQU_YEOh5jeI9cOELUz6N-L',
+  '07_Godeok_011.jpg':'1SpNuYVR6kOnjkOpKDrjB7lDywxi7abUA',
+  '07_Godeok_012.jpg':'1ABRwXBwM8X0SP_AutLteV19eSHbG9D4A',
+  '07_Godeok_013.jpg':'1W4AfOBwg6yAtx5xMFTA0BkJBpuCTJO_J',
+  '07_Godeok_014.jpg':'1pNXf-3RZnf6G1X5GoxdaXb6jnhmXPkbU',
+  '07_Godeok_015.jpg':'1oto0HDWjTlJXgnKS3PzSCUSq_8giBQnp',
+  '07_Godeok_016.jpg':'138y_ApjYH_z-j5YYKPiPhOtS5ZaLS3PW',
+  '07_Godeok_017.jpg':'1mY4Ehw9CHgNm6tOWe-bNB6HdLQ74g1T7',
+  '07_Godeok_018.jpg':'13HwT3_TI_-DDRyRixG6yksjlt9uMdjRe',
+  '07_Godeok_019.jpg':'12TIs_-N0RDMaIuydAAZxgAmH1Ch5NPYT',
+  '07_Godeok_020.mp4':'1IN46UVafJhnbdGTUXMmjGQlLWqzKTA33',
+  '08_Jeonju_Hanok_Village_001.mp4':'1Bt245p1uAv-QeMPh1V9n60Qr4AS9m83Y'
+};
+function img(p,n){
+  const f=`${p}_${pad(n)}.jpg`;
+  const id=DRIVE[f];
+  return{type:'img',file:id?`https://lh3.googleusercontent.com/d/${id}`:`Picture/${f}`};
+}
+function vid(p,n){
+  const f=`${p}_${pad(n)}.mp4`;
+  const id=DRIVE[f];
+  return{type:'vid',file:id?`https://drive.google.com/file/d/${id}/view`:`Picture/${f}`};
+}
+function rng(a,b){return Array.from({length:b-a+1},(_,i)=>a+i)}
+
+// ── zone data ─────────────────────────
+const ZONES=[
+  {num:'01',name:'Jeonju Station',ko:'전주역',
+   color:'#e53e3e',lat:35.849911,lng:127.162436,time:'06/27  13:33',
+   media:rng(1,34).map(n=>img('01_Jeonju_Station',n))},
+
+  {num:'02',name:'Snail Hideout',ko:'달팽이 은신처',
+   color:'#3182ce',lat:35.860924,lng:127.263908,time:'06/27  13:34',
+   media:[
+     ...rng(1,13).map(n=>img('02_Snail_Hideout',n)),
+     vid('02_Snail_Hideout',14),vid('02_Snail_Hideout',15),
+     ...rng(16,19).map(n=>img('02_Snail_Hideout',n)),
+     vid('02_Snail_Hideout',20),
+     ...rng(21,33).map(n=>img('02_Snail_Hideout',n))
+   ]},
+
+  {num:'03',name:'Snail Hideout Bustop',ko:'달팽이 은신처 버스정류장',
+   color:'#38a169',lat:35.856042,lng:127.255825,time:'06/27  13:35',
+   media:[vid('03_Snail_Hideout_Bustop',1),...rng(2,10).map(n=>img('03_Snail_Hideout_Bustop',n))]},
+
+  {num:'04',name:'Yunho Joseph Retreat Center',ko:'윤호 요셉 피정의 집',
+   color:'#805ad5',lat:35.888666,lng:127.257713,time:'06/27  13:46',
+   media:rng(1,10).map(n=>img('04_Yunho_Joseph_Retreat_Center',n))},
+
+  {num:'05',name:'Jeonju Central Cathedral',ko:'전주 중앙성당',
+   color:'#d69e2e',lat:35.824344,lng:127.144233,time:'06/27  오전',
+   media:rng(1,3).map(n=>img('05_Jeonju_Central_Cathedral',n))},
+
+  {num:'06',name:'Jeondong Cathedral',ko:'전동성당',
+   color:'#00a3c4',lat:35.813712,lng:127.149592,time:'06/27  14:22 / 06/28  15:22',
+   media:rng(1,7).map(n=>img('06_Jeondong_Cathedral',n))},
+
+  {num:'07',name:'Godeok',ko:'고덕',
+   color:'#dd6b20',lat:35.773179,lng:127.162963,time:'06/27  16:54',
+   media:[...rng(1,19).map(n=>img('07_Godeok',n)),vid('07_Godeok',20)]},
+
+  {num:'08',name:'Jeonju Hanok Village',ko:'전주 한옥마을',
+   color:'#4a5568',lat:35.814900,lng:127.153000,time:'06/27  14:12',
+   media:[vid('08_Jeonju_Hanok_Village',1)]}
+];
+
+const ORDER=[0,1,2,3,4,7,5,6];
+
+// ── per-zone checklists ───────────────
+const CL={
+  '01':[
+    {group:'교통 및 집결',items:[
+      '대형 버스 주차 공간이 충분히 확보되어 있는가?',
+      'KTX·버스 환승 동선이 단체에 적합한가?',
+      '전 인원 집결·대기할 공간이 있는가?',
+      '짐 보관 또는 임시 적재 공간이 있는가?'
+    ]},
+    {group:'편의 시설',items:[
+      '화장실 위치 및 수량이 단체 이용에 충분한가?',
+      '인근 편의점·식당 등 편의시설이 있는가?',
+      '우천·폭염 시 대기할 실내 공간이 있는가?'
+    ]}
+  ],
+  '02':[
+    {group:'실내 시설',items:[
+      '남·여학생 및 교사 숙소가 적절히 분리되어 있는가?',
+      '화장실·샤워실 개수가 인원 대비 충분하며 청결한가?',
+      '에어컨 가동 여부와 성능이 충분한가?',
+      '침구류 수량과 청결 상태가 양호한가?'
+    ]},
+    {group:'진행 공간',items:[
+      '전체 집회 프로그램을 진행하기에 충분한 공간인가?',
+      '마이크·스피커·영상 장비가 정상 작동하는가?',
+      '야외 활동 공간이 충분히 확보되어 있는가?',
+      '조별 나눔·소그룹 공간이 있는가?'
+    ]},
+    {group:'식사',items:[
+      '전 인원이 한 번에 식사할 수 있는 공간인가?',
+      '취사 시 조리 기구·냉장고 용량이 충분한가?',
+      '외부 바베큐 시설 이용이 가능한가?',
+      '주변 편의시설(매점·편의점)이 근처에 있는가?'
+    ]},
+    {group:'안전 및 의료',items:[
+      '화재 대피경로 확보 및 완강기·소화기가 비치되어 있는가?',
+      '가장 가까운 응급 병원을 확인하였는가?',
+      '외부인 출입 통제 및 야간 보안이 확보되는가?',
+      '주변에 계곡·낭떠러지 등 위험 요인이 없는가?'
+    ]},
+    {group:'교통 및 기타',items:[
+      '대형 버스 진입 및 주차가 가능한가?',
+      '휴대전화 수신 및 Wi-Fi 사용이 원활한가?',
+      '전기 콘센트 수량이 충분한가?'
+    ]}
+  ],
+  '03':[
+    {group:'대중교통 이용',items:[
+      '단체 탑승 가능한 버스 노선이 있는가?',
+      '배차 간격이 단체 이동에 적합한가?',
+      '정류장 대기 공간이 인원 수용에 충분한가?',
+      '우천 시 대피할 지붕·쉼터가 있는가?'
+    ]}
+  ],
+  '04':[
+    {group:'피정·영성 시설',items:[
+      '성당·경당 또는 미사 공간이 갖춰져 있는가?',
+      '묵상·고해·성체조배 공간이 있는가?',
+      '조별 나눔 및 소그룹 공간이 충분한가?',
+      '마이크·스피커·영상 장비가 정상 작동하는가?'
+    ]},
+    {group:'숙박 시설',items:[
+      '남·여학생 및 교사 숙소가 적절히 분리되어 있는가?',
+      '화장실·샤워실 개수가 인원 대비 충분하며 청결한가?',
+      '에어컨 가동 여부와 성능이 충분한가?',
+      '침구류 수량과 청결 상태가 양호한가?'
+    ]},
+    {group:'식사 및 활동',items:[
+      '전 인원 식사 공간이 확보되어 있는가?',
+      '취사 시설 또는 외부 급식 연계가 가능한가?',
+      '야외 활동 공간이 충분히 확보되어 있는가?'
+    ]},
+    {group:'안전 및 교통',items:[
+      '소화기·완강기 등 안전 시설이 갖춰져 있는가?',
+      '대형 버스 진입 및 주차가 가능한가?',
+      '인근 응급 병원 접근 경로를 확인하였는가?'
+    ]}
+  ],
+  '05':[
+    {group:'미사 및 단체 활동',items:[
+      '단체 미사 참례가 가능하며 수용 인원이 충분한가?',
+      '성체조배실·고해소 이용이 가능한가?',
+      '신앙 교육 또는 나눔 공간으로 활용 가능한가?'
+    ]},
+    {group:'접근성',items:[
+      '대형 버스 주차 또는 근거리 주차장이 있는가?',
+      '인근 식당 등 단체 식사 연계가 가능한가?'
+    ]}
+  ],
+  '06':[
+    {group:'미사 및 신앙 활동',items:[
+      '단체 미사 참례가 가능하며 수용 인원이 충분한가?',
+      '성지·역사 관련 교육 콘텐츠로 활용 가능한가?',
+      '단체 관람 가이드 요청이 가능한가?'
+    ]},
+    {group:'한옥마을 연계',items:[
+      '인근 한옥마을 체험 프로그램과 연계 가능한가?',
+      '단체 이동 동선이 안전하고 편리한가?',
+      '단체 식사 가능한 인근 식당이 있는가?'
+    ]}
+  ],
+  '07':[
+    {group:'야외 활동 공간',items:[
+      '전 인원이 활동하기에 충분한 야외 공간인가?',
+      '우천 시 대피·활동 가능한 실내 공간이 있는가?',
+      '레크리에이션·풋살 등 단체 놀이 공간이 있는가?'
+    ]},
+    {group:'편의 및 취사',items:[
+      '화장실 위치 및 수량이 충분한가?',
+      '바베큐·취사 시설 이용이 가능한가?',
+      '음수대 또는 식수 공급이 가능한가?'
+    ]},
+    {group:'안전',items:[
+      '계곡·낭떠러지 등 위험 지형이 없는가?',
+      '야간 조명 및 안전 통제가 가능한가?',
+      '응급 상황 시 차량 접근이 용이한가?'
+    ]}
+  ],
+  '08':[
+    {group:'문화 체험 연계',items:[
+      '단체 한옥 체험 프로그램 예약이 가능한가?',
+      '신앙·역사 교육 콘텐츠와 연계할 수 있는가?',
+      '단체 이동 동선이 안전하고 효율적인가?'
+    ]},
+    {group:'편의 시설',items:[
+      '단체 식사 가능한 식당이 인근에 있는가?',
+      '화장실 이용이 편리한가?',
+      '단체 기념 사진 촬영 공간이 있는가?'
+    ]}
+  ]
+};
+
+// ── MAP ───────────────────────────────
+const map=L.map('map').setView([35.840,127.203],12);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  {attribution:'© OpenStreetMap contributors',maxZoom:18}).addTo(map);
+
+function mkIcon(z){
+  return L.divIcon({
+    className:'',
+    html:`<div style="width:30px;height:30px;border-radius:50%;background:${z.color};
+          color:white;font-weight:700;font-size:12px;display:flex;align-items:center;
+          justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.35);border:2px solid white">${z.num}</div>`,
+    iconSize:[30,30],iconAnchor:[15,15],popupAnchor:[0,-18]
+  });
+}
+ZONES.forEach(z=>{
+  L.marker([z.lat,z.lng],{icon:mkIcon(z)}).addTo(map)
+   .bindPopup(`<strong>${z.num}. ${z.name}</strong><br/><small style="color:#555">${z.ko}</small><br/><small>🕐 ${z.time}</small>`);
+});
+
+const rz=ORDER.map(i=>ZONES[i]);
+const coords=rz.map(z=>`${z.lng},${z.lat}`).join(';');
+fetch(`https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson`)
+  .then(r=>r.json()).then(d=>{
+    if(d.routes&&d.routes[0])
+      L.geoJSON(d.routes[0].geometry,{style:{color:'#2b6cb0',weight:5,opacity:.75}}).addTo(map);
+  }).catch(()=>{
+    L.polyline(rz.map(z=>[z.lat,z.lng]),{color:'#2b6cb0',weight:3,opacity:.55,dashArray:'8,6'}).addTo(map);
+  });
+
+const leg=document.getElementById('legend');
+ZONES.forEach(z=>{
+  const el=document.createElement('div');el.className='leg-item';
+  el.innerHTML=`<div class="leg-dot" style="background:${z.color}">${z.num}</div>${z.name}`;
+  leg.appendChild(el);
+});
+
+// ── TIMELINE ──────────────────────────
+const tbody=document.getElementById('tbody');
+ORDER.map(i=>ZONES[i]).forEach((z,i)=>{
+  const ph=z.media.filter(m=>m.type==='img').length;
+  const vd=z.media.filter(m=>m.type==='vid').length;
+  const tr=document.createElement('tr');
+  tr.innerHTML=`
+    <td>${i+1}</td>
+    <td>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="leg-dot" style="background:${z.color};width:22px;height:22px;font-size:10px">${z.num}</div>
+        <div><div style="font-weight:600">${z.name}</div>
+             <div style="font-size:11px;color:#718096">${z.ko}</div></div>
+      </div>
+    </td>
+    <td><span class="tbadge">${z.time}</span></td>
+    <td>📷 ${ph}${vd>0?` 🎬 ${vd}`:''}</td>
+    <td><input type="text" style="border:none;border-bottom:1px solid #e2e8f0;width:100%;font-size:12px;padding:2px 4px;font-family:inherit;background:transparent" placeholder="비고 입력…"/></td>`;
+  tbody.appendChild(tr);
+});
+
+// ── ZONES ─────────────────────────────
+const zc=document.getElementById('zones');
+ZONES.forEach(z=>{
+  const ph=z.media.filter(m=>m.type==='img').length;
+  const vd=z.media.filter(m=>m.type==='vid').length;
+  const card=document.createElement('div');
+  card.className='zone-card';
+  card.style.borderLeftColor=z.color;
+
+  // checklist html (per-zone)
+  const clData=CL[z.num];
+  const clHtml=clData
+    ? clData.map(g=>`
+      <div class="cl-group">
+        <div class="cl-group-title">${g.group}</div>
+        <div class="cl-items">
+          ${g.items.map(item=>`
+            <label class="cl-item">
+              <input type="checkbox"/>
+              <span class="ci-label">${item}</span>
+              <input class="ci-remark" type="text" placeholder="비고"/>
+            </label>`).join('')}
+        </div>
+      </div>`).join('')
+    : `<p style="color:#a0aec0;font-size:13px;padding:8px 0">체크리스트 항목 없음</p>`;
+
+  card.innerHTML=`
+    <div class="zh">
+      <div class="znum" style="background:${z.color}">${z.num}</div>
+      <div>
+        <div class="ztitle">${z.name}</div>
+        <div class="zmeta">${z.ko} &nbsp;|&nbsp; 🕐 ${z.time} &nbsp;|&nbsp; 📷 ${ph}장${vd>0?` 🎬 ${vd}개`:''}</div>
+      </div>
+    </div>
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'photos-${z.num}','${z.num}')">사진</div>
+      <div class="tab" onclick="switchTab(this,'check-${z.num}','${z.num}')">시설 체크리스트</div>
+      <div class="tab" onclick="switchTab(this,'memo-${z.num}','${z.num}')">메모</div>
+    </div>
+    <div class="tab-pane active" id="photos-${z.num}">
+      <div class="pgrid" id="g${z.num}"></div>
+    </div>
+    <div class="tab-pane" id="check-${z.num}">${clHtml}</div>
+    <div class="tab-pane" id="memo-${z.num}">
+      <div class="mlabel">시설 점검 의견 / 특이사항</div>
+      <textarea class="memo" placeholder="이 장소에 대한 세부 의견을 입력하세요…"></textarea>
+    </div>`;
+  zc.appendChild(card);
+
+  const grid=document.getElementById(`g${z.num}`);
+  z.media.forEach((m,idx)=>{
+    const el=document.createElement('div');el.className='mi';
+    if(m.type==='img'){
+      el.innerHTML=`<img src="${m.file}" alt="${z.name} ${idx+1}" loading="lazy"/><div class="nbadge">${idx+1}</div>`;
+      el.onclick=()=>openLb(m.file,`${z.name} — ${idx+1}`);
+    } else {
+      const fn=m.file.split('/').pop();
+      el.innerHTML=`<div class="vnb"><div class="play"></div><div class="vlabel">${fn}</div></div><div class="nbadge">${idx+1}</div>`;
+      el.onclick=()=>window.open(m.file);
+    }
+    grid.appendChild(el);
+  });
+});
+
+// ── tabs ──────────────────────────────
+function switchTab(el,paneId,zNum){
+  const card=el.closest('.zone-card');
+  card.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  card.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(paneId).classList.add('active');
+}
+
+// ── rating ────────────────────────────
+function toggleRating(el){
+  el.closest('.rating-btns').querySelectorAll('.rbtn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── schedule ──────────────────────────
+function addSched(){
+  const li=document.createElement('li');
+  li.innerHTML=`<input type="checkbox"/><input type="text" placeholder="항목 추가…"/>`;
+  document.getElementById('sched-list').appendChild(li);
+}
+
+// ── lightbox ──────────────────────────
+function openLb(src,cap){
+  document.getElementById('lbimg').src=src;
+  document.getElementById('lbcap').textContent=cap;
+  document.getElementById('lb').classList.add('open');
+}
+function closeLb(){document.getElementById('lb').classList.remove('open')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLb()});
+</script>
+</body>
+</html>
