@@ -71,7 +71,7 @@ table.tl tr:hover td{background:#f7fafc}
 /* ── zone card ───────────────────────── */
 .zone-card{background:white;border-radius:16px;padding:28px;margin-bottom:24px;
            box-shadow:0 1px 6px rgba(0,0,0,.08);border-left:4px solid}
-.zh{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.zh{display:flex;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap}
 .znum{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;
       justify-content:center;color:white;font-weight:700;font-size:14px;flex-shrink:0}
 .ztitle{font-size:17px;font-weight:700}
@@ -148,7 +148,7 @@ textarea.memo:focus{outline:none;border-color:#4299e1;background:white}
 .lbcap{color:rgba(255,255,255,.65);font-size:13px;margin-top:10px}
 
 /* ── zone save/load buttons ─────────── */
-.zh-actions{margin-left:auto;display:flex;gap:6px;align-items:center;flex-shrink:0}
+.zh-actions{margin-left:auto;display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:wrap}
 .zh-btn{padding:5px 11px;border:1.5px solid #cbd5e0;border-radius:8px;background:white;
         font-size:12px;cursor:pointer;color:#4a5568;transition:.15s;white-space:nowrap;
         display:inline-flex;align-items:center;gap:4px;font-family:inherit}
@@ -491,7 +491,7 @@ const ZONES=[
 
   {num:'04',name:'Yunho Joseph Retreat Center',ko:'윤호 요셉 피정의 집',
    color:'#805ad5',lat:35.888666,lng:127.257713,time:'06/27  11:33 ~ 11:36',
-   media:rng(1,10).map(n=>img('04_Yunho_Joseph_Retreat_Center',n))},
+   media:rng(1,8).map(n=>img('04_Yunho_Joseph_Retreat_Center',n))},
 
   {num:'05',name:'Jeonju Central Cathedral',ko:'전주 중앙성당',
    color:'#d69e2e',lat:35.824344,lng:127.144233,time:'06/27  12:24 ~ 12:27',
