@@ -472,11 +472,11 @@ function rng(a,b){return Array.from({length:b-a+1},(_,i)=>a+i)}
 // ── zone data ─────────────────────────
 const ZONES=[
   {num:'01',name:'Jeonju Station',ko:'전주역',
-   color:'#e53e3e',lat:35.849911,lng:127.162436,time:'06/27  13:33',
+   color:'#e53e3e',lat:35.849911,lng:127.162436,time:'06/27  09:52 ~ 10:08',
    media:rng(1,34).map(n=>img('01_Jeonju_Station',n))},
 
   {num:'02',name:'Snail Hideout',ko:'달팽이 아지트',
-   color:'#3182ce',lat:35.860924,lng:127.263908,time:'06/27  13:34',
+   color:'#3182ce',lat:35.860924,lng:127.263908,time:'06/27  10:52 ~ 11:06',
    media:[
      ...rng(1,13).map(n=>img('02_Snail_Hideout',n)),
      vid('02_Snail_Hideout',14),vid('02_Snail_Hideout',15),
@@ -486,23 +486,23 @@ const ZONES=[
    ]},
 
   {num:'03',name:'Snail Hideout Bustop',ko:'달팽이 아지트 버스정류장',
-   color:'#38a169',lat:35.856042,lng:127.255825,time:'06/27  13:35',
+   color:'#38a169',lat:35.856042,lng:127.255825,time:'06/27  11:57 ~ 11:58',
    media:[vid('03_Snail_Hideout_Bustop',1),...rng(2,10).map(n=>img('03_Snail_Hideout_Bustop',n))]},
 
   {num:'04',name:'Yunho Joseph Retreat Center',ko:'윤호 요셉 피정의 집',
-   color:'#805ad5',lat:35.888666,lng:127.257713,time:'06/27  13:46',
+   color:'#805ad5',lat:35.888666,lng:127.257713,time:'06/27  11:33 ~ 11:36',
    media:rng(1,10).map(n=>img('04_Yunho_Joseph_Retreat_Center',n))},
 
   {num:'05',name:'Jeonju Central Cathedral',ko:'전주 중앙성당',
-   color:'#d69e2e',lat:35.824344,lng:127.144233,time:'06/27  오전',
+   color:'#d69e2e',lat:35.824344,lng:127.144233,time:'06/27  12:24 ~ 12:27',
    media:rng(1,3).map(n=>img('05_Jeonju_Central_Cathedral',n))},
 
   {num:'06',name:'Jeondong Cathedral',ko:'전동성당',
-   color:'#00a3c4',lat:35.813712,lng:127.149592,time:'06/27  14:22 / 06/28  15:22',
+   color:'#00a3c4',lat:35.813712,lng:127.149592,time:'06/27  14:21 ~ 14:22 / 06/28  15:22',
    media:rng(1,7).map(n=>img('06_Jeondong_Cathedral',n))},
 
   {num:'07',name:'Godeok',ko:'고덕',
-   color:'#dd6b20',lat:35.773179,lng:127.162963,time:'06/27  16:54',
+   color:'#dd6b20',lat:35.773179,lng:127.162963,time:'06/27  16:04 ~ 16:31',
    media:[...rng(1,19).map(n=>img('07_Godeok',n)),vid('07_Godeok',20)]},
 
   {num:'08',name:'Jeonju Hanok Village',ko:'전주 한옥마을',
@@ -597,7 +597,7 @@ fetch(`https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&
 const leg=document.getElementById('legend');
 ZONES.forEach(z=>{
   const el=document.createElement('div');el.className='leg-item';
-  el.innerHTML=`<div class="leg-dot" style="background:${z.color}">${z.num}</div>${z.name}`;
+  el.innerHTML=`<div class="leg-dot" style="background:${z.color}">${z.num}</div>${z.ko}`;
   leg.appendChild(el);
 });
 
@@ -612,8 +612,8 @@ ORDER.map(i=>ZONES[i]).forEach((z,i)=>{
     <td>
       <div style="display:flex;align-items:center;gap:8px">
         <div class="leg-dot" style="background:${z.color};width:22px;height:22px;font-size:10px">${z.num}</div>
-        <div><div style="font-weight:600">${z.name}</div>
-             <div style="font-size:11px;color:#718096">${z.ko}</div></div>
+        <div><div style="font-weight:600">${z.ko}</div>
+             <div style="font-size:11px;color:#718096">${z.name}</div></div>
       </div>
     </td>
     <td><span class="tbadge">${z.time}</span></td>
