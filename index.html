@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+</html>
+</body>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8"/>
@@ -140,9 +143,16 @@ textarea.memo:focus{outline:none;border-color:#4299e1;background:white}
 .lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:9999;
     align-items:center;justify-content:center;flex-direction:column}
 .lb.open{display:flex}
-.lb img{max-width:92vw;max-height:88vh;object-fit:contain;border-radius:8px}
-.lbclose{position:absolute;top:16px;right:26px;color:white;font-size:36px;cursor:pointer;user-select:none}
+.lb img{max-width:88vw;max-height:84vh;object-fit:contain;border-radius:8px}
+.lbclose{position:absolute;top:16px;right:26px;color:white;font-size:36px;cursor:pointer;user-select:none;z-index:1}
 .lbcap{color:rgba(255,255,255,.65);font-size:13px;margin-top:10px}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);
+        border:none;color:white;font-size:52px;line-height:1;padding:6px 16px;cursor:pointer;
+        border-radius:8px;user-select:none;transition:.15s}
+.lb-nav:hover{background:rgba(255,255,255,.35)}
+.lb-prev{left:12px}
+.lb-next{right:12px}
+.lb-nav:disabled{opacity:.15;cursor:default}
 
 /* ── print ───────────────────────────── */
 @media print{
@@ -307,9 +317,11 @@ textarea.memo:focus{outline:none;border-color:#4299e1;background:white}
 </div><!-- /wrap -->
 
 <!-- lightbox -->
-<div class="lb" id="lb" onclick="closeLb()">
-  <span class="lbclose">&times;</span>
-  <img id="lbimg" src="" alt=""/>
+<div class="lb" id="lb">
+  <span class="lbclose" onclick="closeLb()">&times;</span>
+  <button class="lb-nav lb-prev" id="lbprev" onclick="lbNav(-1)">&#8249;</button>
+  <img id="lbimg" src="" alt="" onclick="event.stopPropagation()"/>
+  <button class="lb-nav lb-next" id="lbnext" onclick="lbNav(1)">&#8250;</button>
   <div class="lbcap" id="lbcap"></div>
 </div>
 
@@ -490,122 +502,6 @@ const ZONES=[
 
 const ORDER=[0,1,2,3,4,7,5,6];
 
-// ── 달팽이 아지트 추정 평면도 (사진 33장 분석 기반) ──
-const FLOORPLAN_02=`<svg viewBox="0 0 900 645" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:900px;font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif">
-  <rect width="900" height="645" fill="#f5f3ef"/>
-
-  <!-- ═══ 한옥 구관 ═══ -->
-  <rect x="10" y="50" width="370" height="450" rx="6" fill="#ede8df" stroke="#5c3d1e" stroke-width="3"/>
-  <text x="195" y="36" text-anchor="middle" font-size="14" font-weight="bold" fill="#5c3d1e">한옥 구관</text>
-
-  <!-- 현관 -->
-  <rect x="20" y="60" width="90" height="75" rx="3" fill="#d1fae5" stroke="#aaa" stroke-width="1"/>
-  <text x="65" y="91" text-anchor="middle" font-size="11" font-weight="bold" fill="#065f46">현관</text>
-  <text x="65" y="106" text-anchor="middle" font-size="9" fill="#065f46">신발장</text>
-
-  <!-- 오락실 (h=150, 현관+피아노 합산) -->
-  <rect x="110" y="60" width="260" height="150" rx="3" fill="#dbeafe" stroke="#aaa" stroke-width="1"/>
-  <text x="240" y="129" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e40af">오락실</text>
-  <text x="240" y="147" text-anchor="middle" font-size="10" fill="#1e40af">축구대 · 바둑판 · 링던지기 · TV</text>
-
-  <!-- 피아노실 -->
-  <rect x="20" y="135" width="90" height="75" rx="3" fill="#dbeafe" stroke="#aaa" stroke-width="1"/>
-  <text x="65" y="167" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e40af">피아노실</text>
-  <text x="65" y="182" text-anchor="middle" font-size="9" fill="#1e40af">Yamaha</text>
-
-  <!-- 침실 A -->
-  <rect x="20" y="210" width="175" height="115" rx="3" fill="#fef9c3" stroke="#aaa" stroke-width="1"/>
-  <text x="108" y="261" text-anchor="middle" font-size="12" font-weight="bold" fill="#78350f">침실 A</text>
-  <text x="108" y="277" text-anchor="middle" font-size="10" fill="#78350f">온돌 · 천창 · TV · 에어컨</text>
-
-  <!-- 침실 B -->
-  <rect x="195" y="210" width="175" height="115" rx="3" fill="#fef9c3" stroke="#aaa" stroke-width="1"/>
-  <text x="283" y="261" text-anchor="middle" font-size="12" font-weight="bold" fill="#78350f">침실 B</text>
-  <text x="283" y="277" text-anchor="middle" font-size="10" fill="#78350f">온돌 · TV · 에어컨 · 이불</text>
-
-  <!-- 다용도 복도 -->
-  <rect x="20" y="325" width="90" height="70" rx="3" fill="#f3f4f6" stroke="#aaa" stroke-width="1"/>
-  <text x="65" y="355" text-anchor="middle" font-size="10" font-weight="bold" fill="#374151">다용도</text>
-  <text x="65" y="369" text-anchor="middle" font-size="10" fill="#374151">복도</text>
-
-  <!-- 침구 보관실 -->
-  <rect x="110" y="325" width="260" height="70" rx="3" fill="#e5e7eb" stroke="#aaa" stroke-width="1"/>
-  <text x="240" y="356" text-anchor="middle" font-size="12" font-weight="bold" fill="#374151">침구 보관실</text>
-  <text x="240" y="372" text-anchor="middle" font-size="10" fill="#374151">대형 선반 · 이불 · 베개 다수</text>
-
-  <!-- 샤워실 A -->
-  <rect x="20" y="395" width="175" height="75" rx="3" fill="#a7f3d0" stroke="#aaa" stroke-width="1"/>
-  <text x="108" y="426" text-anchor="middle" font-size="11" font-weight="bold" fill="#065f46">샤워실 A</text>
-  <text x="108" y="442" text-anchor="middle" font-size="10" fill="#065f46">샤워기 3개</text>
-
-  <!-- 샤워실 B -->
-  <rect x="195" y="395" width="175" height="75" rx="3" fill="#a7f3d0" stroke="#aaa" stroke-width="1"/>
-  <text x="283" y="426" text-anchor="middle" font-size="11" font-weight="bold" fill="#065f46">샤워실 B</text>
-  <text x="283" y="442" text-anchor="middle" font-size="10" fill="#065f46">샤워기 4개(양쪽 2개씩)</text>
-
-  <!-- ═══ 신관 (현대식) ═══ -->
-  <rect x="400" y="50" width="490" height="450" rx="6" fill="#e8ecf0" stroke="#2d5a7a" stroke-width="3"/>
-  <text x="645" y="36" text-anchor="middle" font-size="14" font-weight="bold" fill="#2d5a7a">신관 (현대식)</text>
-
-  <!-- 대집회실 -->
-  <rect x="410" y="60" width="470" height="165" rx="3" fill="#bfdbfe" stroke="#aaa" stroke-width="1"/>
-  <text x="645" y="135" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e40af">대집회실</text>
-  <text x="645" y="154" text-anchor="middle" font-size="11" fill="#1e40af">대형 TV · 피아노 스탠드 · 넓은 마루 · 스포트라이트</text>
-
-  <!-- 주방/식당 + 수건보관대 -->
-  <rect x="410" y="225" width="205" height="120" rx="3" fill="#fed7aa" stroke="#aaa" stroke-width="1"/>
-  <text x="513" y="275" text-anchor="middle" font-size="12" font-weight="bold" fill="#92400e">주방 / 식당</text>
-  <text x="513" y="292" text-anchor="middle" font-size="10" fill="#92400e">가스렌지 · 싱크대 · 식탁 · 의자</text>
-  <text x="513" y="308" text-anchor="middle" font-size="9" fill="#b45309">수건·드라이어 보관대 인접</text>
-
-  <!-- 침실 C -->
-  <rect x="615" y="225" width="130" height="120" rx="3" fill="#fef9c3" stroke="#aaa" stroke-width="1"/>
-  <text x="680" y="273" text-anchor="middle" font-size="11" font-weight="bold" fill="#78350f">침실 C</text>
-  <text x="680" y="289" text-anchor="middle" font-size="9" fill="#78350f">침대·소파</text>
-  <text x="680" y="303" text-anchor="middle" font-size="9" fill="#78350f">이불 선반·에어컨</text>
-
-  <!-- 침실 D -->
-  <rect x="745" y="225" width="135" height="120" rx="3" fill="#fef9c3" stroke="#aaa" stroke-width="1"/>
-  <text x="813" y="273" text-anchor="middle" font-size="11" font-weight="bold" fill="#78350f">침실 D</text>
-  <text x="813" y="289" text-anchor="middle" font-size="9" fill="#78350f">TV · 에어컨</text>
-  <text x="813" y="303" text-anchor="middle" font-size="9" fill="#78350f">이불</text>
-
-  <!-- 침실 E -->
-  <rect x="410" y="345" width="205" height="75" rx="3" fill="#fef9c3" stroke="#aaa" stroke-width="1"/>
-  <text x="513" y="381" text-anchor="middle" font-size="11" font-weight="bold" fill="#78350f">침실 E</text>
-  <text x="513" y="397" text-anchor="middle" font-size="9" fill="#78350f">에어컨 · 이불 · 창문</text>
-
-  <!-- 화장실 A -->
-  <rect x="615" y="345" width="130" height="75" rx="3" fill="#a7f3d0" stroke="#aaa" stroke-width="1"/>
-  <text x="680" y="376" text-anchor="middle" font-size="10" font-weight="bold" fill="#065f46">화장실 A</text>
-  <text x="680" y="392" text-anchor="middle" font-size="9" fill="#065f46">변기 2칸 · 샤워 · 세면대</text>
-
-  <!-- 화장실 B -->
-  <rect x="745" y="345" width="135" height="75" rx="3" fill="#a7f3d0" stroke="#aaa" stroke-width="1"/>
-  <text x="813" y="376" text-anchor="middle" font-size="10" font-weight="bold" fill="#065f46">화장실 B</text>
-  <text x="813" y="392" text-anchor="middle" font-size="9" fill="#065f46">변기 3칸 · 욕조 · 세면대</text>
-
-  <!-- 공용 복도/연결 -->
-  <rect x="410" y="420" width="470" height="58" rx="3" fill="#f3f4f6" stroke="#aaa" stroke-width="1" stroke-dasharray="5,3"/>
-  <text x="645" y="453" text-anchor="middle" font-size="10" fill="#6b7280">공용 복도 / 연결 통로</text>
-
-  <!-- ═══ 야외 공간 ═══ -->
-  <rect x="10" y="512" width="880" height="78" rx="6" fill="#bbf7d0" stroke="#16a34a" stroke-width="2"/>
-  <text x="450" y="538" text-anchor="middle" font-size="13" font-weight="bold" fill="#14532d">야외 공간 (남쪽 · 입구 방향)</text>
-  <text x="450" y="558" text-anchor="middle" font-size="11" fill="#14532d">잔디 마당 · 피크닉 테이블 · BBQ 그릴 · 나무 데크 (외부 조리 싱크) · 그네 · 정원 · 분리수거장</text>
-
-  <!-- ═══ 범례 ═══ -->
-  <g transform="translate(10,603)">
-    <rect width="14" height="12" rx="2" fill="#bfdbfe"/><text x="18" y="11" font-size="10" fill="#444">집회·공용</text>
-    <rect x="88" width="14" height="12" rx="2" fill="#fef9c3"/><text x="106" y="11" font-size="10" fill="#444">침실·온돌</text>
-    <rect x="176" width="14" height="12" rx="2" fill="#a7f3d0"/><text x="194" y="11" font-size="10" fill="#444">욕실·샤워</text>
-    <rect x="264" width="14" height="12" rx="2" fill="#fed7aa"/><text x="282" y="11" font-size="10" fill="#444">주방·식당</text>
-    <rect x="352" width="14" height="12" rx="2" fill="#e5e7eb"/><text x="370" y="11" font-size="10" fill="#444">보관·창고</text>
-    <rect x="440" width="14" height="12" rx="2" fill="#bbf7d0"/><text x="458" y="11" font-size="10" fill="#444">야외</text>
-    <text x="510" y="11" font-size="10" fill="#bbb">│</text>
-    <text x="520" y="11" font-size="10" fill="#aaa">사진 31장·영상 3편 분석 기반 추정 평면도</text>
-  </g>
-</svg>`;
 
 // ── per-zone checklists (02·07만 사용) ──
 const CL={
@@ -743,28 +639,23 @@ ZONES.forEach(z=>{
     : '';
   const clTab=clData?`<div class="tab" onclick="switchTab(this,'check-${z.num}','${z.num}')">답사 체크리스트</div>`:'';
   const clPane=clData?`<div class="tab-pane" id="check-${z.num}">${clHtml}</div>`:'';
-  const fpTab=z.num==='02'?`<div class="tab" onclick="switchTab(this,'fp-${z.num}','${z.num}')">평면도</div>`:'';
-  const fpPane=z.num==='02'?`<div class="tab-pane" id="fp-${z.num}"><div style="overflow-x:auto;padding:8px 0">${FLOORPLAN_02}</div></div>`:'';
-
   card.innerHTML=`
     <div class="zh">
       <div class="znum" style="background:${z.color}">${z.num}</div>
       <div>
-        <div class="ztitle">${z.name}</div>
-        <div class="zmeta">${z.ko} &nbsp;|&nbsp; 🕐 ${z.time} &nbsp;|&nbsp; 📷 ${ph}장${vd>0?` 🎬 ${vd}개`:''}</div>
+        <div class="ztitle">${z.ko}</div>
+        <div class="zmeta">${z.name} &nbsp;|&nbsp; 🕐 ${z.time} &nbsp;|&nbsp; 📷 ${ph}장${vd>0?` 🎬 ${vd}개`:''}</div>
       </div>
     </div>
     <div class="tabs">
       <div class="tab active" onclick="switchTab(this,'photos-${z.num}','${z.num}')">사진</div>
       ${clTab}
-      ${fpTab}
       <div class="tab" onclick="switchTab(this,'memo-${z.num}','${z.num}')">메모</div>
     </div>
     <div class="tab-pane active" id="photos-${z.num}">
       <div class="pgrid" id="g${z.num}"></div>
     </div>
     ${clPane}
-    ${fpPane}
     <div class="tab-pane" id="memo-${z.num}">
       <div class="mlabel">시설 점검 의견 / 특이사항</div>
       <textarea class="memo" placeholder="이 장소에 대한 세부 의견을 입력하세요…"></textarea>
@@ -772,11 +663,14 @@ ZONES.forEach(z=>{
   zc.appendChild(card);
 
   const grid=document.getElementById(`g${z.num}`);
+  const zImgs=z.media.filter(m=>m.type==='img');
+  const zLbList=zImgs.map((m,i)=>({src:m.file,cap:`${z.ko} — ${i+1} / ${zImgs.length}`}));
   z.media.forEach((m,idx)=>{
     const el=document.createElement('div');el.className='mi';
     if(m.type==='img'){
-      el.innerHTML=`<img src="${m.file}" alt="${z.name} ${idx+1}" loading="lazy"/><div class="nbadge">${idx+1}</div>`;
-      el.onclick=()=>openLb(m.file,`${z.name} — ${idx+1}`);
+      const imgIdx=zImgs.indexOf(m);
+      el.innerHTML=`<img src="${m.file}" alt="${z.ko} ${idx+1}" loading="lazy"/><div class="nbadge">${idx+1}</div>`;
+      el.onclick=()=>openLb(zLbList,imgIdx);
     } else {
       const fn=m.file.split('/').pop();
       el.innerHTML=`<div class="vnb"><div class="play"></div><div class="vlabel">${fn}</div></div><div class="nbadge">${idx+1}</div>`;
@@ -809,13 +703,30 @@ function addSched(){
 }
 
 // ── lightbox ──────────────────────────
-function openLb(src,cap){
-  document.getElementById('lbimg').src=src;
-  document.getElementById('lbcap').textContent=cap;
+let _lbList=[],_lbIdx=0;
+function openLb(list,idx){
+  _lbList=list; _lbIdx=idx; _lbShow();
   document.getElementById('lb').classList.add('open');
 }
-function closeLb(){document.getElementById('lb').classList.remove('open')}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLb()});
+function _lbShow(){
+  const m=_lbList[_lbIdx];
+  document.getElementById('lbimg').src=m.src;
+  document.getElementById('lbcap').textContent=m.cap;
+  document.getElementById('lbprev').disabled=_lbIdx===0;
+  document.getElementById('lbnext').disabled=_lbIdx===_lbList.length-1;
+}
+function lbNav(d){
+  _lbIdx=Math.max(0,Math.min(_lbList.length-1,_lbIdx+d));
+  _lbShow();
+}
+function closeLb(){document.getElementById('lb').classList.remove('open');}
+document.getElementById('lb').addEventListener('click',e=>{if(e.target===e.currentTarget)closeLb();});
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('lb').classList.contains('open'))return;
+  if(e.key==='Escape')closeLb();
+  if(e.key==='ArrowLeft')lbNav(-1);
+  if(e.key==='ArrowRight')lbNav(1);
+});
 </script>
 </body>
 </html>
