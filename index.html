@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8"/>
@@ -7,12 +7,12 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#f0f2f5;color:#2d3748;font-size:14px}
+body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#f0f2f5;color:#2d3748;font-size:16px;word-break:keep-all;overflow-wrap:break-word}
 
 /* ── header ─────────────────────────── */
 header{background:linear-gradient(135deg,#1a365d 0%,#2b6cb0 100%);color:white;padding:36px 48px}
-header h1{font-size:22px;font-weight:700;margin-bottom:6px}
-header .sub{font-size:13px;opacity:.8;line-height:2}
+header h1{font-size:24px;font-weight:700;margin-bottom:6px}
+header .sub{font-size:15px;opacity:.8;line-height:2}
 
 /* ── layout ─────────────────────────── */
 .wrap{max-width:1200px;margin:0 auto;padding:32px 24px}
@@ -21,16 +21,16 @@ header .sub{font-size:13px;opacity:.8;line-height:2}
 /* ── card ────────────────────────────── */
 .card{background:white;border-radius:16px;padding:28px;margin-bottom:24px;
       box-shadow:0 1px 6px rgba(0,0,0,.08)}
-.card-title{font-size:16px;font-weight:700;color:#1a365d;padding-bottom:12px;
+.card-title{font-size:18px;font-weight:700;color:#1a365d;padding-bottom:12px;
             border-bottom:2px solid #e2e8f0;margin-bottom:18px;display:flex;
             align-items:center;gap:8px}
-.card-title .icon{font-size:18px}
+.card-title .icon{font-size:20px}
 
 /* ── 개요 grid ───────────────────────── */
 .overview-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.ov-item label{display:block;font-size:12px;font-weight:600;color:#718096;margin-bottom:4px}
+.ov-item label{display:block;font-size:14px;font-weight:600;color:#718096;margin-bottom:4px}
 .ov-item input,.ov-item textarea{width:100%;border:1px solid #e2e8f0;border-radius:8px;
-  padding:8px 12px;font-size:14px;color:#2d3748;font-family:inherit;background:#f7fafc}
+  padding:8px 12px;font-size:16px;color:#2d3748;font-family:inherit;background:#f7fafc}
 .ov-item input:focus,.ov-item textarea:focus{outline:none;border-color:#4299e1;background:white}
 .ov-item.full{grid-column:1/-1}
 
@@ -40,43 +40,43 @@ header .sub{font-size:13px;opacity:.8;line-height:2}
 .eval-box.good{background:#f0fff4;border:1px solid #9ae6b4}
 .eval-box.warn{background:#fffaf0;border:1px solid #fbd38d}
 .eval-box.rating{background:#ebf8ff;border:1px solid #90cdf4}
-.eval-box h4{font-size:12px;font-weight:700;margin-bottom:8px;color:#4a5568}
+.eval-box h4{font-size:14px;font-weight:700;margin-bottom:8px;color:#4a5568}
 .eval-box textarea{width:100%;border:none;background:transparent;resize:vertical;
-  font-size:13px;font-family:inherit;color:#2d3748;min-height:70px}
+  font-size:15px;font-family:inherit;color:#2d3748;min-height:70px}
 .eval-box textarea:focus{outline:none}
 .rating-btns{display:flex;gap:6px;flex-wrap:wrap}
 .rbtn{padding:5px 12px;border-radius:20px;border:1.5px solid #bee3f8;background:white;
-      font-size:12px;font-weight:600;cursor:pointer;color:#2b6cb0;transition:.15s}
+      font-size:14px;font-weight:600;cursor:pointer;color:#2b6cb0;transition:.15s}
 .rbtn:hover,.rbtn.active{background:#2b6cb0;color:white;border-color:#2b6cb0}
 
 /* ── map ─────────────────────────────── */
 #map{height:500px;border-radius:12px;margin-bottom:14px}
 .legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:4px}
-.leg-item{display:flex;align-items:center;gap:7px;font-size:12px;color:#4a5568}
+.leg-item{display:flex;align-items:center;gap:7px;font-size:14px;color:#4a5568}
 .leg-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;
-         justify-content:center;color:white;font-size:10px;font-weight:700;flex-shrink:0}
+         justify-content:center;color:white;font-size:12px;font-weight:700;flex-shrink:0}
 
 /* ── timeline table ──────────────────── */
-table.tl{width:100%;border-collapse:collapse;font-size:13px}
+table.tl{width:100%;border-collapse:collapse;font-size:15px}
 table.tl th{background:#edf2f7;padding:9px 14px;text-align:left;font-weight:600}
 table.tl td{padding:9px 14px;border-bottom:1px solid #e2e8f0;vertical-align:middle}
 table.tl tr:last-child td{border-bottom:none}
 table.tl tr:hover td{background:#f7fafc}
 .tbadge{display:inline-block;background:#e2e8f0;border-radius:5px;padding:2px 8px;
-        font-size:11px;font-weight:600;color:#4a5568}
+        font-size:13px;font-weight:600;color:#4a5568}
 
 /* ── zone card ───────────────────────── */
 .zone-card{background:white;border-radius:16px;padding:28px;margin-bottom:24px;
            box-shadow:0 1px 6px rgba(0,0,0,.08);border-left:4px solid}
 .zh{display:flex;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap}
 .znum{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;
-      justify-content:center;color:white;font-weight:700;font-size:14px;flex-shrink:0}
-.ztitle{font-size:17px;font-weight:700}
-.zmeta{font-size:12px;color:#718096;margin-top:3px}
+      justify-content:center;color:white;font-weight:700;font-size:16px;flex-shrink:0}
+.ztitle{font-size:19px;font-weight:700}
+.zmeta{font-size:14px;color:#718096;margin-top:3px}
 
 /* ── tabs ────────────────────────────── */
 .tabs{display:flex;gap:0;border-bottom:2px solid #e2e8f0;margin-bottom:16px}
-.tab{padding:8px 18px;font-size:13px;font-weight:600;color:#718096;cursor:pointer;
+.tab{padding:8px 18px;font-size:15px;font-weight:600;color:#718096;cursor:pointer;
      border-bottom:2px solid transparent;margin-bottom:-2px;transition:.15s}
 .tab.active{color:#2b6cb0;border-bottom-color:#2b6cb0}
 .tab-pane{display:none}
@@ -84,23 +84,23 @@ table.tl tr:hover td{background:#f7fafc}
 
 /* ── checklist ───────────────────────── */
 .cl-group{margin-bottom:14px}
-.cl-group-title{font-size:12px;font-weight:700;color:#4a5568;margin-bottom:8px;
+.cl-group-title{font-size:14px;font-weight:700;color:#4a5568;margin-bottom:8px;
                 padding:4px 10px;background:#edf2f7;border-radius:6px}
 .cl-items{display:flex;flex-direction:column;gap:6px}
 .cl-item{display:flex;align-items:center;gap:10px;padding:6px 10px;
          border-radius:8px;cursor:pointer;transition:.1s}
 .cl-item:hover{background:#f7fafc}
 .cl-item input[type=checkbox]{width:16px;height:16px;accent-color:#2b6cb0;cursor:pointer;flex-shrink:0}
-.cl-item .ci-label{flex:1;font-size:13px}
-.cl-item .ci-remark{font-size:11px;color:#a0aec0;margin-left:auto;min-width:80px;
+.cl-item .ci-label{flex:1;font-size:15px}
+.cl-item .ci-remark{font-size:13px;color:#a0aec0;margin-left:auto;min-width:80px;
   border:none;background:transparent;font-family:inherit;text-align:right}
 .cl-item .ci-remark:focus{outline:none;color:#2d3748}
-.cl-item .ci-x{color:#e53e3e;font-weight:700;font-size:13px;margin-left:auto;min-width:20px;text-align:center}
+.cl-item .ci-x{color:#e53e3e;font-weight:700;font-size:15px;margin-left:auto;min-width:20px;text-align:center}
 
 /* ── memo ────────────────────────────── */
-.mlabel{font-size:12px;font-weight:600;color:#718096;margin-bottom:5px}
+.mlabel{font-size:14px;font-weight:600;color:#718096;margin-bottom:5px}
 textarea.memo{width:100%;min-height:70px;border:1px dashed #cbd5e0;border-radius:8px;
-  padding:9px 12px;resize:vertical;font-size:13px;color:#2d3748;background:#f7fafc;font-family:inherit}
+  padding:9px 12px;resize:vertical;font-size:15px;color:#2d3748;background:#f7fafc;font-family:inherit}
 textarea.memo:focus{outline:none;border-color:#4299e1;background:white}
 
 /* ── photos ──────────────────────────── */
@@ -113,16 +113,16 @@ textarea.memo:focus{outline:none;border-color:#4299e1;background:white}
      flex-direction:column;align-items:center;justify-content:center;border-radius:9px}
 .play{width:0;height:0;border-style:solid;border-width:14px 0 14px 24px;
       border-color:transparent transparent transparent white;margin-bottom:7px}
-.vlabel{color:rgba(255,255,255,.85);font-size:10px;max-width:90%;text-align:center;word-break:break-all}
+.vlabel{color:rgba(255,255,255,.85);font-size:12px;max-width:90%;text-align:center;word-break:break-all}
 .nbadge{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.5);color:white;
-        font-size:10px;border-radius:4px;padding:1px 5px}
+        font-size:12px;border-radius:4px;padding:1px 5px}
 
 /* ── safety / schedule ───────────────── */
 .info-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
 .info-box{background:#f7fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px}
-.info-box h4{font-size:12px;font-weight:700;color:#4a5568;margin-bottom:8px}
+.info-box h4{font-size:14px;font-weight:700;color:#4a5568;margin-bottom:8px}
 .info-box textarea{width:100%;border:none;background:transparent;resize:vertical;
-  font-size:13px;font-family:inherit;color:#2d3748;min-height:80px}
+  font-size:15px;font-family:inherit;color:#2d3748;min-height:80px}
 .info-box textarea:focus{outline:none}
 
 /* ── schedule list ───────────────────── */
@@ -130,10 +130,10 @@ textarea.memo:focus{outline:none;border-color:#4299e1;background:white}
 .sched-list li{display:flex;align-items:center;gap:10px}
 .sched-list li input[type=checkbox]{width:15px;height:15px;accent-color:#38a169;flex-shrink:0}
 .sched-list li input[type=text]{flex:1;border:none;border-bottom:1px solid #e2e8f0;
-  padding:4px 6px;font-size:13px;font-family:inherit;background:transparent;color:#2d3748}
+  padding:4px 6px;font-size:15px;font-family:inherit;background:transparent;color:#2d3748}
 .sched-list li input[type=text]:focus{outline:none;border-bottom-color:#4299e1}
 .add-btn{margin-top:10px;padding:6px 14px;background:#edf2f7;border:none;border-radius:8px;
-  font-size:12px;font-weight:600;color:#4a5568;cursor:pointer}
+  font-size:14px;font-weight:600;color:#4a5568;cursor:pointer}
 .add-btn:hover{background:#e2e8f0}
 
 /* ── lightbox ────────────────────────── */
@@ -142,26 +142,26 @@ textarea.memo:focus{outline:none;border-color:#4299e1;background:white}
 .lb.open{display:flex}
 .lb img{max-width:88vw;max-height:84vh;object-fit:contain;border-radius:8px}
 .lbclose{position:absolute;top:16px;right:26px;color:white;font-size:36px;cursor:pointer;user-select:none;z-index:1}
-.lbcap{color:rgba(255,255,255,.65);font-size:13px;margin-top:10px}
+.lbcap{color:rgba(255,255,255,.65);font-size:15px;margin-top:10px}
 
 /* ── zone save/load buttons ─────────── */
 .zh-actions{margin-left:auto;display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:wrap}
 .zh-btn{padding:5px 11px;border:1.5px solid #cbd5e0;border-radius:8px;background:white;
-        font-size:12px;cursor:pointer;color:#4a5568;transition:.15s;white-space:nowrap;
+        font-size:14px;cursor:pointer;color:#4a5568;transition:.15s;white-space:nowrap;
         display:inline-flex;align-items:center;gap:4px;font-family:inherit}
 .zh-btn:hover{background:#edf2f7;border-color:#a0aec0}
 .zh-btn.save-btn:hover{background:#ebf8ff;border-color:#90cdf4;color:#2b6cb0}
 .zh-btn.load-btn:hover{background:#f0fff4;border-color:#9ae6b4;color:#276749}
-.hosp-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+.hosp-table{width:100%;border-collapse:collapse;font-size:15px;margin-top:10px}
 .hosp-table th{background:#fff5f5;color:#c53030;padding:8px 10px;text-align:left;font-weight:600;border-bottom:2px solid #feb2b2;white-space:nowrap}
-.hosp-table td{padding:7px 10px;border-bottom:1px solid #e2e8f0;vertical-align:top;font-size:12px}
+.hosp-table td{padding:7px 10px;border-bottom:1px solid #e2e8f0;vertical-align:top;font-size:14px}
 .hosp-table tr:last-child td{border-bottom:none}
 .hosp-table .dist-cell{font-weight:700;color:#e53e3e;white-space:nowrap;text-align:right}
 .hosp-link{color:#2b6cb0;text-decoration:none;font-weight:600}
 .hosp-link:hover{text-decoration:underline}
 .card-hdr{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding-bottom:12px;border-bottom:1px solid #e2e8f0;margin-bottom:18px}
 .card-hdr>.card-title{padding-bottom:0;border-bottom:none;margin-bottom:0}
-.ls-indicator{font-size:11px;color:#a0aec0;white-space:nowrap}
+.ls-indicator{font-size:13px;color:#a0aec0;white-space:nowrap}
 .lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);
         border:none;color:white;font-size:52px;line-height:1;padding:6px 16px;cursor:pointer;
         border-radius:8px;user-select:none;transition:.15s}
@@ -608,7 +608,7 @@ function mkIcon(z){
   return L.divIcon({
     className:'',
     html:`<div style="width:30px;height:30px;border-radius:50%;background:${z.color};
-          color:white;font-weight:700;font-size:12px;display:flex;align-items:center;
+          color:white;font-weight:700;font-size:14px;display:flex;align-items:center;
           justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.35);border:2px solid white">${z.num}</div>`,
     iconSize:[30,30],iconAnchor:[15,15],popupAnchor:[0,-18]
   });
@@ -626,11 +626,11 @@ const HOSPITALS=[
 HOSPITALS.forEach(h=>{
   const hIcon=L.divIcon({
     className:'',
-    html:`<div style="width:26px;height:26px;border-radius:5px;background:${h.color};color:white;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.4);border:2px solid white;line-height:1">+</div>`,
+    html:`<div style="width:26px;height:26px;border-radius:5px;background:${h.color};color:white;font-weight:900;font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.4);border:2px solid white;line-height:1">+</div>`,
     iconSize:[26,26],iconAnchor:[13,13],popupAnchor:[0,-16]
   });
   L.marker([h.lat,h.lng],{icon:hIcon}).addTo(map)
-   .bindPopup(`<div style="min-width:190px"><strong>🏥 ${h.name}</strong><br/><span style="color:#718096;font-size:12px">${h.type}</span><br/><span style="color:#e53e3e;font-weight:700">🚗 ${h.dist}</span><br/><span style="font-size:12px;color:#4a5568">${h.note}</span><br/><a href="${h.url}" target="_blank" style="color:#2b6cb0;font-size:12px;font-weight:600">지도에서 보기 →</a></div>`);
+   .bindPopup(`<div style="min-width:190px"><strong>🏥 ${h.name}</strong><br/><span style="color:#718096;font-size:14px">${h.type}</span><br/><span style="color:#e53e3e;font-weight:700">🚗 ${h.dist}</span><br/><span style="font-size:14px;color:#4a5568">${h.note}</span><br/><a href="${h.url}" target="_blank" style="color:#2b6cb0;font-size:14px;font-weight:600">지도에서 보기 →</a></div>`);
 });
 
 const rz=ORDER.map(i=>ZONES[i]);
@@ -660,14 +660,14 @@ ORDER.map(i=>ZONES[i]).forEach((z,i)=>{
     <td>${i+1}</td>
     <td>
       <div style="display:flex;align-items:center;gap:8px">
-        <div class="leg-dot" style="background:${z.color};width:22px;height:22px;font-size:10px">${z.num}</div>
+        <div class="leg-dot" style="background:${z.color};width:22px;height:22px;font-size:12px">${z.num}</div>
         <div><div style="font-weight:600">${z.ko}</div>
-             <div style="font-size:11px;color:#718096">${z.name}</div></div>
+             <div style="font-size:13px;color:#718096">${z.name}</div></div>
       </div>
     </td>
     <td><span class="tbadge">${z.time}</span></td>
     <td>📷 ${ph}${vd>0?` 🎬 ${vd}`:''}</td>
-    <td><input type="text" style="border:none;border-bottom:1px solid #e2e8f0;width:100%;font-size:12px;padding:2px 4px;font-family:inherit;background:transparent" placeholder="비고 입력…"/></td>`;
+    <td><input type="text" style="border:none;border-bottom:1px solid #e2e8f0;width:100%;font-size:14px;padding:2px 4px;font-family:inherit;background:transparent" placeholder="비고 입력…"/></td>`;
   tbody.appendChild(tr);
 });
 
