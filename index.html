@@ -146,6 +146,16 @@ textarea.memo:focus{outline:none;border-color:#4299e1;background:white}
 .lb img{max-width:88vw;max-height:84vh;object-fit:contain;border-radius:8px}
 .lbclose{position:absolute;top:16px;right:26px;color:white;font-size:36px;cursor:pointer;user-select:none;z-index:1}
 .lbcap{color:rgba(255,255,255,.65);font-size:13px;margin-top:10px}
+
+/* ── zone save/load buttons ─────────── */
+.zh-actions{margin-left:auto;display:flex;gap:6px;align-items:center;flex-shrink:0}
+.zh-btn{padding:5px 11px;border:1.5px solid #cbd5e0;border-radius:8px;background:white;
+        font-size:12px;cursor:pointer;color:#4a5568;transition:.15s;white-space:nowrap;
+        display:inline-flex;align-items:center;gap:4px;font-family:inherit}
+.zh-btn:hover{background:#edf2f7;border-color:#a0aec0}
+.zh-btn.save-btn:hover{background:#ebf8ff;border-color:#90cdf4;color:#2b6cb0}
+.zh-btn.load-btn:hover{background:#f0fff4;border-color:#9ae6b4;color:#276749}
+.ls-indicator{font-size:11px;color:#a0aec0;white-space:nowrap}
 .lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);
         border:none;color:white;font-size:52px;line-height:1;padding:6px 16px;cursor:pointer;
         border-radius:8px;user-select:none;transition:.15s}
@@ -620,6 +630,7 @@ ZONES.forEach(z=>{
   const card=document.createElement('div');
   card.className='zone-card';
   card.style.borderLeftColor=z.color;
+  card.dataset.zone=z.num;
 
   // checklist html (02·07만)
   const clData=CL[z.num];
@@ -642,9 +653,14 @@ ZONES.forEach(z=>{
   card.innerHTML=`
     <div class="zh">
       <div class="znum" style="background:${z.color}">${z.num}</div>
-      <div>
+      <div style="flex:1">
         <div class="ztitle">${z.ko}</div>
         <div class="zmeta">${z.name} &nbsp;|&nbsp; 🕐 ${z.time} &nbsp;|&nbsp; 📷 ${ph}장${vd>0?` 🎬 ${vd}개`:''}</div>
+      </div>
+      <div class="zh-actions">
+        <button class="zh-btn save-btn" onclick="exportZone('${z.num}','${z.ko}')">💾 저장</button>
+        <label class="zh-btn load-btn" style="cursor:pointer">📂 불러오기<input type="file" accept=".json" style="display:none" onchange="importZone('${z.num}',this.files[0]);this.value=''"/></label>
+        <span class="ls-indicator" id="ls-${z.num}"></span>
       </div>
     </div>
     <div class="tabs">
@@ -701,6 +717,93 @@ function addSched(){
   li.innerHTML=`<input type="checkbox"/><input type="text" placeholder="항목 추가…"/>`;
   document.getElementById('sched-list').appendChild(li);
 }
+
+// ── localStorage save / load ──────────
+function _lsKey(n){return`amsa-2026-z${n}`}
+
+function _collectZone(n){
+  const card=document.querySelector(`.zone-card[data-zone="${n}"]`);
+  if(!card)return null;
+  return{
+    zNum:n,
+    savedAt:new Date().toISOString(),
+    memo:card.querySelector('.memo')?.value||'',
+    checks:[...card.querySelectorAll('.cl-item input[type=checkbox]')].map(c=>c.checked),
+    remarks:[...card.querySelectorAll('.ci-remark')].map(r=>r.value)
+  };
+}
+
+function _applyZone(n,d){
+  const card=document.querySelector(`.zone-card[data-zone="${n}"]`);
+  if(!card||!d)return;
+  const memo=card.querySelector('.memo');
+  if(memo&&d.memo!==undefined)memo.value=d.memo;
+  const cbs=[...card.querySelectorAll('.cl-item input[type=checkbox]')];
+  (d.checks||[]).forEach((v,i)=>{if(cbs[i])cbs[i].checked=v});
+  const rems=[...card.querySelectorAll('.ci-remark')];
+  (d.remarks||[]).forEach((v,i)=>{if(rems[i])rems[i].value=v});
+}
+
+function _showIndicator(n,text){
+  const el=document.getElementById(`ls-${n}`);
+  if(el)el.textContent=text;
+}
+
+let _saveTimers={};
+function _autoSave(n){
+  clearTimeout(_saveTimers[n]);
+  _saveTimers[n]=setTimeout(()=>{
+    const d=_collectZone(n);
+    if(d){
+      localStorage.setItem(_lsKey(n),JSON.stringify(d));
+      const t=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+      _showIndicator(n,`자동저장 ${t}`);
+    }
+  },700);
+}
+
+function exportZone(n,name){
+  const d=_collectZone(n);
+  if(!d)return;
+  localStorage.setItem(_lsKey(n),JSON.stringify(d));
+  const t=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+  _showIndicator(n,`저장됨 ${t}`);
+  d.zoneName=name;
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(d,null,2)],{type:'application/json'}));
+  a.download=`답사_${n}_${name}.json`;
+  a.click();
+}
+
+function importZone(n,file){
+  if(!file)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    try{
+      const d=JSON.parse(e.target.result);
+      _applyZone(n,d);
+      localStorage.setItem(_lsKey(n),JSON.stringify(d));
+      _showIndicator(n,'불러오기 완료');
+    }catch{alert('JSON 파일을 읽을 수 없습니다.');}
+  };
+  r.readAsText(file);
+}
+
+// 페이지 로드 시 복원 + 자동저장 바인딩
+document.querySelectorAll('.zone-card[data-zone]').forEach(card=>{
+  const n=card.dataset.zone;
+  const raw=localStorage.getItem(_lsKey(n));
+  if(raw){
+    try{
+      const d=JSON.parse(raw);
+      _applyZone(n,d);
+      const t=new Date(d.savedAt).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+      _showIndicator(n,`복원됨 ${t}`);
+    }catch{}
+  }
+  card.addEventListener('input',()=>_autoSave(n));
+  card.addEventListener('change',()=>_autoSave(n));
+});
 
 // ── lightbox ──────────────────────────
 let _lbList=[],_lbIdx=0;
