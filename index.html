@@ -69,7 +69,6 @@ table.tl tr:hover td{background:#f7fafc}
 .zone-card{background:white;border-radius:16px;padding:28px;margin-bottom:24px;
            box-shadow:0 1px 6px rgba(0,0,0,.08);border-left:4px solid}
 .zh{display:flex;align-items:center;gap:14px;margin-bottom:8px;flex-wrap:wrap}
-.save-row{display:flex;align-items:center;gap:8px;margin-bottom:16px}
 .znum{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;
       justify-content:center;color:white;font-weight:700;font-size:16px;flex-shrink:0}
 .ztitle{font-size:19px;font-weight:700}
@@ -145,14 +144,10 @@ textarea.memo:focus{outline:none;border-color:#4299e1;background:white}
 .lbclose{position:absolute;top:16px;right:26px;color:white;font-size:36px;cursor:pointer;user-select:none;z-index:1}
 .lbcap{color:rgba(255,255,255,.65);font-size:15px;margin-top:10px}
 
-/* ── zone save/load buttons ─────────── */
-.zh-actions{margin-left:auto;display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:wrap}
 .zh-btn{padding:5px 11px;border:1.5px solid #cbd5e0;border-radius:8px;background:white;
         font-size:14px;cursor:pointer;color:#4a5568;transition:.15s;white-space:nowrap;
         display:inline-flex;align-items:center;gap:4px;font-family:inherit}
 .zh-btn:hover{background:#edf2f7;border-color:#a0aec0}
-.zh-btn.save-btn:hover{background:#ebf8ff;border-color:#90cdf4;color:#2b6cb0}
-.zh-btn.load-btn:hover{background:#f0fff4;border-color:#9ae6b4;color:#276749}
 .hosp-table{width:100%;border-collapse:collapse;font-size:15px;margin-top:10px}
 .hosp-table th{background:#fff5f5;color:#c53030;padding:8px 10px;text-align:left;font-weight:600;border-bottom:2px solid #feb2b2;white-space:nowrap}
 .hosp-table td{padding:7px 10px;border-bottom:1px solid #e2e8f0;vertical-align:top;font-size:14px}
@@ -196,10 +191,22 @@ textarea.memo:focus{outline:none;border-color:#4299e1;background:white}
   </div>
 </header>
 
+<!-- Drive 동기화 바 -->
+<div style="background:#2d3748;padding:8px 48px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+  <span style="color:#a0aec0;font-size:14px;font-weight:600;white-space:nowrap">Drive 자동저장</span>
+  <span id="drive-indicator" style="color:#68d391;font-size:13px;white-space:nowrap"></span>
+  <button class="zh-btn" onclick="_gdLoad()" style="border-color:#4299e1;color:#63b3ed;background:#1a2535;white-space:nowrap">🔄 지금 불러오기</button>
+  <button class="zh-btn" onclick="_gdSave()" style="border-color:#68d391;color:#68d391;background:#1a2535;white-space:nowrap">💾 지금 저장</button>
+  <span style="color:#4a5568">|</span>
+  <button class="zh-btn" onclick="exportAll()" style="border-color:#718096;color:#a0aec0;background:#1a2535;white-space:nowrap">📥 JSON 백업</button>
+  <label class="zh-btn" style="cursor:pointer;border-color:#718096;color:#a0aec0;background:#1a2535;white-space:nowrap">📤 JSON 복원<input type="file" accept=".json" style="display:none" onchange="importAll(this.files[0]);this.value=''"/></label>
+  <span id="all-indicator" style="color:#a0aec0;font-size:13px"></span>
+</div>
+
 <div class="wrap">
 
 <!-- ① 답사 개요 ───────────────────────────────── -->
-<div class="card">
+<div class="card" id="card-sec1">
   <div class="card-title"><span class="icon">📋</span> 1. 답사 개요</div>
   <div class="overview-grid">
     <div class="ov-item">
@@ -226,7 +233,7 @@ textarea.memo:focus{outline:none;border-color:#4299e1;background:white}
 </div>
 
 <!-- ② 종합 평가 ────────────────────────────────── -->
-<div class="card">
+<div class="card" id="card-sec2">
   <div class="card-title"><span class="icon">⭐</span> 2. 답사지 종합 평가</div>
   <div class="eval-grid">
     <div class="eval-box rating">
@@ -257,7 +264,7 @@ textarea.memo:focus{outline:none;border-color:#4299e1;background:white}
 </div>
 
 <!-- ④ 방문 시간표 ──────────────────────────────── -->
-<div class="card">
+<div class="card" id="card-sec4">
   <div class="card-title"><span class="icon">🕐</span> 4. 방문 시간표</div>
   <table class="tl">
     <thead><tr><th>순서</th><th>장소</th><th>시각</th><th>수량</th><th>비고</th></tr></thead>
@@ -270,11 +277,6 @@ textarea.memo:focus{outline:none;border-color:#4299e1;background:white}
 <!-- ⑥ 안전 및 비상대응 ─────────────────────────── -->
 <div class="card" id="card-sec6">
   <div class="card-title"><span class="icon">🚑</span> 6. 안전 및 비상대응 계획</div>
-  <div class="save-row">
-    <button class="zh-btn save-btn" onclick="exportSec('card-sec6','안전및비상대응')">💾 저장</button>
-    <label class="zh-btn load-btn" style="cursor:pointer">📂 불러오기<input type="file" accept=".json" style="display:none" onchange="importSec('card-sec6',this.files[0]);this.value=''"/></label>
-    <span class="ls-indicator" id="ls-card-sec6"></span>
-  </div>
   <div class="info-grid" style="grid-template-columns:1fr 1fr">
     <div class="info-box">
       <h4>원내 안전 관리</h4>
@@ -301,37 +303,34 @@ textarea.memo:focus{outline:none;border-color:#4299e1;background:white}
 <!-- ⑦ 대관 조건 및 행정 ─────────────────────────── -->
 <div class="card" id="card-sec7">
   <div class="card-title"><span class="icon">📝</span> 7. 대관 조건 및 행정 사항</div>
-  <div class="save-row">
-    <button class="zh-btn save-btn" onclick="exportSec('card-sec7','대관조건및행정')">💾 저장</button>
-    <label class="zh-btn load-btn" style="cursor:pointer">📂 불러오기<input type="file" accept=".json" style="display:none" onchange="importSec('card-sec7',this.files[0]);this.value=''"/></label>
-    <span class="ls-indicator" id="ls-card-sec7"></span>
-  </div>
   <div class="two-col">
     <div class="overview-grid">
       <div class="ov-item">
         <label>대관 요금</label>
-        <input type="text" placeholder="총액 / 계약금 / 잔금"/>
+        <input type="text" value="1,080,000"/>
       </div>
       <div class="ov-item">
         <label>입·퇴실 시간</label>
-        <input type="text" placeholder="입실 __ : 00  /  퇴실 __ : 00"/>
+        <input type="text" value="입실 15:00 / 퇴실 11:00"/>
       </div>
       <div class="ov-item">
         <label>야간 소음 제한</label>
-        <input type="text" placeholder="__ : 00 이후"/>
+        <input type="text" value="21:00 이후 창문 및 문 닫아달란 요청"/>
       </div>
       <div class="ov-item">
         <label>쓰레기 분리배출</label>
-        <input type="text" placeholder="분리수거장 위치"/>
+        <input type="text" value="내부 및 외부"/>
       </div>
       <div class="ov-item full">
         <label>펜션 측 협조 요청 사항</label>
-        <input type="text" placeholder="추가 이불, 풋살장, 바베큐 그릴 등…"/>
+        <input type="text" value="바베큐 그릴 및 가스버너 각 4개 랜탈"/>
       </div>
     </div>
     <div>
       <div class="mlabel" style="margin-bottom:8px">기타 행정 메모</div>
-      <textarea class="memo" style="min-height:140px" placeholder="계약 관련 메모, 연락처 등…"></textarea>
+      <textarea class="memo" style="min-height:140px">010-8531-9531 사장님
+010-4696-8497 관리 사장님
+010-4696-5529 관리 사모님</textarea>
     </div>
   </div>
 </div>
@@ -339,11 +338,6 @@ textarea.memo:focus{outline:none;border-color:#4299e1;background:white}
 <!-- ⑧ 향후 일정 ──────────────────────────────── -->
 <div class="card" id="card-sec8">
   <div class="card-title"><span class="icon">📅</span> 8. 향후 일정 및 준비사항</div>
-  <div class="save-row">
-    <button class="zh-btn save-btn" onclick="exportSec('card-sec8','향후일정')">💾 저장</button>
-    <label class="zh-btn load-btn" style="cursor:pointer">📂 불러오기<input type="file" accept=".json" style="display:none" onchange="importSec('card-sec8',this.files[0]);this.value=''"/></label>
-    <span class="ls-indicator" id="ls-card-sec8"></span>
-  </div>
   <ul class="sched-list" id="sched-list">
     <li><input type="checkbox"/><input type="text" value="답사 결과 공유 및 교사 회의"/></li>
     <li><input type="checkbox"/><input type="text" value="캠프 세부 시간표 및 준비물 목록 확정"/></li>
@@ -366,6 +360,117 @@ textarea.memo:focus{outline:none;border-color:#4299e1;background:white}
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+// ── Google Drive (Apps Script) 설정 ──
+// script.google.com에서 배포한 웹앱 URL만 붙여넣으면 됨 (Google 로그인 불필요)
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbyb5MHwLH_au8sGbBXinhNwWI3rw4_hScavYO8WAVThrB4EADIhyHlKjaylTjwPJOGoTA/exec';
+
+let _gdSaveTimer = null;
+
+async function _gdLoad() {
+  if (!GAS_URL) return;
+  try {
+    const res = await fetch(GAS_URL, {cache:'no-store'});
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data && data.version) {
+      applyAll(data);
+      const t = new Date(data.savedAt).toLocaleString('ko-KR',
+        {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+      document.getElementById('drive-indicator').textContent = `✅ Drive 동기화 ${t}`;
+    }
+  } catch(e) { console.error('Drive load:', e); }
+}
+
+async function _gdSave() {
+  if (!GAS_URL) return;
+  const json = JSON.stringify(collectAll());
+  // no-cors: POST가 Drive에 저장됨, 응답은 읽지 않음 (CORS 우회)
+  fetch(GAS_URL, {method:'POST', mode:'no-cors', body:json})
+    .catch(()=>{});
+  const t = new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('drive-indicator').textContent = `✅ Drive 저장 ${t}`;
+}
+
+function _gdAutoSave(){clearTimeout(_gdSaveTimer);_gdSaveTimer=setTimeout(_gdSave,1500);}
+
+// ── collectAll / applyAll ─────────────
+function _collectOverview(){
+  const c=document.getElementById('card-sec1'); if(!c)return null;
+  return{texts:[...c.querySelectorAll('input[type=text],textarea')].map(el=>el.value)};
+}
+function _applyOverview(d){
+  const c=document.getElementById('card-sec1'); if(!c||!d)return;
+  const els=[...c.querySelectorAll('input[type=text],textarea')];
+  (d.texts||[]).forEach((v,i)=>{if(els[i])els[i].value=v;});
+}
+function _collectEval(){
+  const c=document.getElementById('card-sec2'); if(!c)return null;
+  return{
+    rating:c.querySelector('.rbtn.active')?.textContent||'',
+    texts:[...c.querySelectorAll('textarea')].map(el=>el.value)
+  };
+}
+function _applyEval(d){
+  const c=document.getElementById('card-sec2'); if(!c||!d)return;
+  if(d.rating)c.querySelectorAll('.rbtn').forEach(b=>b.classList.toggle('active',b.textContent===d.rating));
+  const ta=[...c.querySelectorAll('textarea')];
+  (d.texts||[]).forEach((v,i)=>{if(ta[i])ta[i].value=v;});
+}
+function _collectTimeline(){
+  const tb=document.getElementById('tbody'); if(!tb)return null;
+  return{notes:[...tb.querySelectorAll('input[type=text]')].map(el=>el.value)};
+}
+function _applyTimeline(d){
+  const tb=document.getElementById('tbody'); if(!tb||!d)return;
+  const ins=[...tb.querySelectorAll('input[type=text]')];
+  (d.notes||[]).forEach((v,i)=>{if(ins[i])ins[i].value=v;});
+}
+function collectAll(){
+  return{
+    savedAt:new Date().toISOString(),version:2,
+    overview:_collectOverview(),
+    evaluation:_collectEval(),
+    timeline:_collectTimeline(),
+    zones:ZONES.map(z=>_collectZone(z.num)),
+    sec6:_collectSec('card-sec6'),
+    sec7:_collectSec('card-sec7'),
+    sec8:_collectSec('card-sec8')
+  };
+}
+function applyAll(data){
+  if(!data)return;
+  if(data.overview)_applyOverview(data.overview);
+  if(data.evaluation)_applyEval(data.evaluation);
+  if(data.timeline)_applyTimeline(data.timeline);
+  if(data.zones)data.zones.forEach(z=>{if(z)_applyZone(z.zNum,z);});
+  if(data.sec6)_applySec('card-sec6',data.sec6);
+  if(data.sec7)_applySec('card-sec7',data.sec7);
+  if(data.sec8)_applySec('card-sec8',data.sec8);
+}
+function exportAll(){
+  const data=collectAll();
+  localStorage.setItem('amsa-2026-all',JSON.stringify(data));
+  const t=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('all-indicator').textContent=`백업됨 ${t}`;
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+  a.download=`답사_전체데이터_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+}
+function importAll(file){
+  if(!file)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      applyAll(data);
+      localStorage.setItem('amsa-2026-all',JSON.stringify(data));
+      document.getElementById('all-indicator').textContent='복원 완료';
+    }catch{alert('JSON 파일을 읽을 수 없습니다.');}
+  };
+  r.readAsText(file);
+}
+
 // ── helpers ───────────────────────────
 function pad(n){return String(n).padStart(3,'0')}
 const DRIVE={
@@ -702,11 +807,6 @@ ZONES.forEach(z=>{
         <div class="zmeta">${z.name} &nbsp;|&nbsp; 🕐 ${z.time} &nbsp;|&nbsp; 📷 ${ph}장${vd>0?` 🎬 ${vd}개`:''}</div>
       </div>
     </div>
-    <div class="save-row">
-      <button class="zh-btn save-btn" onclick="exportZone('${z.num}','${z.ko}')">💾 저장</button>
-      <label class="zh-btn load-btn" style="cursor:pointer">📂 불러오기<input type="file" accept=".json" style="display:none" onchange="importZone('${z.num}',this.files[0]);this.value=''"/></label>
-      <span class="ls-indicator" id="ls-${z.num}"></span>
-    </div>
     <div class="tabs">
       <div class="tab active" onclick="switchTab(this,'photos-${z.num}','${z.num}')">사진</div>
       ${clTab}
@@ -784,31 +884,6 @@ function _applySec(id,d){
   (d.checks||[]).forEach((v,i)=>{if(checks[i])checks[i].checked=v});
 }
 const _secTimers={};
-function exportSec(id,name){
-  const d=_collectSec(id);
-  if(!d)return;
-  localStorage.setItem(_secKey(id),JSON.stringify(d));
-  const t=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
-  _showIndicator(id,`저장됨 ${t}`);
-  d.sectionName=name;
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([JSON.stringify(d,null,2)],{type:'application/json'}));
-  a.download=`답사_${name}.json`;
-  a.click();
-}
-function importSec(id,file){
-  if(!file)return;
-  const r=new FileReader();
-  r.onload=e=>{
-    try{
-      const d=JSON.parse(e.target.result);
-      _applySec(id,d);
-      localStorage.setItem(_secKey(id),JSON.stringify(d));
-      _showIndicator(id,'불러오기 완료');
-    }catch{alert('JSON 파일을 읽을 수 없습니다.');}
-  };
-  r.readAsText(file);
-}
 
 function _collectZone(n){
   const card=document.querySelector(`.zone-card[data-zone="${n}"]`);
@@ -851,32 +926,6 @@ function _autoSave(n){
   },700);
 }
 
-function exportZone(n,name){
-  const d=_collectZone(n);
-  if(!d)return;
-  localStorage.setItem(_lsKey(n),JSON.stringify(d));
-  const t=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
-  _showIndicator(n,`저장됨 ${t}`);
-  d.zoneName=name;
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([JSON.stringify(d,null,2)],{type:'application/json'}));
-  a.download=`답사_${n}_${name}.json`;
-  a.click();
-}
-
-function importZone(n,file){
-  if(!file)return;
-  const r=new FileReader();
-  r.onload=e=>{
-    try{
-      const d=JSON.parse(e.target.result);
-      _applyZone(n,d);
-      localStorage.setItem(_lsKey(n),JSON.stringify(d));
-      _showIndicator(n,'불러오기 완료');
-    }catch{alert('JSON 파일을 읽을 수 없습니다.');}
-  };
-  r.readAsText(file);
-}
 
 // 페이지 로드 시 복원 + 자동저장 바인딩
 document.querySelectorAll('.zone-card[data-zone]').forEach(card=>{
@@ -890,8 +939,8 @@ document.querySelectorAll('.zone-card[data-zone]').forEach(card=>{
       _showIndicator(n,`복원됨 ${t}`);
     }catch{}
   }
-  card.addEventListener('input',()=>_autoSave(n));
-  card.addEventListener('change',()=>_autoSave(n));
+  card.addEventListener('input',()=>{_autoSave(n);_gdAutoSave();});
+  card.addEventListener('change',()=>{_autoSave(n);_gdAutoSave();});
 });
 
 ['card-sec6','card-sec7','card-sec8'].forEach(id=>{
@@ -916,10 +965,38 @@ document.querySelectorAll('.zone-card[data-zone]').forEach(card=>{
           _showIndicator(id,`자동저장 ${t}`);
         }
       },700);
+      _gdAutoSave();
     });
     card.addEventListener('change',()=>card.dispatchEvent(new Event('input')));
   }
 });
+
+// 개요·종합평가 섹션도 Drive 자동저장 연결
+['card-sec1','card-sec2','card-sec4'].forEach(id=>{
+  const card=document.getElementById(id);
+  if(card){
+    card.addEventListener('input',_gdAutoSave);
+    card.addEventListener('change',_gdAutoSave);
+  }
+});
+
+// 페이지 로드 시 Drive에서 불러오기 (GAS_URL 설정 시)
+// GAS 미설정이면 localStorage 폴백
+(async()=>{
+  if(GAS_URL){
+    await _gdLoad();
+  } else {
+    const raw=localStorage.getItem('amsa-2026-all');
+    if(raw){
+      try{
+        const data=JSON.parse(raw);
+        if(data.overview)_applyOverview(data.overview);
+        if(data.evaluation)_applyEval(data.evaluation);
+        if(data.timeline)_applyTimeline(data.timeline);
+      }catch{}
+    }
+  }
+})();
 
 // ── lightbox ──────────────────────────
 let _lbList=[],_lbIdx=0;
