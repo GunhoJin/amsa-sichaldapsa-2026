@@ -292,7 +292,6 @@ textarea.memo:focus{outline:none;border-color:#4299e1;background:white}
       <thead><tr><th>구분</th><th>의료기관</th><th>이동시간</th><th>비고</th><th>지도</th></tr></thead>
       <tbody>
         <tr><td><strong>1차 의료기관</strong></td><td>소양보건지소</td><td class="dist-cell">약 5분</td><td>경증환자, 응급처치 가능 (평일 운영)</td><td><a class="hosp-link" href="https://www.google.com/maps/search/소양보건지소+완주군" target="_blank">지도 →</a></td></tr>
-        <tr><td><strong>야간 진료</strong></td><td>키즈드림아이엠씨병원</td><td class="dist-cell">약 15~20분</td><td>평일 21시, 주말 18시까지 운영 (소아 진료 가능)</td><td><a class="hosp-link" href="https://www.google.com/maps/search/키즈드림아이엠씨병원+완주" target="_blank">지도 →</a></td></tr>
         <tr><td><strong>응급 (종합병원)</strong></td><td>대자인병원</td><td class="dist-cell">약 20분</td><td>24시간 응급실 운영</td><td><a class="hosp-link" href="https://www.google.com/maps/search/대자인병원+전주" target="_blank">지도 →</a></td></tr>
         <tr><td><strong>중증 (권역센터)</strong></td><td>전북대학교병원</td><td class="dist-cell">약 25분</td><td>권역응급의료센터, 중증외상·중증응급환자 이송</td><td><a class="hosp-link" href="https://www.google.com/maps/search/전북대학교병원" target="_blank">지도 →</a></td></tr>
       </tbody>
@@ -621,7 +620,6 @@ ZONES.forEach(z=>{
 
 const HOSPITALS=[
   {name:'소양보건지소',type:'1차 의료기관',dist:'약 5분',note:'경증환자, 응급처치 가능 (평일 운영)',color:'#38a169',lat:35.897,lng:127.218,url:'https://www.google.com/maps/search/소양보건지소+완주군'},
-  {name:'키즈드림아이엠씨병원',type:'야간 진료',dist:'약 15~20분',note:'평일 21시, 주말 18시까지 (소아 진료)',color:'#d69e2e',lat:35.821,lng:127.098,url:'https://www.google.com/maps/search/키즈드림아이엠씨병원+완주'},
   {name:'대자인병원',type:'응급 (종합병원)',dist:'약 20분',note:'24시간 응급실 운영',color:'#e53e3e',lat:35.857,lng:127.150,url:'https://www.google.com/maps/search/대자인병원+전주'},
   {name:'전북대학교병원',type:'중증 (권역센터)',dist:'약 25분',note:'권역응급의료센터, 중증외상·중증응급환자 이송',color:'#805ad5',lat:35.851,lng:127.137,url:'https://www.google.com/maps/search/전북대학교병원'},
 ];
