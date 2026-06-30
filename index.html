@@ -1,7 +1,4 @@
 <!DOCTYPE html>
-</html>
-</body>
-<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8"/>
@@ -155,6 +152,15 @@ textarea.memo:focus{outline:none;border-color:#4299e1;background:white}
 .zh-btn:hover{background:#edf2f7;border-color:#a0aec0}
 .zh-btn.save-btn:hover{background:#ebf8ff;border-color:#90cdf4;color:#2b6cb0}
 .zh-btn.load-btn:hover{background:#f0fff4;border-color:#9ae6b4;color:#276749}
+.hosp-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+.hosp-table th{background:#fff5f5;color:#c53030;padding:8px 10px;text-align:left;font-weight:600;border-bottom:2px solid #feb2b2;white-space:nowrap}
+.hosp-table td{padding:7px 10px;border-bottom:1px solid #e2e8f0;vertical-align:top;font-size:12px}
+.hosp-table tr:last-child td{border-bottom:none}
+.hosp-table .dist-cell{font-weight:700;color:#e53e3e;white-space:nowrap;text-align:right}
+.hosp-link{color:#2b6cb0;text-decoration:none;font-weight:600}
+.hosp-link:hover{text-decoration:underline}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding-bottom:12px;border-bottom:1px solid #e2e8f0;margin-bottom:18px}
+.card-hdr>.card-title{padding-bottom:0;border-bottom:none;margin-bottom:0}
 .ls-indicator{font-size:11px;color:#a0aec0;white-space:nowrap}
 .lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);
         border:none;color:white;font-size:52px;line-height:1;padding:6px 16px;cursor:pointer;
@@ -261,27 +267,49 @@ textarea.memo:focus{outline:none;border-color:#4299e1;background:white}
 <div id="zones"></div>
 
 <!-- ⑥ 안전 및 비상대응 ─────────────────────────── -->
-<div class="card">
-  <div class="card-title"><span class="icon">🚑</span> 6. 안전 및 비상대응 계획</div>
-  <div class="info-grid">
+<div class="card" id="card-sec6">
+  <div class="card-hdr">
+    <div class="card-title"><span class="icon">🚑</span> 6. 안전 및 비상대응 계획</div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <button class="zh-btn save-btn" onclick="exportSec('card-sec6','안전및비상대응')">💾 저장</button>
+      <label class="zh-btn load-btn" style="cursor:pointer">📂 불러오기<input type="file" accept=".json" style="display:none" onchange="importSec('card-sec6',this.files[0]);this.value=''"/></label>
+      <span class="ls-indicator" id="ls-card-sec6"></span>
+    </div>
+  </div>
+  <div class="info-grid" style="grid-template-columns:1fr 1fr">
     <div class="info-box">
       <h4>원내 안전 관리</h4>
       <textarea placeholder="비상 대기 인원, 소화기 위치, 야간 통제 방침 등…"></textarea>
-    </div>
-    <div class="info-box">
-      <h4>인근 의료기관</h4>
-      <textarea placeholder="1차: 보건지소&#10;응급: 인근 종합병원 (차량 약 __)&#10;중증: 권역센터 (차량 약 __)"></textarea>
     </div>
     <div class="info-box">
       <h4>위험 구역 현황</h4>
       <textarea placeholder="계곡, 경사지, 출입 제한 구역 등…"></textarea>
     </div>
   </div>
+  <div class="info-box" style="margin-top:16px">
+    <h4>🏥 인근 의료기관 (달팽이 아지트 기준 · 지도에서 병원 마커를 클릭하면 위치 확인 가능)</h4>
+    <table class="hosp-table">
+      <thead><tr><th>구분</th><th>의료기관</th><th>이동시간</th><th>비고</th><th>지도</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1차 의료기관</strong></td><td>소양보건지소</td><td class="dist-cell">약 5분</td><td>경증환자, 응급처치 가능 (평일 운영)</td><td><a class="hosp-link" href="https://www.google.com/maps/search/소양보건지소+완주군" target="_blank">지도 →</a></td></tr>
+        <tr><td><strong>야간 진료</strong></td><td>키즈드림아이엠씨병원</td><td class="dist-cell">약 15~20분</td><td>평일 21시, 주말 18시까지 운영 (소아 진료 가능)</td><td><a class="hosp-link" href="https://www.google.com/maps/search/키즈드림아이엠씨병원+완주" target="_blank">지도 →</a></td></tr>
+        <tr><td><strong>응급 (종합병원)</strong></td><td>대자인병원</td><td class="dist-cell">약 20분</td><td>24시간 응급실 운영</td><td><a class="hosp-link" href="https://www.google.com/maps/search/대자인병원+전주" target="_blank">지도 →</a></td></tr>
+        <tr><td><strong>중증 (권역센터)</strong></td><td>전북대학교병원</td><td class="dist-cell">약 25분</td><td>권역응급의료센터, 중증외상·중증응급환자 이송</td><td><a class="hosp-link" href="https://www.google.com/maps/search/전북대학교병원" target="_blank">지도 →</a></td></tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <!-- ⑦ 대관 조건 및 행정 ─────────────────────────── -->
-<div class="card">
-  <div class="card-title"><span class="icon">📝</span> 7. 대관 조건 및 행정 사항</div>
+<div class="card" id="card-sec7">
+  <div class="card-hdr">
+    <div class="card-title"><span class="icon">📝</span> 7. 대관 조건 및 행정 사항</div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <button class="zh-btn save-btn" onclick="exportSec('card-sec7','대관조건및행정')">💾 저장</button>
+      <label class="zh-btn load-btn" style="cursor:pointer">📂 불러오기<input type="file" accept=".json" style="display:none" onchange="importSec('card-sec7',this.files[0]);this.value=''"/></label>
+      <span class="ls-indicator" id="ls-card-sec7"></span>
+    </div>
+  </div>
   <div class="two-col">
     <div class="overview-grid">
       <div class="ov-item">
@@ -313,8 +341,15 @@ textarea.memo:focus{outline:none;border-color:#4299e1;background:white}
 </div>
 
 <!-- ⑧ 향후 일정 ──────────────────────────────── -->
-<div class="card">
-  <div class="card-title"><span class="icon">📅</span> 8. 향후 일정 및 준비사항</div>
+<div class="card" id="card-sec8">
+  <div class="card-hdr">
+    <div class="card-title"><span class="icon">📅</span> 8. 향후 일정 및 준비사항</div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <button class="zh-btn save-btn" onclick="exportSec('card-sec8','향후일정')">💾 저장</button>
+      <label class="zh-btn load-btn" style="cursor:pointer">📂 불러오기<input type="file" accept=".json" style="display:none" onchange="importSec('card-sec8',this.files[0]);this.value=''"/></label>
+      <span class="ls-indicator" id="ls-card-sec8"></span>
+    </div>
+  </div>
   <ul class="sched-list" id="sched-list">
     <li><input type="checkbox"/><input type="text" value="답사 결과 공유 및 교사 회의"/></li>
     <li><input type="checkbox"/><input type="text" value="캠프 세부 시간표 및 준비물 목록 확정"/></li>
@@ -584,6 +619,22 @@ ZONES.forEach(z=>{
    .bindPopup(`<strong>${z.num}. ${z.name}</strong><br/><small style="color:#555">${z.ko}</small><br/><small>🕐 ${z.time}</small>`);
 });
 
+const HOSPITALS=[
+  {name:'소양보건지소',type:'1차 의료기관',dist:'약 5분',note:'경증환자, 응급처치 가능 (평일 운영)',color:'#38a169',lat:35.897,lng:127.218,url:'https://www.google.com/maps/search/소양보건지소+완주군'},
+  {name:'키즈드림아이엠씨병원',type:'야간 진료',dist:'약 15~20분',note:'평일 21시, 주말 18시까지 (소아 진료)',color:'#d69e2e',lat:35.821,lng:127.098,url:'https://www.google.com/maps/search/키즈드림아이엠씨병원+완주'},
+  {name:'대자인병원',type:'응급 (종합병원)',dist:'약 20분',note:'24시간 응급실 운영',color:'#e53e3e',lat:35.857,lng:127.150,url:'https://www.google.com/maps/search/대자인병원+전주'},
+  {name:'전북대학교병원',type:'중증 (권역센터)',dist:'약 25분',note:'권역응급의료센터, 중증외상·중증응급환자 이송',color:'#805ad5',lat:35.851,lng:127.137,url:'https://www.google.com/maps/search/전북대학교병원'},
+];
+HOSPITALS.forEach(h=>{
+  const hIcon=L.divIcon({
+    className:'',
+    html:`<div style="width:26px;height:26px;border-radius:5px;background:${h.color};color:white;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.4);border:2px solid white;line-height:1">+</div>`,
+    iconSize:[26,26],iconAnchor:[13,13],popupAnchor:[0,-16]
+  });
+  L.marker([h.lat,h.lng],{icon:hIcon}).addTo(map)
+   .bindPopup(`<div style="min-width:190px"><strong>🏥 ${h.name}</strong><br/><span style="color:#718096;font-size:12px">${h.type}</span><br/><span style="color:#e53e3e;font-weight:700">🚗 ${h.dist}</span><br/><span style="font-size:12px;color:#4a5568">${h.note}</span><br/><a href="${h.url}" target="_blank" style="color:#2b6cb0;font-size:12px;font-weight:600">지도에서 보기 →</a></div>`);
+});
+
 const rz=ORDER.map(i=>ZONES[i]);
 const coords=rz.map(z=>`${z.lng},${z.lat}`).join(';');
 fetch(`https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson`)
@@ -720,6 +771,51 @@ function addSched(){
 
 // ── localStorage save / load ──────────
 function _lsKey(n){return`amsa-2026-z${n}`}
+function _secKey(id){return`amsa-2026-${id}`}
+
+function _collectSec(id){
+  const card=document.getElementById(id);
+  if(!card)return null;
+  return{
+    savedAt:new Date().toISOString(),
+    texts:[...card.querySelectorAll('input[type=text],textarea')].map(el=>el.value),
+    checks:[...card.querySelectorAll('input[type=checkbox]')].map(el=>el.checked)
+  };
+}
+function _applySec(id,d){
+  const card=document.getElementById(id);
+  if(!card||!d)return;
+  const texts=[...card.querySelectorAll('input[type=text],textarea')];
+  (d.texts||[]).forEach((v,i)=>{if(texts[i])texts[i].value=v});
+  const checks=[...card.querySelectorAll('input[type=checkbox]')];
+  (d.checks||[]).forEach((v,i)=>{if(checks[i])checks[i].checked=v});
+}
+const _secTimers={};
+function exportSec(id,name){
+  const d=_collectSec(id);
+  if(!d)return;
+  localStorage.setItem(_secKey(id),JSON.stringify(d));
+  const t=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+  _showIndicator(id,`저장됨 ${t}`);
+  d.sectionName=name;
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(d,null,2)],{type:'application/json'}));
+  a.download=`답사_${name}.json`;
+  a.click();
+}
+function importSec(id,file){
+  if(!file)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    try{
+      const d=JSON.parse(e.target.result);
+      _applySec(id,d);
+      localStorage.setItem(_secKey(id),JSON.stringify(d));
+      _showIndicator(id,'불러오기 완료');
+    }catch{alert('JSON 파일을 읽을 수 없습니다.');}
+  };
+  r.readAsText(file);
+}
 
 function _collectZone(n){
   const card=document.querySelector(`.zone-card[data-zone="${n}"]`);
@@ -803,6 +899,33 @@ document.querySelectorAll('.zone-card[data-zone]').forEach(card=>{
   }
   card.addEventListener('input',()=>_autoSave(n));
   card.addEventListener('change',()=>_autoSave(n));
+});
+
+['card-sec6','card-sec7','card-sec8'].forEach(id=>{
+  const raw=localStorage.getItem(_secKey(id));
+  if(raw){
+    try{
+      const d=JSON.parse(raw);
+      _applySec(id,d);
+      const t=new Date(d.savedAt).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+      _showIndicator(id,`복원됨 ${t}`);
+    }catch{}
+  }
+  const card=document.getElementById(id);
+  if(card){
+    card.addEventListener('input',()=>{
+      clearTimeout(_secTimers[id]);
+      _secTimers[id]=setTimeout(()=>{
+        const d=_collectSec(id);
+        if(d){
+          localStorage.setItem(_secKey(id),JSON.stringify(d));
+          const t=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+          _showIndicator(id,`자동저장 ${t}`);
+        }
+      },700);
+    });
+    card.addEventListener('change',()=>card.dispatchEvent(new Event('input')));
+  }
 });
 
 // ── lightbox ──────────────────────────
