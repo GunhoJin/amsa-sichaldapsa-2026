@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>여름 신앙학교 · 개인별 역할 카드</title>
+<style>
+  :root{
+    --paper:#ffffff; --bg:#eef5f6;
+    --ink:#16272b; --muted:#5c7176; --faint:#8aa0a4;
+    --line:#d3e2e4; --line-soft:#e6eff0;
+    --accent:#0e7c9b; --accent-ink:#0a5f78; --accent-soft:#e2f2f6;
+    --hi-bg:#eaf6f9; --hi-bar:#0e7c9b;
+    --band:#0e7c9b;
+    --shadow:0 1px 2px rgba(20,50,60,.06),0 6px 20px rgba(20,50,60,.06);
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#162226; --bg:#0e1719;
+      --ink:#e7f1f2; --muted:#a2b6ba; --faint:#6f868a;
+      --line:#2a3b3f; --line-soft:#223033;
+      --accent:#4bbcd8; --accent-ink:#8fd9ea; --accent-soft:#123138;
+      --hi-bg:#12333b; --hi-bar:#4bbcd8;
+      --band:#12333b;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"]{
+    --paper:#ffffff; --bg:#eef5f6; --ink:#16272b; --muted:#5c7176; --faint:#8aa0a4;
+    --line:#d3e2e4; --line-soft:#e6eff0; --accent:#0e7c9b; --accent-ink:#0a5f78;
+    --accent-soft:#e2f2f6; --hi-bg:#eaf6f9; --hi-bar:#0e7c9b; --band:#0e7c9b;
+    --shadow:0 1px 2px rgba(20,50,60,.06),0 6px 20px rgba(20,50,60,.06);
+  }
+  :root[data-theme="dark"]{
+    --paper:#162226; --bg:#0e1719; --ink:#e7f1f2; --muted:#a2b6ba; --faint:#6f868a;
+    --line:#2a3b3f; --line-soft:#223033; --accent:#4bbcd8; --accent-ink:#8fd9ea;
+    --accent-soft:#123138; --hi-bg:#12333b; --hi-bar:#4bbcd8; --band:#12333b;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Pretendard",-apple-system,"Apple SD Gothic Neo","Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+    font-feature-settings:"tnum";
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+
+  /* ---- screen toolbar ---- */
+  .bar{
+    position:sticky; top:0; z-index:10;
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    padding:14px 22px; background:var(--paper); border-bottom:1px solid var(--line);
+  }
+  .bar h1{font-size:15px; margin:0; font-weight:700; letter-spacing:-.01em}
+  .bar .sub{font-size:12.5px; color:var(--muted)}
+  .bar .spacer{flex:1}
+  .btn{
+    font:inherit; font-size:13px; font-weight:600; cursor:pointer;
+    color:#fff; background:var(--accent); border:none; border-radius:8px;
+    padding:8px 15px;
+  }
+  .btn:focus-visible{outline:2px solid var(--accent-ink); outline-offset:2px}
+  .legend{display:flex; align-items:center; gap:7px; font-size:12px; color:var(--muted)}
+  .swatch{width:26px; height:14px; border-radius:3px; background:var(--hi-bg); border-left:3px solid var(--hi-bar)}
+
+  .sheet{max-width:900px; margin:0 auto; padding:26px 18px 60px}
+
+  /* ---- card ---- */
+  .card{
+    background:var(--paper); border:1px solid var(--line); border-radius:14px;
+    box-shadow:var(--shadow); overflow:hidden; margin:0 0 22px;
+    break-inside:avoid;
+  }
+  .head{
+    display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;
+    padding:16px 20px 14px; border-bottom:1px solid var(--line-soft);
+    border-top:4px solid var(--band);
+  }
+  .name{font-size:22px; font-weight:800; letter-spacing:-.02em; margin:0}
+  .head .role{font-size:13.5px; color:var(--muted); font-weight:600}
+  .badges{display:flex; gap:6px; margin-left:auto; flex-wrap:wrap}
+  .badge{
+    font-size:11px; font-weight:700; letter-spacing:.02em;
+    padding:4px 9px; border-radius:999px;
+    background:var(--accent-soft); color:var(--accent-ink);
+  }
+  .badge.alt{background:transparent; color:var(--muted); border:1px solid var(--line)}
+  .prep{
+    padding:10px 20px; font-size:12.5px; color:var(--muted);
+    background:var(--accent-soft); border-bottom:1px solid var(--line-soft);
+  }
+  .prep b{color:var(--accent-ink)}
+
+  table{width:100%; border-collapse:collapse; font-size:12.5px}
+  th,td{text-align:left; padding:7px 12px; vertical-align:top; border-bottom:1px solid var(--line-soft)}
+  thead th{
+    font-size:10.5px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--faint); font-weight:700; background:transparent;
+  }
+  td.t{white-space:nowrap; font-variant-numeric:tabular-nums; color:var(--muted); width:104px}
+  td.p{color:var(--muted); width:150px}
+  td.r{color:var(--ink)}
+  tr.hi td{background:var(--hi-bg)}
+  tr.hi td.t{border-left:3px solid var(--hi-bar); padding-left:9px}
+  tr.hi td.r{font-weight:700; color:var(--accent-ink)}
+  td.dash{color:var(--faint)}
+
+  /* compact card list */
+  .compact{padding:6px 20px 14px}
+  .compact .row{display:flex; gap:14px; padding:8px 0; border-bottom:1px solid var(--line-soft)}
+  .compact .row:last-child{border-bottom:none}
+  .compact .ct{white-space:nowrap; font-variant-numeric:tabular-nums; color:var(--muted); width:104px; font-size:12.5px}
+  .compact .cr{font-size:13px; font-weight:600; color:var(--accent-ink)}
+  .compact .note{font-weight:400; color:var(--muted)}
+
+  .foot{max-width:900px; margin:10px auto 0; padding:0 20px; color:var(--faint); font-size:11.5px}
+
+  @media print{
+    :root{--bg:#fff}
+    body{background:#fff}
+    .bar,.foot{display:none}
+    .sheet{max-width:none; margin:0; padding:0}
+    .card{
+      box-shadow:none; border:1px solid #c9d8da; border-radius:10px;
+      margin:0 0 14px; page-break-inside:avoid;
+    }
+    @page{size:A4 portrait; margin:14mm}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bar">
+  <div>
+    <h1>여름 신앙학교 · 개인별 역할 카드</h1>
+    <div class="sub">2026.07.25 (토) · 성당 앞마당 · 물놀이</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="legend"><span class="swatch"></span> 물빛 강조 = 내 담당</div>
+  <button class="btn" onclick="window.print()">인쇄 / PDF 저장</button>
+</div>
+
+<div class="sheet" id="sheet"></div>
+<div class="foot">각 선생님은 본인 카드만 인쇄해 지참하세요. 원본: 워크북 · 프로그램 큐시트(노션). 전체 흐름 위에 본인 담당을 물빛으로 표시했습니다.</div>
+
+<script>
+const SLOTS = [
+  ["07:00~09:00","집합·설치"],
+  ["09:00~09:30","인원체크·이름표"],
+  ["09:30~10:10","시작기도·안전규칙"],
+  ["10:10~10:30","단체사진·레크"],
+  ["10:30~12:00","물놀이(로테이션)"],
+  ["12:00~12:10","물기제거·점심준비"],
+  ["12:10~13:20","점심(카레라이스)"],
+  ["13:20~14:00","물놀이·레크"],
+  ["14:00~14:30","신부님-무궁화"],
+  ["14:30~15:00","간식"],
+  ["15:00~15:30","부모물총놀이"],
+  ["15:30~15:50","정리"],
+  ["15:50~16:00","마침기도·끝인사"],
+];
+// duty entry: [text, highlight?] ; "" => dash
+const D = (t,hi)=>({t:t||"",hi:!!hi});
+
+const PEOPLE = [
+  { name:"이하연 실비아T", role:"전체 총괄 / 세라핌 조", badges:["총괄","세라핌 조"],
+    prep:"준비물: 발판(목욕탕의자) 1 · 뜰채 2 · 조별 색 라벨지 &nbsp;|&nbsp; 상시: <b>총괄 체크리스트</b>(시간·안전요원 위치·미참석 아동·신부님 타이밍)",
+    duties:[
+      D("총괄 지휘 / 발판·뜰채 준비 확인",1),
+      D("인원체크 총괄",1),
+      D("안전규칙 안내 / 신부님께 시작 연락",1),
+      D("소성전 조별 호명·순서대로 내보내기",1),
+      D("세라핌 조(5세) 케어 + P1 그림 재작업 지원",1),
+      D("돗자리 준비 지휘",1),
+      D("세라핌 조 식사 인솔"),
+      D("세라핌 조 케어"),
+      D("무궁화 사전 브리핑 / 마이크 서포트",1),
+      D("세라핌 조 케어"),
+      D("부모 물총놀이 진행"),
+      D("전체 정리 지휘"),
+      D("끝인사 / 신부님 마침기도 보조",1),
+    ]},
+  { name:"이민경 루치아T", role:"프로그램1(물풍선) / 미카엘 조", badges:["프로그램1","미카엘 조"],
+    prep:"메모: <b>이준용 베드로T와 P1·미카엘 조 분담</b>(교체 가능), 한 분은 프로그램 준비",
+    duties:[
+      D("물풍선 만들기 / P1 세팅"),
+      D("미카엘 조 인원체크",1),
+      D("미카엘 조 착석"),
+      D("미카엘 조 인솔"),
+      D("프로그램1 물풍선게임 주 진행",1),
+      D("미카엘 조 물기 제거"),
+      D("미카엘 조 인원체크·식사 인솔",1),
+      D("미카엘 조 물놀이"),
+      D("미카엘 조 대열 안전"),
+      D("미카엘 조"),
+      D("부모 물총놀이 진행"),
+      D("미카엘 조 짐 확인"),
+      D("미카엘 조 마무리 인원체크",1),
+    ]},
+  { name:"이준용 베드로T", role:"프로그램1 / 미카엘 조 지원", badges:["프로그램1","미카엘 조"],
+    prep:"메모: 이민경 루치아T와 <b>교체 가능</b>. 한 분이 P1 진행 시 다른 분은 미카엘 조 인솔",
+    duties:[
+      D("물풍선 만들기 / P1 세팅"),
+      D("미카엘 조 지원"),
+      D("미카엘 조 착석 지원"),
+      D("미카엘 조 인솔"),
+      D("프로그램1 컵 배부·결과 진행(보조)",1),
+      D("미카엘 조 물기 제거"),
+      D("미카엘 조 식사 지원"),
+      D("미카엘 조 물놀이"),
+      D("미카엘 조 대열 안전"),
+      D("미카엘 조"),
+      D("부모 물총놀이 진행"),
+      D("미카엘 조 짐 확인"),
+      D("미카엘 조 마무리"),
+    ]},
+  { name:"조보영 카타리나T", role:"프로그램2(물 옮기기) / 가브리엘 조", badges:["프로그램2","가브리엘 조"],
+    prep:"메모: 김채현 마리스텔라T와 <b>교체 가능</b>",
+    duties:[
+      D("P2 대야·그림 세팅"),
+      D("가브리엘 조 인원체크",1),
+      D("가브리엘 조 착석"),
+      D("밖에서 아이들 받아 사진 배치도대로 착석",1),
+      D("프로그램2 물 옮기기게임 진행",1),
+      D("가브리엘 조 물기 제거"),
+      D("가브리엘 조 인원체크·식사 인솔",1),
+      D("가브리엘 조 물놀이"),
+      D("가브리엘 조 대열 안전"),
+      D("가브리엘 조"),
+      D("부모 물총놀이 진행"),
+      D("가브리엘 조 짐 확인"),
+      D("가브리엘 조 마무리 인원체크",1),
+    ]},
+  { name:"김채현 마리스텔라T", role:"음향 / 레크 / 프로그램2", badges:["음향","레크"],
+    prep:"상시: <b>음향 담당</b>(스피커·노트북·마이크)",
+    duties:[
+      D("음향 세팅 / 레크 음원 확인",1),
+      D("음향 대기"),
+      D("음향 대기"),
+      D("레크 2곡 진행",1),
+      D("프로그램2 물 옮기기게임 진행",1),
+      D("음향 관리"),
+      D("음향 관리"),
+      D("레크(축제·너랑 나랑 사랑) 진행",1),
+      D("음향 서포트"),
+      D("음향 서포트"),
+      D("음향 서포트"),
+      D("음향 정리"),
+      D("음향 정리"),
+    ]},
+  { name:"한지희 요안나T", role:"라파엘 조 / 수영장 안전지킴이", badges:["라파엘 조","안전지킴이"],
+    prep:"준비물: 발판(목욕탕의자) 1",
+    duties:[
+      D("발판 준비 / 수영장 세팅"),
+      D("라파엘 조 인원체크",1),
+      D("라파엘 조 착석"),
+      D("라파엘 조 인솔"),
+      D("수영장 안전지킴이(뜰채)",1),
+      D("라파엘 조 물기 제거"),
+      D("라파엘 조 인원체크·식사 인솔",1),
+      D("수영장 안전지킴이(뜰채)",1),
+      D("라파엘 조 대열 안전"),
+      D("라파엘 조"),
+      D("수영장 안전",1),
+      D("라파엘 조 짐 확인"),
+      D("라파엘 조 마무리 인원체크",1),
+    ]},
+  { name:"진건호 토마스T", role:"수영장 안전지킴이 / 돗자리", badges:["안전지킴이","설치"],
+    prep:"설치·안전 중심. 오전 물놀이·오후 물놀이 뜰채 담당",
+    duties:[
+      D("수영장·발판·미끄럼방지 설치",1),
+      D("설치 마무리"),
+      D("대기"),
+      D("대기"),
+      D("수영장 안전지킴이(뜰채)",1),
+      D("돗자리 피기",1),
+      D("식사 지원"),
+      D("수영장 안전지킴이(뜰채)",1),
+      D("대열 안전"),
+      D("대기"),
+      D("수영장 안전",1),
+      D("시설 정리",1),
+      D("마무리"),
+    ]},
+  { name:"강성훈 요아킴", role:"사진 / 남아 화장실 안내", badges:["봉사자","사진"],
+    prep:"상시: <b>사진 촬영 · 남아 화장실 안내</b>",
+    duties:[
+      D("설치 지원"),
+      D("소성전 가방 수거 → 의약품 테이블 아래로 이동",1),
+      D("사진 촬영 / 남아 화장실 안내",1),
+      D("단체사진 촬영",1),
+      D("사진 / 남아 화장실 안내",1),
+      D(""),
+      D("식사 사진"),
+      D("사진 / 남아 화장실 안내",1),
+      D("무궁화 사진",1),
+      D("간식 사진"),
+      D("부모 물총 사진",1),
+      D(""),
+      D("끝인사 사진",1),
+    ]},
+  // ---- compact support cards ----
+  { name:"서혜정 스텔라T", role:"미니게임존 / 여아 화장실 (오전)", badges:["오전 담당"],
+    compact:[
+      ["07:00~09:00","미니게임존 세팅 지원",1],
+      ["09:00~12:00","미니게임존(수돗가·천막3) 관리 + 여아 화장실 안내",1],
+      ["12:10 이후","오후 최미진 마리아T와 교대",0],
+    ]},
+  { name:"최미진 마리아T", role:"미니게임존 / 여아 화장실 (오후) + 돗자리", badges:["오후 담당","돗자리"],
+    compact:[
+      ["12:00~12:10","점심 돗자리 피기",1],
+      ["13:20~15:30","미니게임존 관리 + 여아 화장실 안내 (오후 교대)",1],
+      ["15:30~15:50","미니게임존 정리",1],
+    ]},
+  { name:"김남정 리베라타T", role:"점심 돗자리 / 식사 준비", badges:["돗자리"],
+    compact:[
+      ["12:00~12:10","점심 돗자리 피기",1],
+      ["12:10~13:20","식사 준비·배식 지원",1],
+      ["그 외","조 아이들 식사 준비 지원",0],
+    ]},
+  { name:"클라라 자매님", role:"의약품 (문의 예정)", badges:["보호자","의약품"],
+    compact:[
+      ["상시","의약품 테이블 관리 (천막 한켠)",1],
+      ["상시","대리석 바닥으로 아이들 진입 금지 안내",1],
+    ]},
+];
+
+function esc(s){return s.replace(/&(?!\w+;|#)/g,"&amp;")}
+function fullTable(p){
+  let rows = p.duties.map((d,i)=>{
+    const s=SLOTS[i];
+    const rcell = d.t ? `<td class="r">${d.t}</td>` : `<td class="r dash">—</td>`;
+    return `<tr class="${d.hi?'hi':''}"><td class="t">${s[0]}</td><td class="p">${s[1]}</td>${rcell}</tr>`;
+  }).join("");
+  return `<table><thead><tr><th>시간</th><th>전체 프로그램</th><th>내 역할</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+function compactList(p){
+  const rows=p.compact.map(c=>`<div class="row"><div class="ct">${c[0]}</div><div class="cr ${c[2]?'':'note'}">${c[1]}</div></div>`).join("");
+  return `<div class="compact">${rows}</div>`;
+}
+function card(p){
+  const badges=p.badges.map((b,i)=>`<span class="badge ${i>0?'alt':''}">${b}</span>`).join("");
+  const body=p.duties?fullTable(p):compactList(p);
+  const prep=p.prep?`<div class="prep">${p.prep}</div>`:"";
+  return `<section class="card">
+    <div class="head"><h2 class="name">${p.name}</h2><span class="role">${p.role}</span><span class="badges">${badges}</span></div>
+    ${prep}${body}
+  </section>`;
+}
+document.getElementById("sheet").innerHTML = PEOPLE.map(card).join("");
+</script>
+</body>
+</html>
