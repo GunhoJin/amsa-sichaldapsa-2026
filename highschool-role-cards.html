@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>중고등부 여름캠프 · 개인별 역할 카드</title>
+<style>
+  :root{
+    --paper:#ffffff; --bg:#f7f1ea;
+    --ink:#2b1f16; --muted:#7a6a5a; --faint:#a4917d;
+    --line:#e6d9c8; --line-soft:#f0e6d9;
+    --accent:#b5651d; --accent-ink:#8a4c15; --accent-soft:#f6e6d4;
+    --hi-bg:#fbeedd; --hi-bar:#b5651d;
+    --band:#b5651d;
+    --shadow:0 1px 2px rgba(60,40,20,.06),0 6px 20px rgba(60,40,20,.06);
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#221a12; --bg:#17110b;
+      --ink:#f2e9de; --muted:#c2ac93; --faint:#8a7560;
+      --line:#3c2f22; --line-soft:#2c2318;
+      --accent:#e0954a; --accent-ink:#f3c48e; --accent-soft:#3a2a17;
+      --hi-bg:#3a2a15; --hi-bar:#e0954a;
+      --band:#3a2a15;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"]{
+    --paper:#ffffff; --bg:#f7f1ea; --ink:#2b1f16; --muted:#7a6a5a; --faint:#a4917d;
+    --line:#e6d9c8; --line-soft:#f0e6d9; --accent:#b5651d; --accent-ink:#8a4c15;
+    --accent-soft:#f6e6d4; --hi-bg:#fbeedd; --hi-bar:#b5651d; --band:#b5651d;
+    --shadow:0 1px 2px rgba(60,40,20,.06),0 6px 20px rgba(60,40,20,.06);
+  }
+  :root[data-theme="dark"]{
+    --paper:#221a12; --bg:#17110b; --ink:#f2e9de; --muted:#c2ac93; --faint:#8a7560;
+    --line:#3c2f22; --line-soft:#2c2318; --accent:#e0954a; --accent-ink:#f3c48e;
+    --accent-soft:#3a2a17; --hi-bg:#3a2a15; --hi-bar:#e0954a; --band:#3a2a15;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Pretendard",-apple-system,"Apple SD Gothic Neo","Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+    font-feature-settings:"tnum";
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+
+  .bar{
+    position:sticky; top:0; z-index:10;
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    padding:14px 22px; background:var(--paper); border-bottom:1px solid var(--line);
+  }
+  .bar h1{font-size:15px; margin:0; font-weight:700; letter-spacing:-.01em}
+  .bar .sub{font-size:12.5px; color:var(--muted)}
+  .bar .spacer{flex:1}
+  .btn{
+    font:inherit; font-size:13px; font-weight:600; cursor:pointer;
+    color:#fff; background:var(--accent); border:none; border-radius:8px;
+    padding:8px 15px;
+  }
+  .btn:focus-visible{outline:2px solid var(--accent-ink); outline-offset:2px}
+  .legend{display:flex; align-items:center; gap:7px; font-size:12px; color:var(--muted)}
+  .swatch{width:26px; height:14px; border-radius:3px; background:var(--hi-bg); border-left:3px solid var(--hi-bar)}
+
+  .sheet{max-width:900px; margin:0 auto; padding:26px 18px 60px}
+
+  .card{
+    background:var(--paper); border:1px solid var(--line); border-radius:14px;
+    box-shadow:var(--shadow); overflow:hidden; margin:0 0 22px;
+    break-inside:avoid;
+  }
+  .head{
+    display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;
+    padding:16px 20px 14px; border-bottom:1px solid var(--line-soft);
+    border-top:4px solid var(--band);
+  }
+  .name{font-size:22px; font-weight:800; letter-spacing:-.02em; margin:0}
+  .head .role{font-size:13.5px; color:var(--muted); font-weight:600}
+  .badges{display:flex; gap:6px; margin-left:auto; flex-wrap:wrap}
+  .badge{
+    font-size:11px; font-weight:700; letter-spacing:.02em;
+    padding:4px 9px; border-radius:999px;
+    background:var(--accent-soft); color:var(--accent-ink);
+  }
+  .badge.alt{background:transparent; color:var(--muted); border:1px solid var(--line)}
+  .prep{
+    padding:10px 20px; font-size:12.5px; color:var(--muted);
+    background:var(--accent-soft); border-bottom:1px solid var(--line-soft);
+  }
+  .prep b{color:var(--accent-ink)}
+
+  table{width:100%; border-collapse:collapse; font-size:12.5px}
+  th,td{text-align:left; padding:7px 12px; vertical-align:top; border-bottom:1px solid var(--line-soft)}
+  thead th{
+    font-size:10.5px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--faint); font-weight:700; background:transparent;
+  }
+  td.t{white-space:nowrap; font-variant-numeric:tabular-nums; color:var(--muted); width:112px}
+  td.p{color:var(--muted); width:150px}
+  td.r{color:var(--ink)}
+  tr.hi td{background:var(--hi-bg)}
+  tr.hi td.t{border-left:3px solid var(--hi-bar); padding-left:9px}
+  tr.hi td.r{font-weight:700; color:var(--accent-ink)}
+  td.dash{color:var(--faint)}
+
+  .compact{padding:6px 20px 14px}
+  .compact .row{display:flex; gap:14px; padding:8px 0; border-bottom:1px solid var(--line-soft)}
+  .compact .row:last-child{border-bottom:none}
+  .compact .ct{white-space:nowrap; font-variant-numeric:tabular-nums; color:var(--muted); width:112px; font-size:12.5px}
+  .compact .cr{font-size:13px; font-weight:600; color:var(--accent-ink)}
+  .compact .note{font-weight:400; color:var(--muted)}
+
+  .foot{max-width:900px; margin:10px auto 0; padding:0 20px; color:var(--faint); font-size:11.5px}
+
+  @media print{
+    :root{--bg:#fff}
+    body{background:#fff}
+    .bar,.foot{display:none}
+    .sheet{max-width:none; margin:0; padding:0}
+    .card{
+      box-shadow:none; border:1px solid #d8c7ae; border-radius:10px;
+      margin:0 0 14px; page-break-inside:avoid;
+    }
+    @page{size:A4 portrait; margin:14mm}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bar">
+  <div>
+    <h1>중고등부 여름캠프 · 개인별 역할 카드</h1>
+    <div class="sub">2026.9.5(토)~9.6(일) 1박2일 · 전주 자율여행 &amp; 흑백요리사</div>
+    <div class="sub">숙소: 달팽이 아지트 · 미사: 전동성당(9.6 일 10:30) · 중식: 왱이콩나물국밥(1일차)/한국집(2일차)</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="legend"><span class="swatch"></span> 강조 = 내 담당</div>
+  <button class="btn" onclick="window.print()">인쇄 / PDF 저장</button>
+</div>
+
+<div class="sheet" id="sheet"></div>
+<div class="foot">각 선생님은 본인 카드만 인쇄해 지참하세요. 원본: 워크북 · 프로그램 큐시트(노션). 전체 흐름 위에 본인 담당을 강조 표시했습니다. 조보영 카타리나T·김채현 마리스텔라T는 R&amp;R 세부 역할이 아직 배정되지 않아 확인 필요로 표시했습니다.</div>
+
+<script>
+const SLOTS = [
+  ["~09:00","전주역 도착(선발대)"],
+  ["09:00~10:00","전주역 도착(KTX)"],
+  ["10:00~18:00","전주 자율여행"],
+  ["11:30~12:30","교사·봉사자 중식"],
+  ["14:30~15:30","선발대 숙소 도착"],
+  ["15:30~17:30","전원 숙소 집결"],
+  ["18:00~18:30","숙소 집결·방 배정"],
+  ["18:30~20:30","흑백요리사 요리대회"],
+  ["20:30~22:00","조별 친교·정비"],
+  ["22:00~","취침 준비·소등"],
+  ["07:30~08:00","(2일차) 기상·조식"],
+  ["08:00~09:00","(2일차) 세면·퇴실"],
+  ["09:00~10:00","(2일차) 전동성당 이동"],
+  ["10:30~11:30","교중미사 참례"],
+  ["11:30~13:00","전체 중식(한국집)"],
+  ["13:00~","전주역 이동·복귀"],
+];
+const D = (t,hi)=>({t:t||"",hi:!!hi});
+
+const PEOPLE = [
+  { name:"진건호 토마스T", role:"총괄 / 안전·위치 관리 / 선발대", badges:["총괄","선발대"],
+    prep:"상시: <b>총괄 체크리스트</b>(시간·안전·인원), 위치공유 앱 1시간 간격 모니터링",
+    duties:[
+      D("선발대로 먼저 이동, 조별 도착 확인",1),
+      D("안전/위치 관리 총괄",1),
+      D("체크포인트 모니터링(이준용 베드로T와 분담)",1),
+      D("중식 참석"),
+      D("숙소 최종 점검",1),
+      D("전원 집결 확인"),
+      D("방 배정 지원"),
+      D("요리대회 안전·진행 지원"),
+      D("조별 친교 지도"),
+      D("야간 순찰·인원 확인",1),
+      D(""),
+      D(""),
+      D("성당 이동 지휘, 10:00 앞 집결",1),
+      D("총괄 참례"),
+      D("중식 참석"),
+      D("SRT 이동 지휘, 암사동성당 해산",1),
+    ]},
+  { name:"이준용 베드로T", role:"안전·위치 관리 (봉사자)", badges:["안전·위치","봉사자"],
+    prep:"메모: 진건호 토마스T와 <b>위치공유 모니터링 분담</b>",
+    duties:[
+      D(""),
+      D("안전/위치 관리 지원",1),
+      D("체크포인트 모니터링 지원",1),
+      D("중식 참석"),
+      D(""),
+      D("숙소 집결 확인"),
+      D(""),
+      D("요리대회 진행 지원"),
+      D("조별 친교 지원"),
+      D(""),D(""),D(""),D(""),D(""),D(""),D(""),
+    ]},
+  { name:"손기훈 야고보T", role:"회계 / 정산 (봉사자)", badges:["회계·정산","봉사자"],
+    prep:"메모: 지급은 진건호 토마스T, <b>토스로 지급·카드 사용</b>",
+    duties:[
+      D(""),D(""),D(""),
+      D("중식 영수증 취합",1),
+      D(""),D(""),D(""),
+      D("조별 재료구매 영수증 회수 지원"),
+      D(""),D(""),D(""),D(""),D(""),D(""),
+      D("전체 식대 통합 결제",1),
+      D(""),
+    ]},
+  { name:"최미진 마리아T", role:"요리대회 진행 및 참가", badges:["요리대회"],
+    prep:"전날·준비물: 흑백요리사 심사표",
+    duties:[
+      D(""),D(""),D(""),D(""),D(""),D(""),D(""),
+      D("심사 세팅·재료 구매액 확인·타이머 체크·심사 진행(주 진행)",1),
+      D("여행수첩 내용 공유 지원"),
+      D(""),D(""),D(""),D(""),D(""),D(""),D(""),
+    ]},
+  { name:"김아래미 세실리아T", role:"요리대회 진행 및 참가", badges:["요리대회"],
+    prep:"전날·준비물: 안대",
+    duties:[
+      D(""),D(""),D(""),D(""),D(""),D(""),D(""),
+      D("심사실·거실 화상회의 세팅, 안대 착용 안내, 심사 집계, 포상 발표",1),
+      D(""),D(""),D(""),D(""),D(""),D(""),D(""),D(""),
+    ]},
+  { name:"이민경 루시아T", role:"학생 관리 / 인솔", badges:["학생 관리·인솔"],
+    prep:"메모: 서혜정 스텔라T와 <b>학생 관리·인솔 공동 담당</b>",
+    duties:[
+      D("조별 인원 출발/도착 인증샷 수집",1),
+      D(""),D(""),D(""),D(""),
+      D(""),
+      D("숙소 집결·방 배정 최종 점검",1),
+      D(""),D(""),D(""),
+      D("기상·조식 조별 관리",1),
+      D("세면·숙소정리 퇴실 관리",1),
+      D(""),
+      D("교중미사 입장 인원 점검",1),
+      D(""),
+      D("SRT 탑승 인원 점검 후 해산",1),
+    ]},
+  { name:"서혜정 스텔라T", role:"학생 관리 / 인솔", badges:["학생 관리·인솔"],
+    prep:"메모: 이민경 루시아T와 <b>학생 관리·인솔 공동 담당</b>",
+    duties:[
+      D("조별 인원 출발/도착 인증샷 수집",1),
+      D(""),D(""),D(""),D(""),
+      D(""),
+      D("숙소 집결·방 배정 최종 점검",1),
+      D(""),D(""),D(""),
+      D("기상·조식 조별 관리",1),
+      D("세면·숙소정리 퇴실 관리",1),
+      D(""),
+      D("교중미사 입장 인원 점검",1),
+      D(""),
+      D("SRT 탑승 인원 점검 후 해산",1),
+    ]},
+  // ---- compact / TBD cards ----
+  { name:"조보영 카타리나T", role:"교사 (세부 역할 확인 필요)", badges:["확인 필요"],
+    compact:[
+      ["상시","전체 교사로서 조별 인솔·친교 시간 지도",0],
+      ["교사 회의","R&R 세부 역할 배정 필요 — 교사 회의에서 확정",1],
+    ]},
+  { name:"김채현 마리스텔라T", role:"교사 (세부 역할 확인 필요)", badges:["확인 필요"],
+    compact:[
+      ["상시","전체 교사로서 조별 인솔·친교 시간 지도",0],
+      ["교사 회의","R&R 세부 역할 배정 필요 — 교사 회의에서 확정",1],
+    ]},
+  { name:"부주임 신부님", role:"미사 주례 / 요리대회 심사위원", badges:["미사","심사위원"],
+    compact:[
+      ["10:30~11:30(2일차)","교중미사 주례",1],
+      ["18:30~20:30(1일차)","요리대회 심사위원 (안대 착용, 블라인드 테스트)",1],
+      ["이동","자차 이용(신부님 포함 4명 탑승)",0],
+    ]},
+  { name:"전교 수녀님", role:"전체 동행 / 학생 신앙 지도", badges:["동행"],
+    compact:[
+      ["상시","전체 프로그램 동행, 학생 신앙 지도",1],
+      ["10:30~11:30(2일차)","교중미사 참례",1],
+    ]},
+];
+
+function esc(s){return s.replace(/&(?!\w+;|#)/g,"&amp;")}
+function fullTable(p){
+  let rows = p.duties.map((d,i)=>{
+    const s=SLOTS[i];
+    const rcell = d.t ? `<td class="r">${d.t}</td>` : `<td class="r dash">—</td>`;
+    return `<tr class="${d.hi?'hi':''}"><td class="t">${s[0]}</td><td class="p">${s[1]}</td>${rcell}</tr>`;
+  }).join("");
+  return `<table><thead><tr><th>시간</th><th>전체 프로그램</th><th>내 역할</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+function compactList(p){
+  const rows=p.compact.map(c=>`<div class="row"><div class="ct">${c[0]}</div><div class="cr ${c[2]?'':'note'}">${c[1]}</div></div>`).join("");
+  return `<div class="compact">${rows}</div>`;
+}
+function card(p){
+  const badges=p.badges.map((b,i)=>`<span class="badge ${i>0?'alt':''}">${b}</span>`).join("");
+  const body=p.duties?fullTable(p):compactList(p);
+  const prep=p.prep?`<div class="prep">${p.prep}</div>`:"";
+  return `<section class="card">
+    <div class="head"><h2 class="name">${p.name}</h2><span class="role">${p.role}</span><span class="badges">${badges}</span></div>
+    ${prep}${body}
+  </section>`;
+}
+document.getElementById("sheet").innerHTML = PEOPLE.map(card).join("");
+</script>
+</body>
+</html>
