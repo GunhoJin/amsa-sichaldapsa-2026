@@ -226,8 +226,14 @@
     chip.dataset.name = m.name;
     chip.innerHTML = `<span>${m.name}</span><span class="tag">${m.gender}·${m.level}</span>`;
     chip.addEventListener('click', () => {
-      if(selected.has(m.name)) selected.delete(m.name);
-      else selected.add(m.name);
+      if(m.group !== 0){
+        m.group = 0;
+        selected.delete(m.name);
+      } else if(selected.has(m.name)){
+        selected.delete(m.name);
+      } else {
+        selected.add(m.name);
+      }
       renderBoard();
     });
     chip.addEventListener('dragstart', (e) => {
