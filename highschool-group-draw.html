@@ -53,8 +53,8 @@
     /* 1~4조 구분색 — 시드색과는 별도 계열 */
     --group-1:#b8722a; --group-2:#2c5f6f; --group-3:#8a4a3a; --group-4:#5c7047;
 
-    --serif:'Paperlogy','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
-    --sans:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',-apple-system,BlinkMacSystemFont,sans-serif;
+    --serif:'Paperlogy','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',sans-serif;
+    --sans:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',-apple-system,BlinkMacSystemFont,sans-serif;
     --mono:ui-monospace,'SF Mono','Cascadia Mono','Noto Sans Mono',monospace;
   }
   @media (prefers-color-scheme: dark){
@@ -100,9 +100,9 @@
   .card h2{font-size:25px;}
   .card .hint{color:var(--ink-soft);font-size:17px;margin-bottom:18px;max-width:100ch;}
   textarea{
-    width:100%;min-height:150px;resize:vertical;
-    font-family:var(--mono);font-size:16.5px;padding:15px 17px;
-    background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:10px;
+    width:100%;min-height:440px;resize:vertical;
+    font-family:var(--mono);font-size:18px;line-height:1.85;padding:18px 20px;
+    background:var(--paper);color:var(--ink);border:1.5px solid var(--line);border-radius:10px;
   }
   textarea:focus-visible, button:focus-visible, .chip:focus-visible{
     outline:2px solid var(--accent-2);outline-offset:2px;
@@ -193,7 +193,7 @@
 <body>
 <div class="wrap">
   <div class="eyebrow">중고등부 여름캠프 · 사전 모임(8.9) 도구</div>
-  <h1>조 편성 도구 — 수동 배정</h1>
+  <h1>여름캠프 조 편성</h1>
   <p class="lead">참가자 명단을 불러온 뒤, 명단에서 학생을 <b>드래그해서 조 칸에 놓거나</b>, <b>클릭으로 선택하고 원하는 조 버튼을 누르는 방식</b>으로 직접 배정합니다. 자동으로 조가 정해지지 않으며, 배정은 전부 여기서 수동으로 결정됩니다. <b>입력한 명단은 이 브라우저 밖으로 전송되지 않습니다.</b></p>
 
   <div class="card">
