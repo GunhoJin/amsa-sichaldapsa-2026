@@ -154,14 +154,14 @@
   .chip.selected{border-color:var(--accent-2);border-width:2px;padding:9px 17px 9px 11px;background:color-mix(in srgb, var(--accent-2) 14%, var(--paper-2));}
   .chip:active{cursor:grabbing;}
 
-  /* 미배정 명단 칩은 20% 더 크게 */
-  .pool .chip{
+  /* 미배정 명단·조 배정 칩은 20% 더 크게 */
+  .pool .chip, .group-card .chip{
     gap:11px;border-radius:29px;
     padding:12px 22px 12px 14px;font-size:22px;
   }
-  .pool .chip .dot{width:12px;height:12px;}
-  .pool .chip .tag{font-size:17px;}
-  .pool .chip.selected{padding:11px 21px 11px 13px;}
+  .pool .chip .dot, .group-card .chip .dot{width:12px;height:12px;}
+  .pool .chip .tag, .group-card .chip .tag{font-size:17px;}
+  .pool .chip.selected, .group-card .chip.selected{padding:11px 21px 11px 13px;}
 
   .group-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:8px;}
   .group-card{
@@ -201,7 +201,7 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="eyebrow">중고등부 여름캠프 · 사전 모임(8.9) 도구</div>
+  <div class="eyebrow">중고등부 여름캠프</div>
   <h1>여름캠프 조 편성</h1>
   <p class="lead">참가자 명단을 불러온 뒤, 명단에서 학생을 <b>드래그해서 조 칸에 놓거나</b>, <b>클릭으로 선택하고 원하는 조 버튼을 누르는 방식</b>으로 직접 배정합니다. <b>입력한 명단은 이 브라우저 밖으로 전송되지 않습니다.</b></p>
 
@@ -238,7 +238,7 @@
   </div>
 </div>
 
-<footer>2026 중고등부 여름캠프 조 편성 도구 · 암사동성당 주일학교 교사회 · 브라우저 로컬에서만 동작</footer>
+<footer>2026 중고등부 여름캠프 조 편성 도구 · 암사동성당 주일학교 교사회</footer>
 
 <script>
 (function(){
