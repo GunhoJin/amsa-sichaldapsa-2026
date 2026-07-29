@@ -6,99 +6,152 @@
 <title>중고등부 여름캠프 - 조 편성 도구</title>
 <style>
   :root{
-    --paper:#f3f4f1;
+    --paper:#f3f0ea;
     --paper-2:#ffffff;
-    --ink:#1b1f1c;
-    --ink-soft:#565f57;
-    --line:#d8dbd3;
-    --accent:#c98a2b;
-    --accent-ink:#4a3413;
+    --paper-3:#ebe7de;
+    --ink:#211d16;
+    --ink-soft:#6b6355;
+    --line:#ddd6c7;
+    --accent:#b8722a;
+    --accent-ink:#40260b;
     --accent-2:#2c5f6f;
     --accent-2-ink:#ffffff;
-    --warn-bg:#f6e9c9;
+    --warn-bg:#f3e3c4;
     --warn-ink:#6b4a10;
+    --danger:#a8402f;
     --radius:14px;
+
+    /* seed(성별×학년대) 구분색 — 브랜드 accent와 분리된 범주색 */
+    --seed-mj:#4f6f9e; --seed-mj-bg:color-mix(in srgb, var(--seed-mj) 14%, var(--paper-2));
+    --seed-mh:#3f8a6e; --seed-mh-bg:color-mix(in srgb, var(--seed-mh) 14%, var(--paper-2));
+    --seed-fj:#b25a78; --seed-fj-bg:color-mix(in srgb, var(--seed-fj) 14%, var(--paper-2));
+    --seed-fh:#7462ab; --seed-fh-bg:color-mix(in srgb, var(--seed-fh) 14%, var(--paper-2));
+
+    /* 1~4조 구분색 — 시드색과는 별도 계열 */
+    --group-1:#b8722a; --group-2:#2c5f6f; --group-3:#8a4a3a; --group-4:#5c7047;
+
     --serif:'Iowan Old Style','Noto Serif KR','Apple SD Gothic Neo','Malgun Gothic',serif;
     --sans:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',-apple-system,BlinkMacSystemFont,sans-serif;
     --mono:ui-monospace,'SF Mono','Cascadia Mono','Noto Sans Mono',monospace;
   }
   @media (prefers-color-scheme: dark){
     :root{
-      --paper:#17191a; --paper-2:#1f2224; --ink:#eceae5; --ink-soft:#a7ada4;
+      --paper:#17191a; --paper-2:#1f2224; --paper-3:#262a2b; --ink:#eceae5; --ink-soft:#9ba09a;
       --line:#33372f; --accent:#e0a744; --accent-ink:#241a08; --accent-2:#5fa0b3;
-      --accent-2-ink:#0d1e22; --warn-bg:#3a2c10; --warn-ink:#f0c877;
+      --accent-2-ink:#0d1e22; --warn-bg:#3a2c10; --warn-ink:#f0c877; --danger:#e2796a;
+      --seed-mj:#8fadd9; --seed-mh:#72c4a5; --seed-fj:#e096ae; --seed-fh:#ab9be3;
+      --group-1:#e0a744; --group-2:#5fa0b3; --group-3:#d18871; --group-4:#8fac7a;
     }
   }
   :root[data-theme="dark"]{
-    --paper:#17191a; --paper-2:#1f2224; --ink:#eceae5; --ink-soft:#a7ada4;
+    --paper:#17191a; --paper-2:#1f2224; --paper-3:#262a2b; --ink:#eceae5; --ink-soft:#9ba09a;
     --line:#33372f; --accent:#e0a744; --accent-ink:#241a08; --accent-2:#5fa0b3;
-    --accent-2-ink:#0d1e22; --warn-bg:#3a2c10; --warn-ink:#f0c877;
+    --accent-2-ink:#0d1e22; --warn-bg:#3a2c10; --warn-ink:#f0c877; --danger:#e2796a;
+    --seed-mj:#8fadd9; --seed-mh:#72c4a5; --seed-fj:#e096ae; --seed-fh:#ab9be3;
+    --group-1:#e0a744; --group-2:#5fa0b3; --group-3:#d18871; --group-4:#8fac7a;
   }
   :root[data-theme="light"]{
-    --paper:#f3f4f1; --paper-2:#ffffff; --ink:#1b1f1c; --ink-soft:#565f57;
-    --line:#d8dbd3; --accent:#c98a2b; --accent-ink:#4a3413; --accent-2:#2c5f6f;
-    --accent-2-ink:#ffffff; --warn-bg:#f6e9c9; --warn-ink:#6b4a10;
+    --paper:#f3f0ea; --paper-2:#ffffff; --paper-3:#ebe7de; --ink:#211d16; --ink-soft:#6b6355;
+    --line:#ddd6c7; --accent:#b8722a; --accent-ink:#40260b; --accent-2:#2c5f6f;
+    --accent-2-ink:#ffffff; --warn-bg:#f3e3c4; --warn-ink:#6b4a10; --danger:#a8402f;
+    --seed-mj:#4f6f9e; --seed-mh:#3f8a6e; --seed-fj:#b25a78; --seed-fh:#7462ab;
+    --group-1:#b8722a; --group-2:#2c5f6f; --group-3:#8a4a3a; --group-4:#5c7047;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);}
   body{font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;}
   h1,h2,h3{font-family:var(--serif);text-wrap:balance;margin:0;font-weight:600;letter-spacing:-.01em;}
-  .wrap{max-width:860px;margin:0 auto;padding:56px 28px 100px;}
-  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;margin-bottom:10px;}
-  h1{font-size:clamp(26px,4vw,34px);margin-bottom:10px;}
-  .lead{color:var(--ink-soft);font-size:15px;max-width:64ch;margin-bottom:36px;}
-  .card{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;margin-bottom:22px;}
-  .card h2{font-size:17px;margin-bottom:8px;}
-  .card .hint{color:var(--ink-soft);font-size:13.5px;margin-bottom:14px;}
+  .wrap{max-width:880px;margin:0 auto;padding:52px 28px 100px;}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;margin-bottom:12px;}
+  h1{font-size:clamp(26px,4vw,32px);margin-bottom:12px;}
+  .lead{color:var(--ink-soft);font-size:15px;max-width:66ch;margin-bottom:40px;}
+  .card{
+    background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);
+    padding:26px 28px;margin-bottom:20px;box-shadow:0 1px 2px rgba(0,0,0,.04);
+  }
+  .card-head{display:flex;align-items:baseline;gap:10px;margin-bottom:6px;}
+  .card-head .step{
+    font-family:var(--mono);font-size:12px;font-weight:700;color:var(--accent-ink);
+    background:var(--accent);border-radius:6px;padding:2px 7px;flex-shrink:0;
+  }
+  .card h2{font-size:17px;}
+  .card .hint{color:var(--ink-soft);font-size:13.5px;margin-bottom:14px;max-width:68ch;}
   textarea{
-    width:100%;min-height:180px;resize:vertical;
+    width:100%;min-height:170px;resize:vertical;
     font-family:var(--mono);font-size:13.5px;padding:12px 14px;
     background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:10px;
   }
-  .btn-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+  textarea:focus-visible, button:focus-visible, .chip:focus-visible{
+    outline:2px solid var(--accent-2);outline-offset:2px;
+  }
+  .btn-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;align-items:center;}
   button{
-    font-family:var(--sans);font-size:14.5px;font-weight:600;cursor:pointer;
+    font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;
     border-radius:9px;border:1px solid var(--line);padding:10px 18px;
-    background:var(--paper-2);color:var(--ink);
+    background:var(--paper-2);color:var(--ink);transition:border-color .12s ease;
   }
   button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);}
   button.ghost{background:transparent;}
+  button.ghost:hover{border-color:var(--ink-soft);}
   button:disabled{opacity:.4;cursor:not-allowed;}
-  .seed-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px;}
-  .seed-box{background:var(--paper);border:1px solid var(--line);border-radius:9px;padding:10px 12px;font-size:13px;}
-  .seed-box .k{color:var(--ink-soft);font-size:11.5px;margin-bottom:3px;}
-  .seed-box .v{font-family:var(--mono);font-weight:700;color:var(--accent);}
-  .error{color:#c0392b;font-size:13.5px;margin-top:10px;}
+  .status-text{font-size:13.5px;margin-top:10px;color:var(--ink-soft);}
+  .status-text.warn{color:var(--danger);}
+  .error{color:var(--danger);font-size:13.5px;margin-top:10px;}
+
+  .seed-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0 22px;}
+  .seed-box{
+    background:var(--paper);border:1px solid var(--line);border-radius:9px;padding:10px 12px 11px;
+    font-size:13px;border-top:3px solid var(--dot,var(--line));
+  }
+  .seed-box .k{display:flex;align-items:center;gap:6px;color:var(--ink-soft);font-size:11.5px;margin-bottom:5px;}
+  .seed-box .dot{width:7px;height:7px;border-radius:50%;background:var(--dot);flex-shrink:0;}
+  .seed-box .v{font-family:var(--mono);font-weight:700;font-variant-numeric:tabular-nums;}
+
+  .section-label{
+    display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--ink-soft);
+    margin:0 0 8px;
+  }
+  .section-label .dot{width:8px;height:8px;border-radius:50%;background:var(--dot,var(--ink-soft));flex-shrink:0;}
 
   .pool{
-    display:flex;flex-wrap:wrap;gap:8px;min-height:48px;
-    background:var(--paper);border:1px dashed var(--line);border-radius:10px;padding:12px;
+    background:var(--paper);border:1px dashed var(--line);border-radius:10px;padding:14px;
+    display:flex;flex-direction:column;gap:12px;min-height:56px;
   }
-  .pool.dragover{border-color:var(--accent);}
+  .pool.dragover{border-color:var(--accent);border-style:solid;}
+  .pool-seed-group .chip-row{display:flex;flex-wrap:wrap;gap:8px;}
+  .pool-empty{color:var(--ink-soft);font-size:13px;padding:6px 2px;}
+
   .chip{
-    display:inline-flex;align-items:center;gap:6px;cursor:grab;user-select:none;
+    display:inline-flex;align-items:center;gap:7px;cursor:grab;user-select:none;
     background:var(--paper-2);border:1px solid var(--line);border-radius:20px;
-    padding:6px 12px;font-size:13.5px;
+    padding:6px 12px 6px 8px;font-size:13.5px;line-height:1.3;
   }
-  .chip .tag{
-    font-family:var(--mono);font-size:10.5px;color:var(--ink-soft);
-    background:transparent;padding:0;
-  }
-  .chip.selected{border-color:var(--accent);background:color-mix(in srgb, var(--accent) 16%, var(--paper-2));}
+  .chip .dot{width:8px;height:8px;border-radius:50%;background:var(--dot);flex-shrink:0;}
+  .chip .tag{font-family:var(--mono);font-size:10.5px;color:var(--ink-soft);}
+  .chip.selected{border-color:var(--accent-2);background:color-mix(in srgb, var(--accent-2) 14%, var(--paper-2));}
   .chip:active{cursor:grabbing;}
 
-  .group-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:16px;}
-  .group-card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;}
+  .group-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:4px;}
+  .group-card{
+    background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;
+    border-top:3px solid var(--gcolor,var(--line));
+  }
   .group-card.dragover{border-color:var(--accent);background:color-mix(in srgb, var(--accent) 8%, var(--paper));}
-  .group-card .gc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+  .group-card .gc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:10px;}
+  .group-card .gc-title{display:flex;align-items:center;gap:8px;}
+  .group-card .gc-num{
+    display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;
+    border-radius:50%;background:var(--gcolor);color:var(--paper-2);
+    font-family:var(--mono);font-size:12px;font-weight:700;flex-shrink:0;
+  }
   .group-card h3{font-size:15px;}
-  .group-card .stat{font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin-bottom:10px;}
+  .group-card .stat{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);margin-bottom:12px;font-variant-numeric:tabular-nums;}
   .group-card .chip-list{display:flex;flex-wrap:wrap;gap:6px;min-height:36px;}
   .group-card .empty-hint{color:var(--ink-soft);font-size:12.5px;}
   .assign-btn{
-    font-family:var(--sans);font-size:12.5px;font-weight:600;cursor:pointer;
+    font-family:var(--sans);font-size:12px;font-weight:600;cursor:pointer;
     border-radius:7px;border:1px solid var(--line);padding:5px 10px;
-    background:var(--paper-2);color:var(--ink);
+    background:var(--paper-2);color:var(--ink);flex-shrink:0;
   }
   .assign-btn:disabled{opacity:.4;cursor:not-allowed;}
 
@@ -116,13 +169,13 @@
   <p class="lead">참가자 명단을 불러온 뒤, 명단에서 학생을 <b>드래그해서 조 칸에 놓거나</b>, <b>클릭으로 선택하고 원하는 조 버튼을 누르는 방식</b>으로 직접 배정합니다. 자동으로 조가 정해지지 않으며, 배정은 전부 여기서 수동으로 결정됩니다. <b>입력한 명단은 이 브라우저 밖으로 전송되지 않습니다.</b></p>
 
   <div class="card">
-    <h2>1. 참가자 명단 준비</h2>
+    <div class="card-head"><span class="step">1</span><h2>참가자 명단 준비</h2></div>
     <p class="hint">참가 신청 구글시트에서 자동으로 불러오거나, 직접 입력할 수 있습니다. 자동 불러오기는 이름·학년(학교급)은 그대로 가져오고, 성별은 생년월일 뒷자리로 추정합니다 — 추정이 안 되는 학생은 <code>?</code>로 표시되니 명단 불러오기 전에 직접 채워주세요.</p>
     <div class="btn-row">
       <button class="primary" id="fetchBtn">구글시트에서 자동 불러오기</button>
     </div>
-    <div class="error" id="fetchStatus" style="display:none;"></div>
-    <p class="hint" style="margin-top:18px;">한 줄에 한 명씩, <code>이름,성별,학교급</code> 순서입니다. 성별은 남/여, 학교급은 중/고로 씁니다. 쉼표 대신 탭(스프레드시트 붙여넣기)도 됩니다.<br>예) 김승윤,남,중</p>
+    <div class="status-text" id="fetchStatus" style="display:none;"></div>
+    <p class="hint" style="margin-top:20px;">한 줄에 한 명씩, <code>이름,성별,학교급</code> 순서입니다. 성별은 남/여, 학교급은 중/고로 씁니다. 쉼표 대신 탭(스프레드시트 붙여넣기)도 됩니다.<br>예) 김승윤,남,중</p>
     <textarea id="rosterInput" placeholder="김승윤,남,중
 민지우,남,중
 신서은,여,중
@@ -135,16 +188,16 @@
   </div>
 
   <div class="card" id="boardCard" style="display:none;">
-    <h2>2. 수동 배정</h2>
+    <div class="card-head"><span class="step">2</span><h2>수동 배정</h2></div>
     <p class="hint">학생 이름을 드래그해서 아래 조 칸에 놓거나, 클릭해 선택한 뒤(여러 명 동시 선택 가능) 조 카드의 배정 버튼을 누르세요. 조에 배정된 학생을 다시 클릭하면 미배정 명단으로 돌아옵니다.</p>
     <div class="seed-summary" id="seedSummary"></div>
-    <p class="hint" style="margin-top:16px;margin-bottom:6px;"><b>미배정 명단</b></p>
+    <p class="section-label">미배정 명단 — 성별·학년대로 묶어 보여줍니다</p>
     <div class="pool" id="unassignedPool"></div>
-    <div class="group-grid" id="groupGrid"></div>
+    <div class="group-grid" id="groupGrid" style="margin-top:20px;"></div>
     <div class="btn-row">
       <button class="primary" id="downloadBtn">명단 다운로드 (CSV)</button>
     </div>
-    <div class="error" id="downloadWarning" style="display:none;color:var(--ink-soft);"></div>
+    <div class="status-text" id="downloadWarning" style="display:none;"></div>
   </div>
 </div>
 
@@ -168,6 +221,8 @@
   const downloadWarning = document.getElementById('downloadWarning');
 
   const SEED_LABELS = {'남중':'남자 중학생','남고':'남자 고등학생','여중':'여자 중학생','여고':'여자 고등학생'};
+  const SEED_COLORS = {'남중':'var(--seed-mj)','남고':'var(--seed-mh)','여중':'var(--seed-fj)','여고':'var(--seed-fh)'};
+  const GROUP_COLORS = {1:'var(--group-1)',2:'var(--group-2)',3:'var(--group-3)',4:'var(--group-4)'};
 
   let members = [];       // [{name, gender, level, seed, group}] group: 0 = 미배정, 1~4 = 조
   let selected = new Set();
@@ -214,7 +269,8 @@
       const left = members.filter(m => m.seed === key && m.group === 0).length;
       const box = document.createElement('div');
       box.className = 'seed-box';
-      box.innerHTML = `<div class="k">${SEED_LABELS[key]}</div><div class="v">${left} / ${total}명 미배정</div>`;
+      box.style.setProperty('--dot', SEED_COLORS[key]);
+      box.innerHTML = `<div class="k"><span class="dot"></span>${SEED_LABELS[key]}</div><div class="v">${left} / ${total}명 미배정</div>`;
       seedSummary.appendChild(box);
     });
   }
@@ -222,9 +278,11 @@
   function makeChip(m){
     const chip = document.createElement('div');
     chip.className = 'chip' + (selected.has(m.name) ? ' selected' : '');
+    chip.style.setProperty('--dot', SEED_COLORS[m.seed]);
     chip.draggable = true;
+    chip.tabIndex = 0;
     chip.dataset.name = m.name;
-    chip.innerHTML = `<span>${m.name}</span><span class="tag">${m.gender}·${m.level}</span>`;
+    chip.innerHTML = `<span class="dot"></span><span>${m.name}</span><span class="tag">${m.gender}·${m.level}</span>`;
     chip.addEventListener('click', () => {
       if(m.group !== 0){
         m.group = 0;
@@ -271,9 +329,20 @@
     unassignedPool.innerHTML = '';
     const unassigned = members.filter(m => m.group === 0);
     if(unassigned.length === 0){
-      unassignedPool.innerHTML = '<span class="empty-hint" style="color:var(--ink-soft);font-size:13px;">미배정 인원 없음</span>';
+      unassignedPool.innerHTML = '<span class="pool-empty">미배정 인원 없음</span>';
     } else {
-      unassigned.forEach(m => unassignedPool.appendChild(makeChip(m)));
+      Object.keys(SEED_LABELS).forEach(key => {
+        const group = unassigned.filter(m => m.seed === key);
+        if(group.length === 0) return;
+        const wrap = document.createElement('div');
+        wrap.className = 'pool-seed-group';
+        wrap.innerHTML = `<div class="section-label" style="--dot:${SEED_COLORS[key]};"><span class="dot"></span>${SEED_LABELS[key]} · ${group.length}명</div>`;
+        const row = document.createElement('div');
+        row.className = 'chip-row';
+        group.forEach(m => row.appendChild(makeChip(m)));
+        wrap.appendChild(row);
+        unassignedPool.appendChild(wrap);
+      });
     }
 
     groupGrid.innerHTML = '';
@@ -286,9 +355,10 @@
 
       const card = document.createElement('div');
       card.className = 'group-card';
+      card.style.setProperty('--gcolor', GROUP_COLORS[g]);
       card.innerHTML = `
         <div class="gc-head">
-          <h3>${g}조</h3>
+          <div class="gc-title"><span class="gc-num">${g}</span><h3>${g}조</h3></div>
           <button class="assign-btn" data-group="${g}">선택 인원 배정</button>
         </div>
         <div class="stat">총 ${groupMembers.length}명 · 남${male}·여${female} · 중${middle}·고${high}</div>
@@ -311,7 +381,6 @@
     const remaining = members.filter(m => m.group === 0).length;
     if(remaining > 0){
       downloadWarning.style.display = 'block';
-      downloadWarning.style.color = 'var(--ink-soft)';
       downloadWarning.textContent = `아직 미배정 ${remaining}명이 있습니다. 다운로드하면 이 학생들은 "미배정"으로 표시됩니다.`;
     } else {
       downloadWarning.style.display = 'none';
@@ -405,7 +474,7 @@
 
   async function fetchRosterFromSheet(){
     fetchStatus.style.display = 'block';
-    fetchStatus.style.color = '';
+    fetchStatus.classList.remove('warn');
     fetchStatus.textContent = '불러오는 중…';
     fetchBtn.disabled = true;
     try {
@@ -431,14 +500,14 @@
       });
       rosterInput.value = lines.join('\n');
       if(unresolved.length){
-        fetchStatus.style.color = '#c0392b';
+        fetchStatus.classList.add('warn');
         fetchStatus.textContent = `${lines.length}명 불러옴 — 다음 학생은 정보를 확인할 수 없어 "?"로 표시됨, 계산 전 직접 채워주세요: ${unresolved.join(', ')}`;
       } else {
-        fetchStatus.style.color = '';
-        fetchStatus.textContent = `${lines.length}명 불러왔습니다. 명단을 확인한 뒤 "조 편성 계산"을 눌러주세요.`;
+        fetchStatus.classList.remove('warn');
+        fetchStatus.textContent = `${lines.length}명 불러왔습니다. 명단을 확인한 뒤 "명단 불러오기"를 눌러주세요.`;
       }
     } catch(err){
-      fetchStatus.style.color = '#c0392b';
+      fetchStatus.classList.add('warn');
       fetchStatus.textContent = '자동 불러오기에 실패했습니다(' + err.message + '). 아래 칸에 직접 입력해주세요.';
     } finally {
       fetchBtn.disabled = false;
