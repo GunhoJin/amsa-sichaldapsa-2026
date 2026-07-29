@@ -70,15 +70,6 @@
   .seed-box .v{font-family:var(--mono);font-weight:700;color:var(--accent);}
   .error{color:#c0392b;font-size:13.5px;margin-top:10px;}
 
-  .reveal-stage{
-    text-align:center;padding:34px 20px;background:var(--paper);border:1px dashed var(--line);
-    border-radius:12px;margin-top:16px;
-  }
-  .reveal-stage .name{font-family:var(--serif);font-size:28px;font-weight:700;margin-bottom:6px;}
-  .reveal-stage .group{font-family:var(--mono);font-size:15px;color:var(--accent);}
-  .reveal-stage .empty{color:var(--ink-soft);font-size:14px;}
-  .reveal-progress{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);margin-top:10px;}
-
   .group-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:16px;}
   .group-card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;}
   .group-card h3{font-size:15px;margin-bottom:4px;}
@@ -97,8 +88,8 @@
 <body>
 <div class="wrap">
   <div class="eyebrow">중고등부 여름캠프 · 사전 모임(8.9) 도구</div>
-  <h1>조 편성 도구 — 시드 추첨</h1>
-  <p class="lead">참가자 명단을 붙여넣으면 성별×학년대(남중·남고·여중·여고) 시드풀로 나눈 뒤, 각 풀 안에서 무작위로 뽑아 1조→2조→3조→4조 순서로 배정합니다. 배정 계산은 이 화면에서 즉시 끝나고, 실제 발표는 아래 "1명씩 뽑기"로 현장에서 수동으로 진행하면 됩니다. <b>입력한 명단은 이 브라우저 밖으로 전송되지 않습니다.</b></p>
+  <h1>조 편성 도구 — 시드 배정</h1>
+  <p class="lead">참가자 명단을 붙여넣고 버튼을 누르면 성별×학년대(남중·남고·여중·여고) 시드풀로 나눈 뒤, 각 풀 안에서 무작위로 뽑아 1조→2조→3조→4조 순서로 배정합니다. 실제 조 추첨은 현장에서 진짜 제비뽑기로 진행하므로, 이 도구는 배정 계산과 결과 명단 다운로드까지만 담당합니다. <b>입력한 명단은 이 브라우저 밖으로 전송되지 않습니다.</b></p>
 
   <div class="card">
     <h2>1. 참가자 명단 준비</h2>
@@ -120,26 +111,13 @@
     <div class="seed-summary" id="seedSummary" style="display:none;"></div>
   </div>
 
-  <div class="card" id="revealCard" style="display:none;">
-    <h2>2. 현장에서 1명씩 뽑기</h2>
-    <p class="hint">뽑기 순서는 배정과 무관하게 매번 무작위로 섞입니다. 버튼을 누를 때마다 다음 학생과 배정된 조가 공개됩니다.</p>
-    <div class="reveal-stage" id="revealStage">
-      <div class="empty">아직 시작 전입니다 — "다음 학생 뽑기"를 눌러주세요</div>
-    </div>
-    <div class="reveal-progress" id="revealProgress"></div>
-    <div class="btn-row">
-      <button class="primary" id="nextBtn">다음 학생 뽑기</button>
-      <button class="ghost" id="resetRevealBtn">뽑기 다시 시작</button>
-    </div>
-  </div>
-
   <div class="card" id="resultCard" style="display:none;">
-    <h2>3. 전체 배정표 (진행자용)</h2>
-    <p class="hint">학생들에게 보여주기 전에 미리 확인하는 용도입니다. 화면 공유 시 이 카드는 가려두세요.</p>
+    <h2>2. 배정 결과</h2>
+    <p class="hint">아래 명단대로 현장에서 제비뽑기용 이름표·번호표를 준비하면 됩니다.</p>
     <div class="btn-row">
-      <button class="ghost" id="toggleResultBtn">전체 배정표 보기</button>
+      <button class="primary" id="downloadBtn">명단 다운로드 (CSV)</button>
     </div>
-    <div class="group-grid" id="groupGrid" style="display:none;"></div>
+    <div class="group-grid" id="groupGrid"></div>
   </div>
 </div>
 
@@ -156,14 +134,9 @@
   const clearBtn = document.getElementById('clearBtn');
   const errorBox = document.getElementById('errorBox');
   const seedSummary = document.getElementById('seedSummary');
-  const revealCard = document.getElementById('revealCard');
-  const revealStage = document.getElementById('revealStage');
-  const revealProgress = document.getElementById('revealProgress');
-  const nextBtn = document.getElementById('nextBtn');
-  const resetRevealBtn = document.getElementById('resetRevealBtn');
   const resultCard = document.getElementById('resultCard');
   const groupGrid = document.getElementById('groupGrid');
-  const toggleResultBtn = document.getElementById('toggleResultBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
 
   const SEED_ORDER = [
     {key:'남중', gender:'남', level:'중'},
@@ -173,8 +146,6 @@
   ];
 
   let assigned = [];      // [{name, gender, level, seed, group}]
-  let revealQueue = [];
-  let revealIndex = -1;
 
   function shuffle(arr){
     const a = arr.slice();
@@ -253,22 +224,28 @@
       const high = members.filter(m=>m.level==='고').length;
       const card = document.createElement('div');
       card.className = 'group-card';
-      const revealed = new Set(revealQueue.slice(0, revealIndex+1).filter(r=>r.group===g).map(r=>r.name));
-      const items = members.map(m => {
-        const shown = revealed.has(m.name) || revealIndex < 0 ? true : revealed.has(m.name);
-        return `<li>${m.name} <span style="color:var(--ink-soft);font-size:12px;">(${m.gender}·${m.level})</span></li>`;
-      }).join('');
+      const items = members.map(m => `<li>${m.name} <span style="color:var(--ink-soft);font-size:12px;">(${m.gender}·${m.level})</span></li>`).join('');
       card.innerHTML = `<h3>${g}조</h3><div class="stat">총 ${members.length}명 · 남${male}·여${female} · 중${middle}·고${high}</div><ul>${items || '<li class="pending">배정 인원 없음</li>'}</ul>`;
       groupGrid.appendChild(card);
     }
   }
 
-  function resetReveal(){
-    revealQueue = shuffle(assigned);
-    revealIndex = -1;
-    revealStage.innerHTML = '<div class="empty">아직 시작 전입니다 — "다음 학생 뽑기"를 눌러주세요</div>';
-    revealProgress.textContent = assigned.length ? `0 / ${assigned.length}명` : '';
-    nextBtn.disabled = assigned.length === 0;
+  function downloadCsv(){
+    const rows = [['조','이름','성별','학교급']];
+    assigned
+      .slice()
+      .sort((a,b) => a.group - b.group || a.name.localeCompare(b.name, 'ko'))
+      .forEach(m => rows.push([m.group + '조', m.name, m.gender, m.level]));
+    const csv = '﻿' + rows.map(r => r.join(',')).join('\r\n');
+    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '조편성결과.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 
   computeBtn.addEventListener('click', () => {
@@ -283,48 +260,20 @@
     }
     assigned = computeAssignment(rows);
     renderSeedSummary(rows);
-    resetReveal();
     renderGroupGrid();
-    revealCard.style.display = 'block';
     resultCard.style.display = 'block';
   });
 
   clearBtn.addEventListener('click', () => {
     rosterInput.value = '';
     assigned = [];
-    revealQueue = [];
-    revealIndex = -1;
     seedSummary.style.display = 'none';
-    revealCard.style.display = 'none';
     resultCard.style.display = 'none';
     errorBox.style.display = 'none';
-    groupGrid.style.display = 'none';
-    toggleResultBtn.textContent = '전체 배정표 보기';
+    groupGrid.innerHTML = '';
   });
 
-  nextBtn.addEventListener('click', () => {
-    if(revealIndex >= revealQueue.length - 1) return;
-    revealIndex++;
-    const cur = revealQueue[revealIndex];
-    revealStage.innerHTML = `<div class="name">${cur.name}</div><div class="group">${cur.group}조 (${cur.gender}·${cur.level})</div>`;
-    revealProgress.textContent = `${revealIndex+1} / ${revealQueue.length}명`;
-    if(groupGrid.style.display !== 'none') renderGroupGrid();
-    if(revealIndex >= revealQueue.length - 1){
-      nextBtn.disabled = true;
-    }
-  });
-
-  resetRevealBtn.addEventListener('click', () => {
-    resetReveal();
-    if(groupGrid.style.display !== 'none') renderGroupGrid();
-  });
-
-  toggleResultBtn.addEventListener('click', () => {
-    const showing = groupGrid.style.display !== 'none';
-    groupGrid.style.display = showing ? 'none' : 'grid';
-    toggleResultBtn.textContent = showing ? '전체 배정표 보기' : '전체 배정표 숨기기';
-    if(!showing) renderGroupGrid();
-  });
+  downloadBtn.addEventListener('click', downloadCsv);
 
   // ---- Auto-load from the participant registration Google Sheet ----
   function parseCSV(text){
