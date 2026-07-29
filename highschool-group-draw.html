@@ -101,8 +101,13 @@
   <p class="lead">참가자 명단을 붙여넣으면 성별×학년대(남중·남고·여중·여고) 시드풀로 나눈 뒤, 각 풀 안에서 무작위로 뽑아 1조→2조→3조→4조 순서로 배정합니다. 배정 계산은 이 화면에서 즉시 끝나고, 실제 발표는 아래 "1명씩 뽑기"로 현장에서 수동으로 진행하면 됩니다. <b>입력한 명단은 이 브라우저 밖으로 전송되지 않습니다.</b></p>
 
   <div class="card">
-    <h2>1. 참가자 명단 입력</h2>
-    <p class="hint">한 줄에 한 명씩, <code>이름,성별,학교급</code> 순서로 입력하세요. 성별은 남/여, 학교급은 중/고로 씁니다. 쉼표 대신 탭(스프레드시트 붙여넣기)도 됩니다.<br>예) 김승윤,남,중</p>
+    <h2>1. 참가자 명단 준비</h2>
+    <p class="hint">참가 신청 구글시트에서 자동으로 불러오거나, 직접 입력할 수 있습니다. 자동 불러오기는 이름·학년(학교급)은 그대로 가져오고, 성별은 생년월일 뒷자리로 추정합니다 — 추정이 안 되는 학생은 <code>?</code>로 표시되니 계산 전에 직접 채워주세요.</p>
+    <div class="btn-row">
+      <button class="primary" id="fetchBtn">구글시트에서 자동 불러오기</button>
+    </div>
+    <div class="error" id="fetchStatus" style="display:none;"></div>
+    <p class="hint" style="margin-top:18px;">한 줄에 한 명씩, <code>이름,성별,학교급</code> 순서입니다. 성별은 남/여, 학교급은 중/고로 씁니다. 쉼표 대신 탭(스프레드시트 붙여넣기)도 됩니다.<br>예) 김승윤,남,중</p>
     <textarea id="rosterInput" placeholder="김승윤,남,중
 민지우,남,중
 신서은,여,중
@@ -142,6 +147,10 @@
 
 <script>
 (function(){
+  const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1Six9KDBeogfsVM5Q9fuSi3WSMlnGBqLqMNQk1fMoXyE/export?format=csv';
+
+  const fetchBtn = document.getElementById('fetchBtn');
+  const fetchStatus = document.getElementById('fetchStatus');
   const rosterInput = document.getElementById('rosterInput');
   const computeBtn = document.getElementById('computeBtn');
   const clearBtn = document.getElementById('clearBtn');
@@ -316,6 +325,91 @@
     toggleResultBtn.textContent = showing ? '전체 배정표 보기' : '전체 배정표 숨기기';
     if(!showing) renderGroupGrid();
   });
+
+  // ---- Auto-load from the participant registration Google Sheet ----
+  function parseCSV(text){
+    const rows = [];
+    let row = [], field = '', inQuotes = false;
+    for(let i=0;i<text.length;i++){
+      const c = text[i];
+      if(inQuotes){
+        if(c === '"'){
+          if(text[i+1] === '"'){ field += '"'; i++; }
+          else inQuotes = false;
+        } else field += c;
+      } else {
+        if(c === '"') inQuotes = true;
+        else if(c === ','){ row.push(field); field = ''; }
+        else if(c === '\n'){ row.push(field); rows.push(row); row = []; field = ''; }
+        else if(c === '\r'){ /* skip */ }
+        else field += c;
+      }
+    }
+    if(field.length || row.length){ row.push(field); rows.push(row); }
+    return rows.filter(r => r.length > 1 || (r.length===1 && r[0].trim()!==''));
+  }
+
+  function findCol(header, ...needles){
+    return header.findIndex(h => needles.some(n => h.includes(n)));
+  }
+
+  function inferGenderFromBirthdate(raw){
+    const m = String(raw||'').match(/(\d{6})\D{0,2}([1-4])\b/);
+    if(!m) return null;
+    const code = m[2];
+    return (code === '1' || code === '3') ? '남' : '여';
+  }
+
+  function inferLevel(raw){
+    const s = String(raw||'');
+    if(s.includes('고')) return '고';
+    if(s.includes('중')) return '중';
+    return null;
+  }
+
+  async function fetchRosterFromSheet(){
+    fetchStatus.style.display = 'block';
+    fetchStatus.style.color = '';
+    fetchStatus.textContent = '불러오는 중…';
+    fetchBtn.disabled = true;
+    try {
+      const res = await fetch(SHEET_CSV_URL, {cache:'no-store'});
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const text = await res.text();
+      const table = parseCSV(text);
+      if(table.length < 2) throw new Error('시트에서 명단을 찾지 못했습니다');
+      const header = table[0];
+      const nameCol = findCol(header, '학생 이름');
+      const levelCol = findCol(header, '학생 학년');
+      const birthCol = findCol(header, '생년월일');
+      if(nameCol === -1 || levelCol === -1 || birthCol === -1){
+        throw new Error('시트 열 구성이 예상과 달라 자동 매핑에 실패했습니다');
+      }
+      const unresolved = [];
+      const lines = table.slice(1).filter(r => (r[nameCol]||'').trim() !== '').map(r => {
+        const name = r[nameCol].trim();
+        const level = inferLevel(r[levelCol]) || '?';
+        const gender = inferGenderFromBirthdate(r[birthCol]) || '?';
+        if(level === '?' || gender === '?') unresolved.push(name);
+        return `${name},${gender},${level}`;
+      });
+      rosterInput.value = lines.join('\n');
+      if(unresolved.length){
+        fetchStatus.style.color = '#c0392b';
+        fetchStatus.textContent = `${lines.length}명 불러옴 — 다음 학생은 정보를 확인할 수 없어 "?"로 표시됨, 계산 전 직접 채워주세요: ${unresolved.join(', ')}`;
+      } else {
+        fetchStatus.style.color = '';
+        fetchStatus.textContent = `${lines.length}명 불러왔습니다. 명단을 확인한 뒤 "조 편성 계산"을 눌러주세요.`;
+      }
+    } catch(err){
+      fetchStatus.style.color = '#c0392b';
+      fetchStatus.textContent = '자동 불러오기에 실패했습니다(' + err.message + '). 아래 칸에 직접 입력해주세요.';
+    } finally {
+      fetchBtn.disabled = false;
+    }
+  }
+
+  fetchBtn.addEventListener('click', fetchRosterFromSheet);
 })();
 </script>
 </body>
