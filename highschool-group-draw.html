@@ -70,13 +70,37 @@
   .seed-box .v{font-family:var(--mono);font-weight:700;color:var(--accent);}
   .error{color:#c0392b;font-size:13.5px;margin-top:10px;}
 
+  .pool{
+    display:flex;flex-wrap:wrap;gap:8px;min-height:48px;
+    background:var(--paper);border:1px dashed var(--line);border-radius:10px;padding:12px;
+  }
+  .pool.dragover{border-color:var(--accent);}
+  .chip{
+    display:inline-flex;align-items:center;gap:6px;cursor:grab;user-select:none;
+    background:var(--paper-2);border:1px solid var(--line);border-radius:20px;
+    padding:6px 12px;font-size:13.5px;
+  }
+  .chip .tag{
+    font-family:var(--mono);font-size:10.5px;color:var(--ink-soft);
+    background:transparent;padding:0;
+  }
+  .chip.selected{border-color:var(--accent);background:color-mix(in srgb, var(--accent) 16%, var(--paper-2));}
+  .chip:active{cursor:grabbing;}
+
   .group-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:16px;}
-  .group-card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;}
-  .group-card h3{font-size:15px;margin-bottom:4px;}
+  .group-card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;}
+  .group-card.dragover{border-color:var(--accent);background:color-mix(in srgb, var(--accent) 8%, var(--paper));}
+  .group-card .gc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+  .group-card h3{font-size:15px;}
   .group-card .stat{font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin-bottom:10px;}
-  .group-card ul{margin:0;padding-left:18px;font-size:14px;}
-  .group-card li{margin-bottom:2px;}
-  .group-card li.pending{color:var(--ink-soft);}
+  .group-card .chip-list{display:flex;flex-wrap:wrap;gap:6px;min-height:36px;}
+  .group-card .empty-hint{color:var(--ink-soft);font-size:12.5px;}
+  .assign-btn{
+    font-family:var(--sans);font-size:12.5px;font-weight:600;cursor:pointer;
+    border-radius:7px;border:1px solid var(--line);padding:5px 10px;
+    background:var(--paper-2);color:var(--ink);
+  }
+  .assign-btn:disabled{opacity:.4;cursor:not-allowed;}
 
   footer{padding:40px 0 60px;text-align:center;color:var(--ink-soft);font-size:12.5px;font-family:var(--mono);}
 
@@ -88,12 +112,12 @@
 <body>
 <div class="wrap">
   <div class="eyebrow">중고등부 여름캠프 · 사전 모임(8.9) 도구</div>
-  <h1>조 편성 도구 — 시드 배정</h1>
-  <p class="lead">참가자 명단을 붙여넣고 버튼을 누르면 성별×학년대(남중·남고·여중·여고) 시드풀로 나눈 뒤, 각 풀 안에서 무작위로 뽑아 1조→2조→3조→4조 순서로 배정합니다. 실제 조 추첨은 현장에서 진짜 제비뽑기로 진행하므로, 이 도구는 배정 계산과 결과 명단 다운로드까지만 담당합니다. <b>입력한 명단은 이 브라우저 밖으로 전송되지 않습니다.</b></p>
+  <h1>조 편성 도구 — 수동 배정</h1>
+  <p class="lead">참가자 명단을 불러온 뒤, 명단에서 학생을 <b>드래그해서 조 칸에 놓거나</b>, <b>클릭으로 선택하고 원하는 조 버튼을 누르는 방식</b>으로 직접 배정합니다. 자동으로 조가 정해지지 않으며, 배정은 전부 여기서 수동으로 결정됩니다. <b>입력한 명단은 이 브라우저 밖으로 전송되지 않습니다.</b></p>
 
   <div class="card">
     <h2>1. 참가자 명단 준비</h2>
-    <p class="hint">참가 신청 구글시트에서 자동으로 불러오거나, 직접 입력할 수 있습니다. 자동 불러오기는 이름·학년(학교급)은 그대로 가져오고, 성별은 생년월일 뒷자리로 추정합니다 — 추정이 안 되는 학생은 <code>?</code>로 표시되니 계산 전에 직접 채워주세요.</p>
+    <p class="hint">참가 신청 구글시트에서 자동으로 불러오거나, 직접 입력할 수 있습니다. 자동 불러오기는 이름·학년(학교급)은 그대로 가져오고, 성별은 생년월일 뒷자리로 추정합니다 — 추정이 안 되는 학생은 <code>?</code>로 표시되니 명단 불러오기 전에 직접 채워주세요.</p>
     <div class="btn-row">
       <button class="primary" id="fetchBtn">구글시트에서 자동 불러오기</button>
     </div>
@@ -104,20 +128,23 @@
 신서은,여,중
 홍은진,여,고"></textarea>
     <div class="btn-row">
-      <button class="primary" id="computeBtn">조 편성 계산</button>
+      <button class="primary" id="loadBtn">명단 불러오기</button>
       <button class="ghost" id="clearBtn">초기화</button>
     </div>
     <div class="error" id="errorBox" style="display:none;"></div>
-    <div class="seed-summary" id="seedSummary" style="display:none;"></div>
   </div>
 
-  <div class="card" id="resultCard" style="display:none;">
-    <h2>2. 배정 결과</h2>
-    <p class="hint">아래 명단대로 현장에서 제비뽑기용 이름표·번호표를 준비하면 됩니다.</p>
+  <div class="card" id="boardCard" style="display:none;">
+    <h2>2. 수동 배정</h2>
+    <p class="hint">학생 이름을 드래그해서 아래 조 칸에 놓거나, 클릭해 선택한 뒤(여러 명 동시 선택 가능) 조 카드의 배정 버튼을 누르세요. 조에 배정된 학생을 다시 클릭하면 미배정 명단으로 돌아옵니다.</p>
+    <div class="seed-summary" id="seedSummary"></div>
+    <p class="hint" style="margin-top:16px;margin-bottom:6px;"><b>미배정 명단</b></p>
+    <div class="pool" id="unassignedPool"></div>
+    <div class="group-grid" id="groupGrid"></div>
     <div class="btn-row">
       <button class="primary" id="downloadBtn">명단 다운로드 (CSV)</button>
     </div>
-    <div class="group-grid" id="groupGrid"></div>
+    <div class="error" id="downloadWarning" style="display:none;color:var(--ink-soft);"></div>
   </div>
 </div>
 
@@ -130,31 +157,20 @@
   const fetchBtn = document.getElementById('fetchBtn');
   const fetchStatus = document.getElementById('fetchStatus');
   const rosterInput = document.getElementById('rosterInput');
-  const computeBtn = document.getElementById('computeBtn');
+  const loadBtn = document.getElementById('loadBtn');
   const clearBtn = document.getElementById('clearBtn');
   const errorBox = document.getElementById('errorBox');
+  const boardCard = document.getElementById('boardCard');
   const seedSummary = document.getElementById('seedSummary');
-  const resultCard = document.getElementById('resultCard');
+  const unassignedPool = document.getElementById('unassignedPool');
   const groupGrid = document.getElementById('groupGrid');
   const downloadBtn = document.getElementById('downloadBtn');
+  const downloadWarning = document.getElementById('downloadWarning');
 
-  const SEED_ORDER = [
-    {key:'남중', gender:'남', level:'중'},
-    {key:'남고', gender:'남', level:'고'},
-    {key:'여중', gender:'여', level:'중'},
-    {key:'여고', gender:'여', level:'고'},
-  ];
+  const SEED_LABELS = {'남중':'남자 중학생','남고':'남자 고등학생','여중':'여자 중학생','여고':'여자 고등학생'};
 
-  let assigned = [];      // [{name, gender, level, seed, group}]
-
-  function shuffle(arr){
-    const a = arr.slice();
-    for(let i=a.length-1;i>0;i--){
-      const j = Math.floor(Math.random()*(i+1));
-      [a[i],a[j]] = [a[j],a[i]];
-    }
-    return a;
-  }
+  let members = [];       // [{name, gender, level, seed, group}] group: 0 = 미배정, 1~4 = 조
+  let selected = new Set();
 
   function normGender(s){
     s = s.trim();
@@ -186,56 +202,122 @@
         errors.push(`${idx+1}행: "${line}" — 성별(남/여) 또는 학교급(중/고)을 확인해주세요`);
         return;
       }
-      rows.push({name, gender, level, seed: gender+level});
+      rows.push({name, gender, level, seed: gender+level, group: 0});
     });
     return {rows, errors};
   }
 
-  function computeAssignment(rows){
-    const result = [];
-    SEED_ORDER.forEach(pool => {
-      const members = shuffle(rows.filter(r => r.seed === pool.key));
-      members.forEach((m, i) => {
-        result.push(Object.assign({}, m, {group: (i % 4) + 1}));
-      });
-    });
-    return result;
-  }
-
-  function renderSeedSummary(rows){
+  function renderSeedSummary(){
     seedSummary.innerHTML = '';
-    SEED_ORDER.forEach(pool => {
-      const count = rows.filter(r => r.seed === pool.key).length;
+    Object.keys(SEED_LABELS).forEach(key => {
+      const total = members.filter(m => m.seed === key).length;
+      const left = members.filter(m => m.seed === key && m.group === 0).length;
       const box = document.createElement('div');
       box.className = 'seed-box';
-      box.innerHTML = `<div class="k">${pool.key === '남중' ? '남자 중학생' : pool.key === '남고' ? '남자 고등학생' : pool.key === '여중' ? '여자 중학생' : '여자 고등학생'}</div><div class="v">${count}명</div>`;
+      box.innerHTML = `<div class="k">${SEED_LABELS[key]}</div><div class="v">${left} / ${total}명 미배정</div>`;
       seedSummary.appendChild(box);
     });
-    seedSummary.style.display = 'grid';
   }
 
-  function renderGroupGrid(){
+  function makeChip(m){
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (selected.has(m.name) ? ' selected' : '');
+    chip.draggable = true;
+    chip.dataset.name = m.name;
+    chip.innerHTML = `<span>${m.name}</span><span class="tag">${m.gender}·${m.level}</span>`;
+    chip.addEventListener('click', () => {
+      if(selected.has(m.name)) selected.delete(m.name);
+      else selected.add(m.name);
+      renderBoard();
+    });
+    chip.addEventListener('dragstart', (e) => {
+      if(!selected.has(m.name)){ selected = new Set([m.name]); }
+      e.dataTransfer.setData('text/plain', m.name);
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    return chip;
+  }
+
+  function moveSelectedTo(group){
+    if(selected.size === 0) return;
+    members.forEach(m => { if(selected.has(m.name)) m.group = group; });
+    selected.clear();
+    renderBoard();
+  }
+
+  function setupDropTarget(el, group){
+    el.addEventListener('dragover', (e) => { e.preventDefault(); el.classList.add('dragover'); });
+    el.addEventListener('dragleave', () => el.classList.remove('dragover'));
+    el.addEventListener('drop', (e) => {
+      e.preventDefault();
+      el.classList.remove('dragover');
+      const name = e.dataTransfer.getData('text/plain');
+      const names = selected.has(name) ? new Set(selected) : new Set([name]);
+      members.forEach(m => { if(names.has(m.name)) m.group = group; });
+      selected.clear();
+      renderBoard();
+    });
+  }
+
+  function renderBoard(){
+    renderSeedSummary();
+
+    unassignedPool.innerHTML = '';
+    const unassigned = members.filter(m => m.group === 0);
+    if(unassigned.length === 0){
+      unassignedPool.innerHTML = '<span class="empty-hint" style="color:var(--ink-soft);font-size:13px;">미배정 인원 없음</span>';
+    } else {
+      unassigned.forEach(m => unassignedPool.appendChild(makeChip(m)));
+    }
+
     groupGrid.innerHTML = '';
     for(let g=1; g<=4; g++){
-      const members = assigned.filter(a => a.group === g);
-      const male = members.filter(m=>m.gender==='남').length;
-      const female = members.filter(m=>m.gender==='여').length;
-      const middle = members.filter(m=>m.level==='중').length;
-      const high = members.filter(m=>m.level==='고').length;
+      const groupMembers = members.filter(m => m.group === g);
+      const male = groupMembers.filter(m=>m.gender==='남').length;
+      const female = groupMembers.filter(m=>m.gender==='여').length;
+      const middle = groupMembers.filter(m=>m.level==='중').length;
+      const high = groupMembers.filter(m=>m.level==='고').length;
+
       const card = document.createElement('div');
       card.className = 'group-card';
-      const items = members.map(m => `<li>${m.name} <span style="color:var(--ink-soft);font-size:12px;">(${m.gender}·${m.level})</span></li>`).join('');
-      card.innerHTML = `<h3>${g}조</h3><div class="stat">총 ${members.length}명 · 남${male}·여${female} · 중${middle}·고${high}</div><ul>${items || '<li class="pending">배정 인원 없음</li>'}</ul>`;
+      card.innerHTML = `
+        <div class="gc-head">
+          <h3>${g}조</h3>
+          <button class="assign-btn" data-group="${g}">선택 인원 배정</button>
+        </div>
+        <div class="stat">총 ${groupMembers.length}명 · 남${male}·여${female} · 중${middle}·고${high}</div>
+      `;
+      const list = document.createElement('div');
+      list.className = 'chip-list';
+      if(groupMembers.length === 0){
+        list.innerHTML = '<span class="empty-hint">배정 인원 없음</span>';
+      } else {
+        groupMembers.forEach(m => list.appendChild(makeChip(m)));
+      }
+      card.appendChild(list);
+      card.querySelector('.assign-btn').addEventListener('click', () => moveSelectedTo(g));
+      setupDropTarget(card, g);
       groupGrid.appendChild(card);
+    }
+
+    setupDropTarget(unassignedPool, 0);
+
+    const remaining = members.filter(m => m.group === 0).length;
+    if(remaining > 0){
+      downloadWarning.style.display = 'block';
+      downloadWarning.style.color = 'var(--ink-soft)';
+      downloadWarning.textContent = `아직 미배정 ${remaining}명이 있습니다. 다운로드하면 이 학생들은 "미배정"으로 표시됩니다.`;
+    } else {
+      downloadWarning.style.display = 'none';
     }
   }
 
   function downloadCsv(){
     const rows = [['조','이름','성별','학교급']];
-    assigned
+    members
       .slice()
       .sort((a,b) => a.group - b.group || a.name.localeCompare(b.name, 'ko'))
-      .forEach(m => rows.push([m.group + '조', m.name, m.gender, m.level]));
+      .forEach(m => rows.push([m.group === 0 ? '미배정' : m.group + '조', m.name, m.gender, m.level]));
     const csv = '﻿' + rows.map(r => r.join(',')).join('\r\n');
     const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
     const url = URL.createObjectURL(blob);
@@ -248,7 +330,7 @@
     URL.revokeObjectURL(url);
   }
 
-  computeBtn.addEventListener('click', () => {
+  loadBtn.addEventListener('click', () => {
     errorBox.style.display = 'none';
     const {rows, errors} = parseRoster(rosterInput.value);
     if(errors.length){
@@ -258,19 +340,18 @@
     if(rows.length === 0){
       return;
     }
-    assigned = computeAssignment(rows);
-    renderSeedSummary(rows);
-    renderGroupGrid();
-    resultCard.style.display = 'block';
+    members = rows;
+    selected.clear();
+    boardCard.style.display = 'block';
+    renderBoard();
   });
 
   clearBtn.addEventListener('click', () => {
     rosterInput.value = '';
-    assigned = [];
-    seedSummary.style.display = 'none';
-    resultCard.style.display = 'none';
+    members = [];
+    selected.clear();
+    boardCard.style.display = 'none';
     errorBox.style.display = 'none';
-    groupGrid.innerHTML = '';
   });
 
   downloadBtn.addEventListener('click', downloadCsv);
