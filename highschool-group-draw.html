@@ -194,13 +194,13 @@
 <div class="wrap">
   <div class="eyebrow">중고등부 여름캠프 · 사전 모임(8.9) 도구</div>
   <h1>여름캠프 조 편성</h1>
-  <p class="lead">참가자 명단을 불러온 뒤, 명단에서 학생을 <b>드래그해서 조 칸에 놓거나</b>, <b>클릭으로 선택하고 원하는 조 버튼을 누르는 방식</b>으로 직접 배정합니다. 자동으로 조가 정해지지 않으며, 배정은 전부 여기서 수동으로 결정됩니다. <b>입력한 명단은 이 브라우저 밖으로 전송되지 않습니다.</b></p>
+  <p class="lead">참가자 명단을 불러온 뒤, 명단에서 학생을 <b>드래그해서 조 칸에 놓거나</b>, <b>클릭으로 선택하고 원하는 조 버튼을 누르는 방식</b>으로 직접 배정합니다. <b>입력한 명단은 이 브라우저 밖으로 전송되지 않습니다.</b></p>
 
   <div class="card">
-    <div class="card-head"><span class="step">1</span><h2>참가자 명단 준비</h2></div>
+    <div class="card-head"><span class="step">1</span><h2>참가자 명단</h2></div>
     <p class="hint">참가 신청 구글시트에서 자동으로 불러오거나, 직접 입력할 수 있습니다. 자동 불러오기는 이름·학년(학교급)은 그대로 가져오고, 성별은 생년월일 뒷자리로 추정합니다 — 추정이 안 되는 학생은 <code>?</code>로 표시되니 명단 불러오기 전에 직접 채워주세요.</p>
     <div class="btn-row">
-      <button class="primary" id="fetchBtn">구글시트에서 자동 불러오기</button>
+      <button class="primary" id="fetchBtn">참가자 불러오기</button>
     </div>
     <div class="status-text" id="fetchStatus" style="display:none;"></div>
     <p class="hint" style="margin-top:20px;">한 줄에 한 명씩, <code>이름,성별,학교급</code> 순서입니다. 성별은 남/여, 학교급은 중/고로 씁니다. 쉼표 대신 탭(스프레드시트 붙여넣기)도 됩니다.<br>예) 김승윤,남,중</p>
@@ -216,7 +216,7 @@
   </div>
 
   <div class="card" id="boardCard" style="display:none;">
-    <div class="card-head"><span class="step">2</span><h2>수동 배정</h2></div>
+    <div class="card-head"><span class="step">2</span><h2>배정 결과</h2></div>
     <p class="hint">학생 이름을 드래그해서 아래 조 칸에 놓거나, 클릭해 선택한 뒤(여러 명 동시 선택 가능) 조 카드의 배정 버튼을 누르세요. 조에 배정된 학생을 다시 클릭하면 미배정 명단으로 돌아옵니다.</p>
     <div class="seed-summary" id="seedSummary"></div>
     <p class="section-label">미배정 명단 — 성별·학년대로 묶어 보여줍니다</p>
