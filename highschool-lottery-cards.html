@@ -122,7 +122,7 @@
     display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;
     background:var(--dot-bg,var(--paper-2));
   }
-  .lot-card .big{font-family:var(--serif);font-size:30px;font-weight:800;color:var(--dot);}
+  .lot-card .big{font-family:var(--serif);font-size:30px;font-weight:800;color:var(--ink);}
   .lot-card .sm{font-family:var(--mono);font-size:11px;color:var(--ink-soft);}
 
   .foot-note{color:var(--ink-soft);font-size:13px;text-align:center;margin-top:50px;}
@@ -154,7 +154,7 @@
 
   <div class="eyebrow">2026 중고등부 여름캠프 · 조추첨</div>
   <h1>조추첨 인쇄용 카드</h1>
-  <p class="lead">오프라인 제비뽑기 진행을 위한 이름 카드(시드별)와 조 뽑기 쪽지(1~4조)입니다. 인쇄 후 점선을 따라 잘라 사용하세요.</p>
+  <p class="lead">오프라인 제비뽑기 진행을 위한 조 뽑기 쪽지(1~4조)입니다. 시드(남중·남고·여중·여고)별로 통을 나누고, 인쇄 후 점선을 따라 잘라 사용하세요.</p>
   <p class="lead">기준일 2026-08-08 · 참가 신청 19명(목표 25명 중 6명 미접수 — 인쇄 직전 최신 명단 재확인 필요)</p>
 
   <div class="toolbar">
@@ -165,91 +165,61 @@
   <div class="guide">
     <h2>진행 방법</h2>
     <ol>
-      <li>이름 카드를 시드(남중·남고·여중·여고)별로 잘라 색깔이 다른 4개의 통(또는 봉투)에 나눠 담습니다.</li>
-      <li>진행자가 남중 → 남고 → 여중 → 여고 순으로 통을 돌아가며 카드를 한 장씩 뽑아 이름을 호명합니다. 한 시드가 먼저 소진되면 남은 시드끼리 순서대로 이어서 진행합니다.</li>
-      <li>호명된 학생이 직접 조 뽑기함에서 쪽지를 1장 뽑아 자신의 조(1~4조)를 확인합니다.</li>
-      <li>특정 조 인원이 먼저 다 차면, 진행자가 그 조 번호 쪽지를 뽑기함에서 미리 빼 두어 인원이 한쪽으로 몰리지 않도록 조정합니다.</li>
+      <li>조 뽑기 쪽지를 시드(남중·남고·여중·여고)별로 잘라 색깔이 다른 4개의 통(또는 봉투)에 나눠 담습니다. 각 통 안에는 1~4조 쪽지가 동일한 수량으로 들어 있어, 어느 시드에서 뽑든 특정 조로 쏠리지 않습니다.</li>
+      <li>진행자가 참가자 명단을 보고 학생을 시드 순서(남중 → 남고 → 여중 → 여고, 또는 편한 순서)대로 호명합니다.</li>
+      <li>호명된 학생이 자신의 시드 통에서 쪽지를 1장 뽑아 조(1~4조)를 확인합니다.</li>
       <li>확정된 배정 결과는 <a href="https://gunhojin.github.io/amsa-sichaldapsa-2026/highschool-group-draw.html">조편성 도구</a>에 옮겨 기록하거나 수기로 워크북 「9. 조 배정」에 반영합니다.</li>
-      <li>참가 신청이 늦게 들어온 학생은 하단의 빈 카드에 이름·학년을 직접 적어 같은 시드 통에 추가하면 됩니다.</li>
+      <li>참가 신청이 늦게 들어온 학생은 같은 시드 통에 쪽지를 1장 추가로 만들어 넣으면 됩니다(어느 조 번호를 추가할지는 그때 조별 인원이 가장 적은 조로 맞춥니다).</li>
     </ol>
-    <div class="note">※ 남고 시드는 현재 1명뿐입니다. 인원이 매우 적은 시드는 진행자가 먼저 조를 배정하거나, 다른 시드와 함께 뽑는 방식으로 유연하게 운영해도 됩니다.</div>
+    <div class="note">※ 시드별 쪽지 수량은 최소 4장(1~4조 각 1장)을 보장하고, 인원이 많은 시드는 조당 장수를 균등하게 늘렸습니다. 남고처럼 인원이 아주 적은 시드도 4개 조 중 어디든 뽑힐 수 있도록 여유를 뒀습니다.</div>
   </div>
 
-  <div class="seed-legend">
-    <div class="item" style="--dot:var(--seed-mj)"><div class="name">남중</div><div class="cnt">8명</div></div>
-    <div class="item" style="--dot:var(--seed-mh)"><div class="name">남고</div><div class="cnt">1명</div></div>
-    <div class="item" style="--dot:var(--seed-fj)"><div class="name">여중</div><div class="cnt">6명</div></div>
-    <div class="item" style="--dot:var(--seed-fh)"><div class="name">여고</div><div class="cnt">4명</div></div>
-  </div>
+  <div class="seed-legend" id="seedLegend"></div>
 
-  <!-- 남중 -->
-  <div class="sheet-title" style="--dot:var(--seed-mj)"><span class="dot"></span>남중 이름 카드 (8명 + 여유 2장)</div>
-  <div class="sheet" style="--dot:var(--seed-mj);--dot-bg:var(--seed-mj-bg)">
-    <div class="card"><div class="top"><span class="grade">중3</span><span class="seed-dot"></span></div><div class="nm">김승윤</div><div class="bap">보니파시오</div><div class="foot">남중 · SUMMER CAMP 2026</div></div>
-    <div class="card"><div class="top"><span class="grade">중3</span><span class="seed-dot"></span></div><div class="nm">민지우</div><div class="bap">사도요한</div><div class="foot">남중 · SUMMER CAMP 2026</div></div>
-    <div class="card"><div class="top"><span class="grade">중2</span><span class="seed-dot"></span></div><div class="nm">진시원</div><div class="bap">알베르토</div><div class="foot">남중 · SUMMER CAMP 2026</div></div>
-    <div class="card"><div class="top"><span class="grade">중1</span><span class="seed-dot"></span></div><div class="nm">최준범</div><div class="bap">안토니오</div><div class="foot">남중 · SUMMER CAMP 2026</div></div>
-    <div class="card"><div class="top"><span class="grade">중2</span><span class="seed-dot"></span></div><div class="nm">간우진</div><div class="bap">니콜라오</div><div class="foot">남중 · SUMMER CAMP 2026</div></div>
-    <div class="card"><div class="top"><span class="grade">중3</span><span class="seed-dot"></span></div><div class="nm">손윤호</div><div class="bap">바오로</div><div class="foot">남중 · SUMMER CAMP 2026</div></div>
-    <div class="card"><div class="top"><span class="grade">중1</span><span class="seed-dot"></span></div><div class="nm">손윤성</div><div class="bap">스테파노</div><div class="foot">남중 · SUMMER CAMP 2026</div></div>
-    <div class="card"><div class="top"><span class="grade">중3</span><span class="seed-dot"></span></div><div class="nm">김세환</div><div class="bap">다니엘</div><div class="foot">남중 · SUMMER CAMP 2026</div></div>
-    <div class="card blank"><div class="nm">이름 직접 기입</div><div class="bap">( 학년 / 세례명 )</div></div>
-    <div class="card blank"><div class="nm">이름 직접 기입</div><div class="bap">( 학년 / 세례명 )</div></div>
-  </div>
-
-  <!-- 남고 -->
-  <div class="sheet-title" style="--dot:var(--seed-mh)"><span class="dot"></span>남고 이름 카드 (1명 + 여유 3장)</div>
-  <div class="sheet" style="--dot:var(--seed-mh);--dot-bg:var(--seed-mh-bg)">
-    <div class="card"><div class="top"><span class="grade">고1</span><span class="seed-dot"></span></div><div class="nm">남승완</div><div class="bap">마르티노</div><div class="foot">남고 · SUMMER CAMP 2026</div></div>
-    <div class="card blank"><div class="nm">이름 직접 기입</div><div class="bap">( 학년 / 세례명 )</div></div>
-    <div class="card blank"><div class="nm">이름 직접 기입</div><div class="bap">( 학년 / 세례명 )</div></div>
-    <div class="card blank"><div class="nm">이름 직접 기입</div><div class="bap">( 학년 / 세례명 )</div></div>
-  </div>
-
-  <!-- 여중 -->
-  <div class="sheet-title" style="--dot:var(--seed-fj)"><span class="dot"></span>여중 이름 카드 (6명 + 여유 2장)</div>
-  <div class="sheet" style="--dot:var(--seed-fj);--dot-bg:var(--seed-fj-bg)">
-    <div class="card"><div class="top"><span class="grade">중1</span><span class="seed-dot"></span></div><div class="nm">신서은</div><div class="bap">엘리사벳</div><div class="foot">여중 · SUMMER CAMP 2026</div></div>
-    <div class="card"><div class="top"><span class="grade">중1</span><span class="seed-dot"></span></div><div class="nm">이채현</div><div class="bap">엠마누엘라</div><div class="foot">여중 · SUMMER CAMP 2026</div></div>
-    <div class="card"><div class="top"><span class="grade">중1</span><span class="seed-dot"></span></div><div class="nm">이경주</div><div class="bap">스텔라</div><div class="foot">여중 · SUMMER CAMP 2026</div></div>
-    <div class="card"><div class="top"><span class="grade">중3</span><span class="seed-dot"></span></div><div class="nm">김다온</div><div class="bap">베아트리체</div><div class="foot">여중 · SUMMER CAMP 2026</div></div>
-    <div class="card"><div class="top"><span class="grade">중3</span><span class="seed-dot"></span></div><div class="nm">정윤하</div><div class="bap">미카엘라</div><div class="foot">여중 · SUMMER CAMP 2026</div></div>
-    <div class="card"><div class="top"><span class="grade">중3</span><span class="seed-dot"></span></div><div class="nm">류세라</div><div class="bap">로사</div><div class="foot">여중 · SUMMER CAMP 2026</div></div>
-    <div class="card blank"><div class="nm">이름 직접 기입</div><div class="bap">( 학년 / 세례명 )</div></div>
-    <div class="card blank"><div class="nm">이름 직접 기입</div><div class="bap">( 학년 / 세례명 )</div></div>
-  </div>
-
-  <!-- 여고 -->
-  <div class="sheet-title" style="--dot:var(--seed-fh)"><span class="dot"></span>여고 이름 카드 (4명 + 여유 2장)</div>
-  <div class="sheet" style="--dot:var(--seed-fh);--dot-bg:var(--seed-fh-bg)">
-    <div class="card"><div class="top"><span class="grade">고1</span><span class="seed-dot"></span></div><div class="nm">홍은진</div><div class="bap">마리아</div><div class="foot">여고 · SUMMER CAMP 2026</div></div>
-    <div class="card"><div class="top"><span class="grade">고3</span><span class="seed-dot"></span></div><div class="nm">정윤서</div><div class="bap">릴리안</div><div class="foot">여고 · SUMMER CAMP 2026</div></div>
-    <div class="card"><div class="top"><span class="grade">고2</span><span class="seed-dot"></span></div><div class="nm">이서영</div><div class="bap">릴리안</div><div class="foot">여고 · SUMMER CAMP 2026</div></div>
-    <div class="card"><div class="top"><span class="grade">고1</span><span class="seed-dot"></span></div><div class="nm">김가빈</div><div class="bap">미카엘라</div><div class="foot">여고 · SUMMER CAMP 2026</div></div>
-    <div class="card blank"><div class="nm">이름 직접 기입</div><div class="bap">( 학년 / 세례명 )</div></div>
-    <div class="card blank"><div class="nm">이름 직접 기입</div><div class="bap">( 학년 / 세례명 )</div></div>
-  </div>
-
-  <!-- 조 뽑기 쪽지 -->
-  <div class="sheet-title" style="--dot:var(--accent)"><span class="dot"></span>조 뽑기 쪽지 (1~4조 각 6장, 총 24장)</div>
-  <div class="sheet" id="lotSheet"></div>
+  <div id="seedSheets"></div>
 
   <p class="foot-note">암사동성당 중고등부 2026 여름캠프 · gunhojin.github.io/amsa-sichaldapsa-2026</p>
 </div>
 
 <script>
+  const seeds = [
+    {key:'mj', label:'남중', students:8,  dot:'var(--seed-mj)', bg:'var(--seed-mj-bg)'},
+    {key:'mh', label:'남고', students:1,  dot:'var(--seed-mh)', bg:'var(--seed-mh-bg)'},
+    {key:'fj', label:'여중', students:6,  dot:'var(--seed-fj)', bg:'var(--seed-fj-bg)'},
+    {key:'fh', label:'여고', students:4,  dot:'var(--seed-fh)', bg:'var(--seed-fh-bg)'},
+  ];
   const groups = [
     {n:'1', c:'var(--group-1)'}, {n:'2', c:'var(--group-2)'},
     {n:'3', c:'var(--group-3)'}, {n:'4', c:'var(--group-4)'}
   ];
-  const lots = [];
-  for (let i = 0; i < 6; i++) groups.forEach(g => lots.push(g));
-  document.getElementById('lotSheet').innerHTML = lots.map(g =>
-    `<div class="lot-card" style="--dot:${g.c};--dot-bg:color-mix(in srgb, ${g.c} 12%, var(--paper-2))">
-       <div class="big">${g.n}조</div>
-       <div class="sm">SUMMER CAMP 2026</div>
-     </div>`
-  ).join('');
+
+  // 시드별 쪽지 수량: 최소 4장(1~4조 각 1장 보장), 그 이상은 4의 배수로 올림해 조당 동일 수량 유지
+  function lotCountFor(students){
+    return Math.max(4, Math.ceil(students / 4) * 4);
+  }
+
+  document.getElementById('seedLegend').innerHTML = seeds.map(s => {
+    const total = lotCountFor(s.students);
+    return `<div class="item" style="--dot:${s.dot}">
+      <div class="name">${s.label}</div>
+      <div class="cnt">${s.students}명 · 쪽지 ${total}장(조당 ${total/4}장)</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('seedSheets').innerHTML = seeds.map(s => {
+    const total = lotCountFor(s.students);
+    const perGroup = total / 4;
+    const lots = [];
+    for (let i = 0; i < perGroup; i++) groups.forEach(g => lots.push(g));
+    const cards = lots.map(g =>
+      `<div class="lot-card" style="--dot-bg:${s.bg}">
+         <div class="big">${g.n}조</div>
+         <div class="sm">${s.label} · SUMMER CAMP 2026</div>
+       </div>`
+    ).join('');
+    return `<div class="sheet-title" style="--dot:${s.dot}"><span class="dot"></span>${s.label} 조 뽑기 쪽지 (${s.students}명 · 총 ${total}장, 조당 ${perGroup}장)</div>
+      <div class="sheet">${cards}</div>`;
+  }).join('');
 </script>
 </body>
 </html>
