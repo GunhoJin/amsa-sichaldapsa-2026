@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>중고등부 여름캠프 - 조추첨 인쇄용 카드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+  @font-face{
+    font-family:'Paperlogy';
+    src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Regular.woff2') format('woff2');
+    font-weight:400;font-display:swap;
+  }
+  @font-face{
+    font-family:'Paperlogy';
+    src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-6SemiBold.woff2') format('woff2');
+    font-weight:600;font-display:swap;
+  }
+  @font-face{
+    font-family:'Paperlogy';
+    src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2') format('woff2');
+    font-weight:700;font-display:swap;
+  }
+  @font-face{
+    font-family:'Paperlogy';
+    src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2');
+    font-weight:800;font-display:swap;
+  }
+  :root{
+    --paper:#f3f0ea; --paper-2:#ffffff; --paper-3:#ebe7de;
+    --ink:#211d16; --ink-soft:#6b6355;
+    --line:#ddd6c7; --accent:#b8722a; --accent-ink:#40260b; --accent-2:#2c5f6f;
+    --accent-2-ink:#ffffff; --warn-bg:#f3e3c4; --warn-ink:#6b4a10; --danger:#a8402f;
+    --radius:14px;
+
+    --seed-mj:#4f6f9e; --seed-mj-bg:color-mix(in srgb, var(--seed-mj) 14%, var(--paper-2));
+    --seed-mh:#3f8a6e; --seed-mh-bg:color-mix(in srgb, var(--seed-mh) 14%, var(--paper-2));
+    --seed-fj:#b25a78; --seed-fj-bg:color-mix(in srgb, var(--seed-fj) 14%, var(--paper-2));
+    --seed-fh:#7462ab; --seed-fh-bg:color-mix(in srgb, var(--seed-fh) 14%, var(--paper-2));
+
+    --group-1:#b8722a; --group-2:#2c5f6f; --group-3:#8a4a3a; --group-4:#5c7047;
+
+    --serif:'Paperlogy','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',sans-serif;
+    --sans:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',-apple-system,BlinkMacSystemFont,sans-serif;
+    --mono:ui-monospace,'SF Mono','Cascadia Mono','Noto Sans Mono','Malgun Gothic','맑은 고딕',monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#17191a; --paper-2:#1f2224; --paper-3:#262a2b; --ink:#eceae5; --ink-soft:#9ba09a;
+      --line:#33372f; --accent:#e0a744; --accent-ink:#241a08; --accent-2:#5fa0b3;
+      --accent-2-ink:#0d1e22; --warn-bg:#3a2c10; --warn-ink:#f0c877; --danger:#e2796a;
+      --seed-mj:#8fadd9; --seed-mh:#72c4a5; --seed-fj:#e096ae; --seed-fh:#ab9be3;
+      --group-1:#e0a744; --group-2:#5fa0b3; --group-3:#d18871; --group-4:#8fac7a;
+    }
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);}
+  body{font-family:var(--sans);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:var(--serif);text-wrap:balance;margin:0;font-weight:700;letter-spacing:-.01em;}
+
+  .wrap{max-width:920px;margin:0 auto;padding:40px 24px 80px;}
+  .eyebrow{font-family:var(--mono);font-size:14px;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;margin-bottom:12px;}
+  h1{font-size:clamp(28px,4vw,38px);font-weight:800;margin-bottom:10px;}
+  .lead{color:var(--ink-soft);font-size:16px;max-width:70ch;margin-bottom:8px;}
+
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0 30px;}
+  button{
+    font-family:var(--sans);font-size:15px;font-weight:600;cursor:pointer;
+    border-radius:9px;border:1px solid var(--line);padding:11px 20px;
+    background:var(--paper-2);color:var(--ink);
+  }
+  button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);}
+
+  .guide{
+    background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);
+    padding:24px 26px;margin-bottom:30px;
+  }
+  .guide h2{font-size:19px;margin-bottom:14px;}
+  .guide ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:9px;font-size:15.5px;}
+  .guide .note{margin-top:16px;padding:12px 14px;background:var(--warn-bg);color:var(--warn-ink);border-radius:9px;font-size:14.5px;}
+
+  .seed-legend{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:30px;}
+  .seed-legend .item{
+    background:var(--paper-2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;
+    border-top:4px solid var(--dot);font-size:14px;
+  }
+  .seed-legend .item .name{font-weight:700;margin-bottom:3px;}
+  .seed-legend .item .cnt{color:var(--ink-soft);font-family:var(--mono);}
+
+  /* ---- 카드 시트 ---- */
+  .sheet-title{
+    display:flex;align-items:center;gap:10px;margin:0 0 14px;font-size:15px;font-weight:600;color:var(--ink-soft);
+  }
+  .sheet-title .dot{width:11px;height:11px;border-radius:50%;background:var(--dot,var(--ink-soft));flex-shrink:0;}
+  .sheet{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:0;
+    border-top:1px dashed var(--line);border-left:1px dashed var(--line);
+    margin-bottom:44px;
+  }
+  .card{
+    position:relative;aspect-ratio:85/54;border-right:1px dashed var(--line);border-bottom:1px dashed var(--line);
+    padding:14px 16px;display:flex;flex-direction:column;justify-content:space-between;
+    background:var(--dot-bg,var(--paper-2));
+  }
+  .card .top{display:flex;align-items:center;justify-content:space-between;}
+  .card .grade{
+    font-family:var(--mono);font-size:12px;font-weight:700;color:var(--dot);
+    background:var(--paper-2);border:1px solid var(--dot);border-radius:6px;padding:2px 8px;
+  }
+  .card .seed-dot{width:9px;height:9px;border-radius:50%;background:var(--dot);}
+  .card .nm{font-family:var(--serif);font-size:23px;font-weight:800;line-height:1.2;}
+  .card .bap{font-size:12.5px;color:var(--ink-soft);}
+  .card .foot{font-family:var(--mono);font-size:10px;color:var(--ink-soft);letter-spacing:.03em;}
+  .card.blank .nm{color:var(--ink-soft);font-weight:600;font-size:14px;}
+  .card.blank{justify-content:center;align-items:center;text-align:center;}
+
+  /* 조 뽑기 쪽지 */
+  .lot-card{
+    position:relative;aspect-ratio:85/54;border-right:1px dashed var(--line);border-bottom:1px dashed var(--line);
+    display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;
+    background:var(--dot-bg,var(--paper-2));
+  }
+  .lot-card .big{font-family:var(--serif);font-size:30px;font-weight:800;color:var(--dot);}
+  .lot-card .sm{font-family:var(--mono);font-size:11px;color:var(--ink-soft);}
+
+  .foot-note{color:var(--ink-soft);font-size:13px;text-align:center;margin-top:50px;}
+
+  @media print{
+    body{background:#fff;}
+    .toolbar,.guide .note-noprint{display:none;}
+    .wrap{max-width:none;padding:0;margin:0;}
+    .guide,.seed-legend,.toolbar{display:none;}
+    .sheet-title{margin-top:0;}
+    .sheet{page-break-after:always;break-after:page;}
+    .card,.lot-card{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    @page{size:A4 portrait;margin:12mm;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">2026 중고등부 여름캠프 · 조추첨</div>
+  <h1>조추첨 인쇄용 카드</h1>
+  <p class="lead">오프라인 제비뽑기 진행을 위한 이름 카드(시드별)와 조 뽑기 쪽지(1~4조)입니다. 인쇄 후 점선을 따라 잘라 사용하세요.</p>
+  <p class="lead">기준일 2026-08-08 · 참가 신청 19명(목표 25명 중 6명 미접수 — 인쇄 직전 최신 명단 재확인 필요)</p>
+
+  <div class="toolbar">
+    <button class="primary" onclick="window.print()">🖨️ 인쇄하기</button>
+    <a href="https://gunhojin.github.io/amsa-sichaldapsa-2026/highschool-group-draw.html"><button>🎲 조편성 결과 입력 도구</button></a>
+  </div>
+
+  <div class="guide">
+    <h2>진행 방법</h2>
+    <ol>
+      <li>이름 카드를 시드(남중·남고·여중·여고)별로 잘라 색깔이 다른 4개의 통(또는 봉투)에 나눠 담습니다.</li>
+      <li>진행자가 남중 → 남고 → 여중 → 여고 순으로 통을 돌아가며 카드를 한 장씩 뽑아 이름을 호명합니다. 한 시드가 먼저 소진되면 남은 시드끼리 순서대로 이어서 진행합니다.</li>
+      <li>호명된 학생이 직접 조 뽑기함에서 쪽지를 1장 뽑아 자신의 조(1~4조)를 확인합니다.</li>
+      <li>특정 조 인원이 먼저 다 차면, 진행자가 그 조 번호 쪽지를 뽑기함에서 미리 빼 두어 인원이 한쪽으로 몰리지 않도록 조정합니다.</li>
+      <li>확정된 배정 결과는 <a href="https://gunhojin.github.io/amsa-sichaldapsa-2026/highschool-group-draw.html">조편성 도구</a>에 옮겨 기록하거나 수기로 워크북 「9. 조 배정」에 반영합니다.</li>
+      <li>참가 신청이 늦게 들어온 학생은 하단의 빈 카드에 이름·학년을 직접 적어 같은 시드 통에 추가하면 됩니다.</li>
+    </ol>
+    <div class="note">※ 남고 시드는 현재 1명뿐입니다. 인원이 매우 적은 시드는 진행자가 먼저 조를 배정하거나, 다른 시드와 함께 뽑는 방식으로 유연하게 운영해도 됩니다.</div>
+  </div>
+
+  <div class="seed-legend">
+    <div class="item" style="--dot:var(--seed-mj)"><div class="name">남중</div><div class="cnt">8명</div></div>
+    <div class="item" style="--dot:var(--seed-mh)"><div class="name">남고</div><div class="cnt">1명</div></div>
+    <div class="item" style="--dot:var(--seed-fj)"><div class="name">여중</div><div class="cnt">6명</div></div>
+    <div class="item" style="--dot:var(--seed-fh)"><div class="name">여고</div><div class="cnt">4명</div></div>
+  </div>
+
+  <!-- 남중 -->
+  <div class="sheet-title" style="--dot:var(--seed-mj)"><span class="dot"></span>남중 이름 카드 (8명 + 여유 2장)</div>
+  <div class="sheet" style="--dot:var(--seed-mj);--dot-bg:var(--seed-mj-bg)">
+    <div class="card"><div class="top"><span class="grade">중3</span><span class="seed-dot"></span></div><div class="nm">김승윤</div><div class="bap">보니파시오</div><div class="foot">남중 · SUMMER CAMP 2026</div></div>
+    <div class="card"><div class="top"><span class="grade">중3</span><span class="seed-dot"></span></div><div class="nm">민지우</div><div class="bap">사도요한</div><div class="foot">남중 · SUMMER CAMP 2026</div></div>
+    <div class="card"><div class="top"><span class="grade">중2</span><span class="seed-dot"></span></div><div class="nm">진시원</div><div class="bap">알베르토</div><div class="foot">남중 · SUMMER CAMP 2026</div></div>
+    <div class="card"><div class="top"><span class="grade">중1</span><span class="seed-dot"></span></div><div class="nm">최준범</div><div class="bap">안토니오</div><div class="foot">남중 · SUMMER CAMP 2026</div></div>
+    <div class="card"><div class="top"><span class="grade">중2</span><span class="seed-dot"></span></div><div class="nm">간우진</div><div class="bap">니콜라오</div><div class="foot">남중 · SUMMER CAMP 2026</div></div>
+    <div class="card"><div class="top"><span class="grade">중3</span><span class="seed-dot"></span></div><div class="nm">손윤호</div><div class="bap">바오로</div><div class="foot">남중 · SUMMER CAMP 2026</div></div>
+    <div class="card"><div class="top"><span class="grade">중1</span><span class="seed-dot"></span></div><div class="nm">손윤성</div><div class="bap">스테파노</div><div class="foot">남중 · SUMMER CAMP 2026</div></div>
+    <div class="card"><div class="top"><span class="grade">중3</span><span class="seed-dot"></span></div><div class="nm">김세환</div><div class="bap">다니엘</div><div class="foot">남중 · SUMMER CAMP 2026</div></div>
+    <div class="card blank"><div class="nm">이름 직접 기입</div><div class="bap">( 학년 / 세례명 )</div></div>
+    <div class="card blank"><div class="nm">이름 직접 기입</div><div class="bap">( 학년 / 세례명 )</div></div>
+  </div>
+
+  <!-- 남고 -->
+  <div class="sheet-title" style="--dot:var(--seed-mh)"><span class="dot"></span>남고 이름 카드 (1명 + 여유 3장)</div>
+  <div class="sheet" style="--dot:var(--seed-mh);--dot-bg:var(--seed-mh-bg)">
+    <div class="card"><div class="top"><span class="grade">고1</span><span class="seed-dot"></span></div><div class="nm">남승완</div><div class="bap">마르티노</div><div class="foot">남고 · SUMMER CAMP 2026</div></div>
+    <div class="card blank"><div class="nm">이름 직접 기입</div><div class="bap">( 학년 / 세례명 )</div></div>
+    <div class="card blank"><div class="nm">이름 직접 기입</div><div class="bap">( 학년 / 세례명 )</div></div>
+    <div class="card blank"><div class="nm">이름 직접 기입</div><div class="bap">( 학년 / 세례명 )</div></div>
+  </div>
+
+  <!-- 여중 -->
+  <div class="sheet-title" style="--dot:var(--seed-fj)"><span class="dot"></span>여중 이름 카드 (6명 + 여유 2장)</div>
+  <div class="sheet" style="--dot:var(--seed-fj);--dot-bg:var(--seed-fj-bg)">
+    <div class="card"><div class="top"><span class="grade">중1</span><span class="seed-dot"></span></div><div class="nm">신서은</div><div class="bap">엘리사벳</div><div class="foot">여중 · SUMMER CAMP 2026</div></div>
+    <div class="card"><div class="top"><span class="grade">중1</span><span class="seed-dot"></span></div><div class="nm">이채현</div><div class="bap">엠마누엘라</div><div class="foot">여중 · SUMMER CAMP 2026</div></div>
+    <div class="card"><div class="top"><span class="grade">중1</span><span class="seed-dot"></span></div><div class="nm">이경주</div><div class="bap">스텔라</div><div class="foot">여중 · SUMMER CAMP 2026</div></div>
+    <div class="card"><div class="top"><span class="grade">중3</span><span class="seed-dot"></span></div><div class="nm">김다온</div><div class="bap">베아트리체</div><div class="foot">여중 · SUMMER CAMP 2026</div></div>
+    <div class="card"><div class="top"><span class="grade">중3</span><span class="seed-dot"></span></div><div class="nm">정윤하</div><div class="bap">미카엘라</div><div class="foot">여중 · SUMMER CAMP 2026</div></div>
+    <div class="card"><div class="top"><span class="grade">중3</span><span class="seed-dot"></span></div><div class="nm">류세라</div><div class="bap">로사</div><div class="foot">여중 · SUMMER CAMP 2026</div></div>
+    <div class="card blank"><div class="nm">이름 직접 기입</div><div class="bap">( 학년 / 세례명 )</div></div>
+    <div class="card blank"><div class="nm">이름 직접 기입</div><div class="bap">( 학년 / 세례명 )</div></div>
+  </div>
+
+  <!-- 여고 -->
+  <div class="sheet-title" style="--dot:var(--seed-fh)"><span class="dot"></span>여고 이름 카드 (4명 + 여유 2장)</div>
+  <div class="sheet" style="--dot:var(--seed-fh);--dot-bg:var(--seed-fh-bg)">
+    <div class="card"><div class="top"><span class="grade">고1</span><span class="seed-dot"></span></div><div class="nm">홍은진</div><div class="bap">마리아</div><div class="foot">여고 · SUMMER CAMP 2026</div></div>
+    <div class="card"><div class="top"><span class="grade">고3</span><span class="seed-dot"></span></div><div class="nm">정윤서</div><div class="bap">릴리안</div><div class="foot">여고 · SUMMER CAMP 2026</div></div>
+    <div class="card"><div class="top"><span class="grade">고2</span><span class="seed-dot"></span></div><div class="nm">이서영</div><div class="bap">릴리안</div><div class="foot">여고 · SUMMER CAMP 2026</div></div>
+    <div class="card"><div class="top"><span class="grade">고1</span><span class="seed-dot"></span></div><div class="nm">김가빈</div><div class="bap">미카엘라</div><div class="foot">여고 · SUMMER CAMP 2026</div></div>
+    <div class="card blank"><div class="nm">이름 직접 기입</div><div class="bap">( 학년 / 세례명 )</div></div>
+    <div class="card blank"><div class="nm">이름 직접 기입</div><div class="bap">( 학년 / 세례명 )</div></div>
+  </div>
+
+  <!-- 조 뽑기 쪽지 -->
+  <div class="sheet-title" style="--dot:var(--accent)"><span class="dot"></span>조 뽑기 쪽지 (1~4조 각 6장, 총 24장)</div>
+  <div class="sheet" id="lotSheet"></div>
+
+  <p class="foot-note">암사동성당 중고등부 2026 여름캠프 · gunhojin.github.io/amsa-sichaldapsa-2026</p>
+</div>
+
+<script>
+  const groups = [
+    {n:'1', c:'var(--group-1)'}, {n:'2', c:'var(--group-2)'},
+    {n:'3', c:'var(--group-3)'}, {n:'4', c:'var(--group-4)'}
+  ];
+  const lots = [];
+  for (let i = 0; i < 6; i++) groups.forEach(g => lots.push(g));
+  document.getElementById('lotSheet').innerHTML = lots.map(g =>
+    `<div class="lot-card" style="--dot:${g.c};--dot-bg:color-mix(in srgb, ${g.c} 12%, var(--paper-2))">
+       <div class="big">${g.n}조</div>
+       <div class="sm">SUMMER CAMP 2026</div>
+     </div>`
+  ).join('');
+</script>
+</body>
+</html>
