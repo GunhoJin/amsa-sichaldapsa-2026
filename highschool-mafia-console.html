@@ -422,10 +422,18 @@
     });
   });
 
+  function suggestMafia(total){
+    if (total <= 14) return 2;
+    if (total <= 20) return 3;
+    return 4;
+  }
+
   applyTotal.addEventListener('click', function(){
     var v = parseInt(totalInput.value, 10);
     if (!v || v < 1) return;
     initialTotal = v;
+    state.mafia = suggestMafia(v);
+    state.rest = Math.max(0, v - state.mafia);
     renderSurvivors();
   });
 
