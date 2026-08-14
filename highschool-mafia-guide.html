@@ -3,373 +3,346 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>흑막의 밤 : 마피아 게임 가이드</title>
-<meta name="description" content="2026 중고등부 여름캠프 1일차 밤 마피아 게임 진행 매뉴얼">
+<title>OPERATION 흑막의 밤 / 마피아 게임 브리핑</title>
+<meta name="description" content="2026 중고등부 여름캠프 1일차 밤 마피아 게임 진행 브리핑">
 <style>
+  @font-face{
+    font-family:'Pretendard';
+    src:local('Pretendard');
+  }
   :root{
-    --paper:#f3f4f1;
-    --paper-2:#ffffff;
-    --ink:#1b1f1c;
-    --ink-soft:#565f57;
-    --line:#d8dbd3;
-    --accent:#c98a2b;
-    --accent-ink:#4a3413;
-    --accent-2:#2c5f6f;
-    --accent-2-ink:#ffffff;
-    --night-bg:#0b0c0e;
-    --day-bg:#f6e9c9;
-    --radius:16px;
-    --serif:'Iowan Old Style','Noto Serif KR','Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',serif;
-    --sans:'Pretendard','Apple SD Gothic Neo','Malgun Gothic','맑은 고딕',-apple-system,BlinkMacSystemFont,sans-serif;
-    --mono:ui-monospace,'SF Mono','Cascadia Mono','Noto Sans Mono','Malgun Gothic','맑은 고딕',monospace;
+    --bg:#0a0a0a;
+    --panel:#111111;
+    --fg:#eaeaea;
+    --fg-dim:#8c8c88;
+    --line:#2a2a26;
+    --red:#e61919;
+    --red-text:#ff4d4d;
+    --green:#4af626;
+    --mono:'IBM Plex Mono','JetBrains Mono','Space Mono',ui-monospace,'Noto Sans Mono','Malgun Gothic',monospace;
+    --grotesk:'Archivo Black','Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+    --sans:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',-apple-system,BlinkMacSystemFont,sans-serif;
   }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --paper:#111213;
-      --paper-2:#1a1c1d;
-      --ink:#ece9e2;
-      --ink-soft:#9a9d95;
-      --line:#2b2d2a;
-      --accent:#e0a744;
-      --accent-ink:#241a08;
-      --accent-2:#6fb0c2;
-      --accent-2-ink:#0d1e22;
-    }
-  }
-  :root[data-theme="dark"]{
-    --paper:#111213; --paper-2:#1a1c1d; --ink:#ece9e2; --ink-soft:#9a9d95;
-    --line:#2b2d2a; --accent:#e0a744; --accent-ink:#241a08; --accent-2:#6fb0c2; --accent-2-ink:#0d1e22;
-  }
-  :root[data-theme="light"]{
-    --paper:#f3f4f1; --paper-2:#ffffff; --ink:#1b1f1c; --ink-soft:#565f57;
-    --line:#d8dbd3; --accent:#c98a2b; --accent-ink:#4a3413; --accent-2:#2c5f6f; --accent-2-ink:#ffffff;
-  }
-
   *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);}
   body{
     font-family:var(--sans);
     font-size:16px;
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
-    padding-bottom:96px;
+    padding-bottom:60px;
+    position:relative;
   }
-  h1,h2,h3{font-family:var(--serif);text-wrap:balance;margin:0;font-weight:600;letter-spacing:-0.01em;}
-  p{margin:0;}
-  .wrap{max-width:760px;margin:0 auto;padding:0 22px;}
   a{color:inherit;}
+  ::selection{background:var(--red);color:var(--bg);}
 
-  /* ---- Top bar ---- */
-  .topbar{
+  /* fixed scanline + noise layer, never on scrolling content */
+  .scanlines{
+    position:fixed;inset:0;z-index:60;pointer-events:none;
+    background:repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.018) 2px, rgba(255,255,255,0.018) 4px);
+    mix-blend-mode:overlay;
+  }
+
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px;}
+
+  /* ---- top status bar ---- */
+  .statusbar{
     position:sticky;top:0;z-index:30;
-    backdrop-filter:blur(14px) saturate(140%);
-    -webkit-backdrop-filter:blur(14px) saturate(140%);
-    background:color-mix(in srgb, var(--paper) 82%, transparent);
+    background:color-mix(in srgb, var(--bg) 90%, transparent);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
     border-bottom:1px solid var(--line);
   }
-  .topbar .row{
-    max-width:760px;margin:0 auto;padding:12px 22px;
+  .statusbar .row{
+    max-width:760px;margin:0 auto;padding:10px 20px;
     display:flex;align-items:center;justify-content:space-between;gap:12px;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-dim);
   }
-  .brand{
-    font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--ink-soft);
-  }
-  .brand b{color:var(--ink);font-weight:600;}
+  .statusbar .live{display:flex;align-items:center;gap:6px;color:var(--red);}
+  .statusbar .live .pip{width:6px;height:6px;background:var(--red);animation:blink 1.4s steps(1) infinite;}
+  @keyframes blink{50%{opacity:.15;}}
 
-  /* ---- Hero ---- */
-  .hero{
-    padding:56px 0 40px;
-    background:
-      radial-gradient(560px 300px at 88% -10%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 70%),
-      radial-gradient(480px 280px at -6% 100%, color-mix(in srgb, var(--accent-2) 16%, transparent), transparent 70%);
+  /* ---- hero / brief header ---- */
+  .brief{padding:56px 0 34px;border-bottom:1px solid var(--line);}
+  .brief .tag{
+    font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--red-text);text-transform:uppercase;
+    display:block;margin-bottom:18px;
   }
-  .hero .eyebrow-line{
-    font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.08em;
-    margin-bottom:14px;
+  .brief .tag::before{content:"[ ";color:var(--fg-dim);}
+  .brief .tag::after{content:" ]";color:var(--fg-dim);}
+  .brief h1{
+    font-family:var(--grotesk);
+    font-size:clamp(40px,11vw,76px);
+    line-height:.92;
+    letter-spacing:-0.02em;
+    text-transform:uppercase;
+    margin:0 0 18px;
   }
-  .hero h1{
-    font-size:clamp(32px,8vw,48px);
-    line-height:1.12;
-    margin-bottom:14px;
+  .brief h1 span{color:var(--red);}
+  .brief .desc{
+    font-family:var(--sans);font-size:15px;color:var(--fg-dim);max-width:52ch;line-height:1.7;margin-bottom:22px;
   }
-  .hero h1 em{font-style:normal;color:var(--accent);}
-  .hero .sub{
-    font-size:16px;color:var(--ink-soft);max-width:44ch;margin-bottom:26px;
-  }
-  .badge-row{display:flex;flex-wrap:wrap;gap:8px;}
-  .badge{
-    font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);
-    background:var(--paper-2);border:1px solid var(--line);
-    padding:6px 12px;border-radius:999px;
-  }
-
-  /* ---- Live phase control ---- */
-  .phase-card{
-    margin:0 0 44px;
-    border-radius:var(--radius);
+  .meta-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);
     border:1px solid var(--line);
-    overflow:hidden;
   }
-  .phase-head{
-    display:flex;align-items:center;justify-content:space-between;gap:12px;
-    padding:16px 20px;
-    background:var(--paper-2);
-    border-bottom:1px solid var(--line);
-  }
-  .phase-head .label{font-family:var(--mono);font-size:12px;color:var(--ink-soft);letter-spacing:.06em;}
-  .phase-toggle{display:flex;gap:6px;}
-  .phase-toggle button{
-    font-family:var(--sans);font-size:14px;font-weight:600;
-    padding:8px 14px;border-radius:999px;border:1px solid var(--line);
-    background:transparent;color:var(--ink-soft);cursor:pointer;
-    transition:transform .15s ease, background .2s ease, color .2s ease, border-color .2s ease;
-  }
-  .phase-toggle button:active{transform:scale(.96);}
-  .phase-toggle button[aria-pressed="true"].night{background:var(--night-bg);color:#f2d99a;border-color:var(--night-bg);}
-  .phase-toggle button[aria-pressed="true"].day{background:var(--day-bg);color:#5a3f0a;border-color:var(--day-bg);}
+  .meta-grid div{background:var(--bg);padding:10px 12px;}
+  .meta-grid dt{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--fg-dim);text-transform:uppercase;margin:0 0 3px;}
+  .meta-grid dd{font-family:var(--mono);font-size:13px;margin:0;color:var(--fg);}
 
-  .phase-body{padding:22px 20px 24px;transition:background .3s ease;}
-  .phase-body.is-night{background:linear-gradient(180deg, color-mix(in srgb, var(--night-bg) 92%, var(--paper-2)), var(--paper-2) 70%);color:#f2ede0;}
-  .phase-body.is-day{background:linear-gradient(180deg, color-mix(in srgb, var(--day-bg) 55%, var(--paper-2)), var(--paper-2) 70%);}
-  .phase-body h3{font-size:20px;margin-bottom:4px;}
-  .phase-body .round{font-family:var(--mono);font-size:12px;opacity:.75;margin-bottom:14px;display:block;}
-  .phase-body ol{margin:0;padding-left:20px;display:grid;gap:8px;font-size:14.5px;}
-  .phase-body ol li::marker{font-family:var(--mono);color:var(--accent);}
-
-  .round-ctrl{
-    display:flex;align-items:center;justify-content:space-between;
-    margin-top:18px;padding-top:16px;border-top:1px solid color-mix(in srgb, currentColor 16%, transparent);
+  /* ---- reveal on scroll ---- */
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s cubic-bezier(0.22,1,0.36,1), transform .7s cubic-bezier(0.22,1,0.36,1);}
+  .reveal.is-in{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .reveal{opacity:1;transform:none;transition:none;}
   }
-  .round-ctrl .rc-label{font-size:13px;opacity:.75;}
-  .round-ctrl .rc-btns{display:flex;align-items:center;gap:10px;}
-  .round-ctrl button{
-    width:32px;height:32px;border-radius:999px;border:1px solid currentColor;
-    background:transparent;color:inherit;font-size:16px;line-height:1;cursor:pointer;
-  }
-  .round-ctrl .rc-num{font-family:var(--mono);font-size:16px;font-weight:700;min-width:20px;text-align:center;}
 
-  /* ---- Section heading ---- */
+  /* ---- live phase panel : bracketed, crosshair corners, square ---- */
+  .opspanel{
+    position:relative;margin:36px 0 0;border:1px solid var(--fg);padding:22px 20px 24px;
+    background:var(--panel);
+    transition:background .4s ease, border-color .4s ease;
+  }
+  .opspanel::before,.opspanel::after,
+  .opspanel .cr-tl,.opspanel .cr-br{
+    content:"+";position:absolute;font-family:var(--mono);font-size:14px;color:var(--fg-dim);line-height:1;
+  }
+  .opspanel::before{content:"+";top:-7px;left:-7px;}
+  .opspanel::after{content:"+";top:-7px;right:-7px;}
+  .opspanel .cr-tl{bottom:-7px;left:-7px;}
+  .opspanel .cr-br{bottom:-7px;right:-7px;}
+  .opspanel.is-night{border-color:var(--red);}
+  .opspanel.is-day{border-color:var(--green);}
+
+  .op-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;}
+  .op-top .label{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-dim);}
+  .op-toggle{display:flex;border:1px solid var(--line);}
+  .op-toggle button{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;
+    padding:8px 16px;border:none;background:transparent;color:var(--fg-dim);cursor:pointer;
+    transition:background .25s cubic-bezier(0.22,1,0.36,1), color .25s cubic-bezier(0.22,1,0.36,1), transform .15s ease;
+  }
+  .op-toggle button:active{transform:scale(.96);}
+  .op-toggle button + button{border-left:1px solid var(--line);}
+  .op-toggle button[data-phase="night"][aria-pressed="true"]{background:color-mix(in srgb, var(--red) 85%, black);color:#fff;}
+  .op-toggle button[data-phase="day"][aria-pressed="true"]{background:var(--green);color:#04220a;}
+
+  .op-status{font-family:var(--mono);font-size:10.5px;color:var(--fg-dim);letter-spacing:.08em;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+  .op-status .dot{width:7px;height:7px;display:inline-block;flex:none;}
+  .opspanel.is-night .op-status .dot{background:var(--red);}
+  .opspanel.is-day .op-status .dot{background:var(--green);}
+  .op-title{font-family:var(--grotesk);font-size:26px;text-transform:uppercase;letter-spacing:-0.01em;margin-bottom:16px;}
+  .op-steps{margin:0;padding:0;list-style:none;display:grid;gap:9px;}
+  .op-steps li{
+    font-family:var(--sans);font-size:14px;color:var(--fg);padding-left:22px;position:relative;line-height:1.6;
+  }
+  .op-steps li::before{
+    content:counter(step-counter,decimal-leading-zero);counter-increment:step-counter;
+    position:absolute;left:0;top:1px;font-family:var(--mono);font-size:11px;color:var(--fg-dim);
+  }
+  .op-steps{counter-reset:step-counter;}
+
+  .op-round{
+    display:flex;align-items:center;gap:12px;margin-top:20px;padding-top:16px;border-top:1px solid var(--line);
+    font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-dim);
+  }
+  .op-round button{
+    width:26px;height:26px;border:1px solid var(--fg-dim);background:transparent;color:var(--fg);
+    font-family:var(--mono);font-size:14px;cursor:pointer;
+    transition:background .2s ease, transform .15s ease;
+  }
+  .op-round button:active{transform:scale(.9);}
+  .op-round button:hover{background:var(--line);}
+  .op-round .n{font-size:15px;color:var(--fg);min-width:16px;text-align:center;}
+
+  /* ---- section rhythm ---- */
+  section{padding:44px 0;border-bottom:1px solid var(--line);}
+  section:last-of-type{border-bottom:none;}
   .head{margin-bottom:22px;}
-  .head .eyebrow{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.06em;display:block;margin-bottom:6px;}
-  .head h2{font-size:24px;}
-  section{padding:0 0 48px;}
+  .head .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--red-text);text-transform:uppercase;display:block;margin-bottom:8px;}
+  .head .tag::before{content:"[ ";color:var(--fg-dim);}
+  .head .tag::after{content:" ]";color:var(--fg-dim);}
+  .head h2{font-family:var(--grotesk);font-size:26px;text-transform:uppercase;letter-spacing:-0.01em;}
 
-  /* ---- Role cards ---- */
-  .roles{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-  .role-card{
-    border:1px solid var(--line);border-radius:var(--radius);padding:16px;
-    background:var(--paper-2);
-  }
-  .role-card .who{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--ink-soft);text-transform:uppercase;}
-  .role-card .name{font-size:19px;font-weight:700;margin:4px 0 8px;}
-  .role-card p{font-size:13.5px;color:var(--ink-soft);line-height:1.55;}
-  .role-card.mafia{border-color:color-mix(in srgb, var(--accent) 45%, var(--line));}
-  .role-card.mafia .name{color:var(--accent);}
+  /* ---- roles: dl-based dossier grid, gap-1 hairlines ---- */
+  .roles{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);}
+  .role-entry{background:var(--bg);padding:16px 16px;display:grid;grid-template-columns:1fr 2fr;gap:14px;align-items:start;}
+  .role-entry dt{font-family:var(--grotesk);font-size:18px;text-transform:uppercase;margin:0;}
+  .role-entry dt small{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--fg-dim);margin-top:4px;text-transform:uppercase;font-weight:400;}
+  .role-entry.is-mafia dt{color:var(--red);}
+  .role-entry dd{margin:0;font-size:13.5px;color:var(--fg-dim);line-height:1.65;}
 
-  /* ---- Setup table ---- */
-  .setup{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
-  .setup .row{display:grid;grid-template-columns:1fr 2fr;font-size:14px;}
-  .setup .row + .row{border-top:1px solid var(--line);}
-  .setup .row > div{padding:12px 16px;}
-  .setup .row > div:first-child{font-family:var(--mono);color:var(--ink-soft);background:var(--paper-2);}
-  .setup .row.head-row > div{font-weight:700;background:var(--paper-2);}
+  /* ---- setup table ---- */
+  .setup{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);}
+  .setup-row{background:var(--bg);padding:12px 16px;display:grid;grid-template-columns:110px 1fr;gap:14px;font-family:var(--mono);font-size:13px;align-items:center;}
+  .setup-row .k{color:var(--fg-dim);letter-spacing:.03em;}
+  .setup-row .v{color:var(--fg);}
 
-  /* ---- Flow accordion ---- */
-  .flow{display:grid;gap:10px;}
-  details{
-    border:1px solid var(--line);border-radius:var(--radius);
-    background:var(--paper-2);overflow:hidden;
+  /* ---- flow: bracketed steps ---- */
+  .flow{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);}
+  .flow-item{background:var(--bg);}
+  .flow-item summary{
+    list-style:none;cursor:pointer;padding:15px 16px;
+    display:flex;align-items:baseline;gap:12px;
+    font-family:var(--mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;
   }
-  summary{
-    list-style:none;cursor:pointer;padding:15px 18px;
-    display:flex;align-items:center;gap:12px;font-weight:600;font-size:15px;
-  }
-  summary::-webkit-details-marker{display:none;}
-  summary .step-n{
-    font-family:var(--mono);font-size:12px;color:var(--accent-2-ink);
-    background:var(--accent-2);border-radius:999px;
-    width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex:none;
-  }
-  summary .chev{margin-left:auto;color:var(--ink-soft);transition:transform .2s ease;font-size:13px;}
-  details[open] summary .chev{transform:rotate(180deg);}
-  .step-body{padding:0 18px 18px 56px;font-size:14px;color:var(--ink-soft);line-height:1.7;}
-  .step-body .line{display:block;margin-bottom:6px;}
-  .step-body .line b{color:var(--ink);font-weight:600;}
+  .flow-item summary::-webkit-details-marker{display:none;}
+  .flow-item summary .step-n{color:var(--red-text);flex:none;}
+  .flow-item summary .chev{margin-left:auto;color:var(--fg-dim);font-size:11px;transition:transform .25s cubic-bezier(0.22,1,0.36,1);}
+  .flow-item[open] summary .chev{transform:rotate(180deg);}
+  .flow-body{padding:0 16px 18px 44px;font-family:var(--sans);font-size:14px;color:var(--fg-dim);line-height:1.75;}
+  .flow-body .line{display:block;margin-bottom:7px;}
+  .flow-body .line b{color:var(--fg);font-weight:600;}
 
-  /* ---- Win condition ---- */
-  .wins{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-  .win-card{border-radius:var(--radius);padding:18px;border:1px solid var(--line);}
-  .win-card.citizens{background:color-mix(in srgb, var(--accent-2) 12%, var(--paper-2));}
-  .win-card.mafia{background:color-mix(in srgb, var(--accent) 14%, var(--paper-2));}
-  .win-card .t{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--ink-soft);text-transform:uppercase;margin-bottom:6px;}
-  .win-card .d{font-size:14.5px;line-height:1.6;}
+  /* ---- win conditions ---- */
+  .wins{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);}
+  .win{background:var(--bg);padding:18px 18px;}
+  .win .t{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--fg-dim);text-transform:uppercase;margin-bottom:8px;}
+  .win.citizens .t{color:var(--green);}
+  .win.mafia .t{color:var(--red-text);}
+  .win .d{font-family:var(--sans);font-size:13.5px;line-height:1.65;color:var(--fg);}
 
-  /* ---- Tips ---- */
-  .tips{display:grid;gap:10px;}
-  .tip{
-    display:flex;gap:12px;padding:14px 16px;border-radius:12px;
-    background:var(--paper-2);border:1px solid var(--line);font-size:14px;
-  }
-  .tip .num{font-family:var(--mono);color:var(--accent);flex:none;font-weight:700;}
+  /* ---- tips ---- */
+  .tips{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);}
+  .tip-row{background:var(--bg);display:flex;gap:14px;padding:13px 16px;font-size:13.5px;color:var(--fg-dim);}
+  .tip-row .num{font-family:var(--mono);color:var(--red-text);flex:none;font-weight:700;}
 
-  footer{
-    border-top:1px solid var(--line);padding:28px 0 40px;
-    font-size:12.5px;color:var(--ink-soft);font-family:var(--mono);
-  }
+  footer{padding:24px 0 40px;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--fg-dim);text-transform:uppercase;}
 
   @media (max-width:600px){
-    .roles{grid-template-columns:1fr;}
     .wins{grid-template-columns:1fr;}
-    .setup .row{grid-template-columns:96px 1fr;}
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    *{transition:none !important;}
+    .role-entry{grid-template-columns:1fr;gap:6px;}
+    .setup-row{grid-template-columns:1fr;gap:4px;}
+    .meta-grid{grid-template-columns:1fr;}
   }
 </style>
 </head>
 <body>
 
-<div class="topbar">
+<div class="scanlines"></div>
+
+<div class="statusbar">
   <div class="row">
-    <span class="brand"><b>흑막의 밤</b> · 마피아 게임 가이드</span>
-    <span class="brand">9.5 (토) 20:30~</span>
+    <span>흑막의 밤 // OPS BRIEF</span>
+    <span class="live"><span class="pip"></span>LIVE</span>
   </div>
 </div>
 
-<div class="hero">
+<div class="brief">
   <div class="wrap">
-    <span class="eyebrow-line">2026 중고등부 여름캠프 · 1일차 밤</span>
-    <h1>모두가 눈을 감으면,<br><em>진짜 범인</em>이 움직인다.</h1>
-    <p class="sub">조별 친교 시간에 진행하는 마피아 게임 매뉴얼입니다. 게임 중에는 이 페이지를 그대로 켜두고 참고하세요.</p>
-    <div class="badge-row">
-      <span class="badge">달팽이 아지트</span>
-      <span class="badge">20:30 ~ 22:00</span>
-      <span class="badge">전원 참여</span>
+    <span class="tag">2026 중고등부 여름캠프 · 1일차 야간작전</span>
+    <h1>흑막의<br><span>밤</span></h1>
+    <p class="desc">조별 친교 시간에 진행하는 마피아 게임 브리핑입니다. 게임이 진행되는 동안 이 화면을 켜둔 채로 참고하세요.</p>
+    <dl class="meta-grid">
+      <div><dt>장소</dt><dd>달팽이 아지트</dd></div>
+      <div><dt>시각</dt><dd>20:30 - 22:00</dd></div>
+      <div><dt>대상</dt><dd>전원 참여</dd></div>
+    </dl>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="opspanel is-night" id="opsPanel">
+    <span class="cr-tl"></span><span class="cr-br"></span>
+    <div class="op-top">
+      <span class="label">현재 진행 상황</span>
+      <div class="op-toggle">
+        <button type="button" data-phase="night" aria-pressed="true">NIGHT</button>
+        <button type="button" data-phase="day" aria-pressed="false">DAY</button>
+      </div>
+    </div>
+    <span class="op-status" id="opsStatus"><span class="dot"></span>ROUND 01 / NIGHT PHASE</span>
+    <h3 class="op-title" id="opsTitle">전원 눈 감기</h3>
+    <ol class="op-steps" id="opsSteps">
+      <li>진행자 "모두 눈을 감아주세요"</li>
+      <li>마피아만 눈 뜨고 조용히 제거할 사람을 손가락으로 지목</li>
+      <li>진행자가 확인하면 마피아는 다시 눈 감기</li>
+      <li>경찰만 눈 뜨고 조사할 사람 지목, 진행자는 고갯짓으로만 답하기</li>
+      <li>의사만 눈 뜨고 보호할 사람 지목</li>
+    </ol>
+    <div class="op-round">
+      <span>ROUND COUNTER</span>
+      <button type="button" id="roundMinus">-</button>
+      <span class="n" id="roundNum">1</span>
+      <button type="button" id="roundPlus">+</button>
     </div>
   </div>
 </div>
 
 <div class="wrap">
 
-  <div class="phase-card">
-    <div class="phase-head">
-      <span class="label">지금 진행 상황</span>
-      <div class="phase-toggle">
-        <button type="button" class="night" data-phase="night" aria-pressed="true">밤</button>
-        <button type="button" class="day" data-phase="day" aria-pressed="false">낮</button>
-      </div>
-    </div>
-    <div class="phase-body is-night" id="phaseBody">
-      <span class="round" id="roundLabel">1라운드 · 밤</span>
-      <h3 id="phaseTitle">전원 눈 감기</h3>
-      <ol id="phaseSteps">
-        <li>진행자: "모두 눈을 감아주세요"</li>
-        <li>마피아만 눈 뜨고 조용히 제거할 사람을 손가락으로 지목</li>
-        <li>진행자가 확인하면 마피아는 다시 눈 감기</li>
-        <li>경찰만 눈 뜨고 조사할 사람 지목 → 진행자가 마피아 여부를 고갯짓으로 알려주기</li>
-        <li>의사만 눈 뜨고 보호할 사람 지목</li>
-      </ol>
-      <div class="round-ctrl">
-        <span class="rc-label">라운드 카운터</span>
-        <div class="rc-btns">
-          <button type="button" id="roundMinus">−</button>
-          <span class="rc-num" id="roundNum">1</span>
-          <button type="button" id="roundPlus">+</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <section>
+  <section class="reveal">
     <div class="head">
-      <span class="eyebrow">역할</span>
-      <h2>네 개의 역할, 한 번씩 배정</h2>
+      <span class="tag">personnel</span>
+      <h2>네 개의 역할</h2>
     </div>
-    <div class="roles">
-      <div class="role-card mafia">
-        <span class="who">밤에 움직임</span>
-        <div class="name">마피아</div>
-        <p>밤마다 한 명을 지목해 제거합니다. 낮에는 시민인 척 정체를 숨기고 토론에 참여합니다.</p>
+    <dl class="roles">
+      <div class="role-entry is-mafia">
+        <dt>마피아<small>밤에 활동</small></dt>
+        <dd>밤마다 한 명을 지목해 제거합니다. 낮에는 시민인 척 정체를 숨기고 토론에 참여합니다.</dd>
       </div>
-      <div class="role-card">
-        <span class="who">밤에 움직임</span>
-        <div class="name">경찰</div>
-        <p>밤마다 한 명을 조사해 마피아인지 아닌지 확인합니다. 조사 결과는 본인만 알고 있어야 합니다.</p>
+      <div class="role-entry">
+        <dt>경찰<small>밤에 활동</small></dt>
+        <dd>밤마다 한 명을 조사해 마피아인지 아닌지 확인합니다. 조사 결과는 본인만 알고 있어야 합니다.</dd>
       </div>
-      <div class="role-card">
-        <span class="who">밤에 움직임</span>
-        <div class="name">의사</div>
-        <p>밤마다 한 명을 지목해 그날 밤 마피아의 공격으로부터 보호합니다. 자기 자신도 지목할 수 있습니다.</p>
+      <div class="role-entry">
+        <dt>의사<small>밤에 활동</small></dt>
+        <dd>밤마다 한 명을 지목해 그날 밤 마피아의 공격으로부터 보호합니다. 자기 자신도 지목할 수 있습니다.</dd>
       </div>
-      <div class="role-card">
-        <span class="who">낮에 움직임</span>
-        <div class="name">시민</div>
-        <p>특별한 능력은 없지만 낮 토론과 투표로 마피아를 찾아내야 합니다. 가장 인원이 많은 역할입니다.</p>
+      <div class="role-entry">
+        <dt>시민<small>낮에 활동</small></dt>
+        <dd>특별한 능력은 없지만 낮 토론과 투표로 마피아를 찾아내야 합니다. 가장 인원이 많은 역할입니다.</dd>
       </div>
-    </div>
+    </dl>
   </section>
 
-  <section>
+  <section class="reveal">
     <div class="head">
-      <span class="eyebrow">준비</span>
+      <span class="tag">setup</span>
       <h2>인원별 추천 구성</h2>
     </div>
     <div class="setup">
-      <div class="row head-row">
-        <div>인원</div>
-        <div>마피아 / 경찰 / 의사 / 시민</div>
-      </div>
-      <div class="row">
-        <div>10~14명</div>
-        <div>2 / 1 / 1 / 나머지</div>
-      </div>
-      <div class="row">
-        <div>15~20명</div>
-        <div>3 / 1 / 1 / 나머지</div>
-      </div>
-      <div class="row">
-        <div>21명 이상</div>
-        <div>4 / 1 / 1 / 나머지</div>
-      </div>
+      <div class="setup-row"><span class="k">10-14명</span><span class="v">마피아 2 / 경찰 1 / 의사 1 / 나머지 시민</span></div>
+      <div class="setup-row"><span class="k">15-20명</span><span class="v">마피아 3 / 경찰 1 / 의사 1 / 나머지 시민</span></div>
+      <div class="setup-row"><span class="k">21명 이상</span><span class="v">마피아 4 / 경찰 1 / 의사 1 / 나머지 시민</span></div>
     </div>
   </section>
 
-  <section>
+  <section class="reveal">
     <div class="head">
-      <span class="eyebrow">진행 순서</span>
+      <span class="tag">procedure</span>
       <h2>단계별 진행 대본</h2>
     </div>
     <div class="flow">
-      <details open>
-        <summary><span class="step-n">1</span>준비<span class="chev">▾</span></summary>
-        <div class="step-body">
+      <details class="flow-item" open>
+        <summary><span class="step-n">STEP 01</span>준비<span class="chev">▾</span></summary>
+        <div class="flow-body">
           <span class="line">역할 쪽지를 무작위로 접어 한 장씩 뽑게 합니다.</span>
           <span class="line">쪽지는 본인만 확인하고 절대 공개하지 않습니다.</span>
           <span class="line"><b>진행자 대사</b> "각자 뽑은 역할은 게임이 끝날 때까지 비밀입니다"</span>
         </div>
       </details>
-      <details>
-        <summary><span class="step-n">2</span>밤 페이즈<span class="chev">▾</span></summary>
-        <div class="step-body">
+      <details class="flow-item">
+        <summary><span class="step-n">STEP 02</span>밤 페이즈<span class="chev">▾</span></summary>
+        <div class="flow-body">
           <span class="line"><b>진행자 대사</b> "모두 눈을 감아주세요"</span>
-          <span class="line">마피아만 눈 뜨고 제거할 사람을 조용히 지목 → 다시 눈 감기</span>
-          <span class="line">경찰만 눈 뜨고 조사할 사람 지목 → 진행자가 마피아 여부를 고갯짓으로만 답하기 → 다시 눈 감기</span>
-          <span class="line">의사만 눈 뜨고 보호할 사람 지목 → 다시 눈 감기</span>
+          <span class="line">마피아만 눈 뜨고 제거할 사람을 조용히 지목, 다시 눈 감기</span>
+          <span class="line">경찰만 눈 뜨고 조사할 사람 지목, 진행자는 고갯짓으로만 답하기, 다시 눈 감기</span>
+          <span class="line">의사만 눈 뜨고 보호할 사람 지목, 다시 눈 감기</span>
         </div>
       </details>
-      <details>
-        <summary><span class="step-n">3</span>낮 페이즈<span class="chev">▾</span></summary>
-        <div class="step-body">
+      <details class="flow-item">
+        <summary><span class="step-n">STEP 03</span>낮 페이즈<span class="chev">▾</span></summary>
+        <div class="flow-body">
           <span class="line"><b>진행자 대사</b> "모두 눈을 뜨세요. 간밤에 OOO님이 습격당했습니다" (의사가 지켰다면 "오늘 밤은 아무 일도 없었습니다")</span>
-          <span class="line">전체 자유 토론, 제한시간 3~5분 권장</span>
-          <span class="line">손들기 투표로 최다 득표자 지목 → 지목된 사람 소감 한마디 후 처형</span>
+          <span class="line">전체 자유 토론, 제한시간 3-5분 권장</span>
+          <span class="line">손들기 투표로 최다 득표자 지목 후 처형</span>
           <span class="line">처형된 사람의 역할은 공개하는 편을 권장합니다</span>
         </div>
       </details>
-      <details>
-        <summary><span class="step-n">4</span>반복 및 종료<span class="chev">▾</span></summary>
-        <div class="step-body">
+      <details class="flow-item">
+        <summary><span class="step-n">STEP 04</span>반복/종료<span class="chev">▾</span></summary>
+        <div class="flow-body">
           <span class="line">밤과 낮을 번갈아 반복합니다</span>
           <span class="line">아래 승리 조건 중 하나가 충족되면 즉시 게임을 종료하고 전원 역할을 공개합니다</span>
         </div>
@@ -377,43 +350,41 @@
     </div>
   </section>
 
-  <section>
+  <section class="reveal">
     <div class="head">
-      <span class="eyebrow">승리 조건</span>
+      <span class="tag">win condition</span>
       <h2>게임은 언제 끝나는가</h2>
     </div>
     <div class="wins">
-      <div class="win-card citizens">
+      <div class="win citizens">
         <div class="t">시민팀 승리</div>
         <div class="d">마피아를 모두 찾아내 제거하면 시민, 경찰, 의사 모두 승리합니다.</div>
       </div>
-      <div class="win-card mafia">
+      <div class="win mafia">
         <div class="t">마피아팀 승리</div>
         <div class="d">생존한 마피아 수가 나머지 인원 수 이상이 되는 순간 마피아가 승리합니다.</div>
       </div>
     </div>
   </section>
 
-  <section>
+  <section class="reveal">
     <div class="head">
-      <span class="eyebrow">유의사항</span>
+      <span class="tag">field notes</span>
       <h2>진행이 매끄러워지는 다섯 가지</h2>
     </div>
     <div class="tips">
-      <div class="tip"><span class="num">01</span>눈 감고 있을 때는 정숙 유지. 웃음소리나 숨소리로 정체가 드러날 수 있습니다.</div>
-      <div class="tip"><span class="num">02</span>밤 지목은 손가락으로 조용히. 진행자만 알아볼 수 있으면 충분합니다.</div>
-      <div class="tip"><span class="num">03</span>죽은 사람은 이후 발언권이 없습니다. 관전만 가능합니다.</div>
-      <div class="tip"><span class="num">04</span>토론 시간에 제한을 두면 늘어지지 않습니다. 타이머를 켜두세요.</div>
-      <div class="tip"><span class="num">05</span>진행자는 되도록 게임에 참여하지 않는 교사나 봉사자가 맡아주세요.</div>
+      <div class="tip-row"><span class="num">01</span>눈 감고 있을 때는 정숙 유지. 웃음소리나 숨소리로 정체가 드러날 수 있습니다.</div>
+      <div class="tip-row"><span class="num">02</span>밤 지목은 손가락으로 조용히. 진행자만 알아볼 수 있으면 충분합니다.</div>
+      <div class="tip-row"><span class="num">03</span>죽은 사람은 이후 발언권이 없습니다. 관전만 가능합니다.</div>
+      <div class="tip-row"><span class="num">04</span>토론 시간에 제한을 두면 늘어지지 않습니다. 타이머를 켜두세요.</div>
+      <div class="tip-row"><span class="num">05</span>진행자는 되도록 게임에 참여하지 않는 교사나 봉사자가 맡아주세요.</div>
     </div>
   </section>
 
 </div>
 
 <footer>
-  <div class="wrap">
-    문의 · 진건호 토마스T · 2026.8.14 게시
-  </div>
+  <div class="wrap">문의 진건호 토마스T / REV 2026.08.14</div>
 </footer>
 
 <script>
@@ -422,30 +393,30 @@
     night: {
       title: "전원 눈 감기",
       steps: [
-        "진행자: \"모두 눈을 감아주세요\"",
+        "진행자 \"모두 눈을 감아주세요\"",
         "마피아만 눈 뜨고 조용히 제거할 사람을 손가락으로 지목",
         "진행자가 확인하면 마피아는 다시 눈 감기",
-        "경찰만 눈 뜨고 조사할 사람 지목 → 진행자가 마피아 여부를 고갯짓으로 알려주기",
+        "경찰만 눈 뜨고 조사할 사람 지목, 진행자는 고갯짓으로만 답하기",
         "의사만 눈 뜨고 보호할 사람 지목"
       ]
     },
     day: {
       title: "토론 후 투표",
       steps: [
-        "진행자: \"모두 눈을 뜨세요\" → 간밤의 결과 발표",
-        "전체 자유 토론 (3~5분 권장, 타이머 활용)",
+        "진행자 \"모두 눈을 뜨세요\", 간밤의 결과 발표",
+        "전체 자유 토론 (3-5분 권장, 타이머 활용)",
         "손들기 투표로 최다 득표자 지목",
         "지목된 사람 소감 한마디 후 처형, 역할 공개 권장"
       ]
     }
   };
 
-  var body = document.getElementById('phaseBody');
-  var title = document.getElementById('phaseTitle');
-  var steps = document.getElementById('phaseSteps');
-  var roundLabel = document.getElementById('roundLabel');
+  var panel = document.getElementById('opsPanel');
+  var title = document.getElementById('opsTitle');
+  var steps = document.getElementById('opsSteps');
+  var status = document.getElementById('opsStatus');
   var roundNum = document.getElementById('roundNum');
-  var buttons = document.querySelectorAll('.phase-toggle button');
+  var buttons = document.querySelectorAll('.op-toggle button');
   var round = 1;
 
   function render(phase){
@@ -457,34 +428,42 @@
       li.textContent = s;
       steps.appendChild(li);
     });
-    body.classList.toggle('is-night', phase === 'night');
-    body.classList.toggle('is-day', phase === 'day');
-    roundLabel.textContent = round + '라운드 · ' + (phase === 'night' ? '밤' : '낮');
+    panel.classList.toggle('is-night', phase === 'night');
+    panel.classList.toggle('is-day', phase === 'day');
+    status.innerHTML = '<span class="dot"></span>ROUND ' + String(round).padStart(2,'0') + ' / ' + (phase === 'night' ? 'NIGHT PHASE' : 'DAY PHASE');
     buttons.forEach(function(b){
       b.setAttribute('aria-pressed', b.dataset.phase === phase ? 'true' : 'false');
     });
   }
 
   buttons.forEach(function(b){
-    b.addEventListener('click', function(){
-      render(b.dataset.phase);
-    });
+    b.addEventListener('click', function(){ render(b.dataset.phase); });
   });
 
   document.getElementById('roundPlus').addEventListener('click', function(){
-    round++;
-    roundNum.textContent = round;
-    var current = document.querySelector('.phase-toggle button[aria-pressed="true"]').dataset.phase;
-    render(current);
+    round++; roundNum.textContent = round;
+    render(document.querySelector('.op-toggle button[aria-pressed="true"]').dataset.phase);
   });
   document.getElementById('roundMinus').addEventListener('click', function(){
-    round = Math.max(1, round - 1);
-    roundNum.textContent = round;
-    var current = document.querySelector('.phase-toggle button[aria-pressed="true"]').dataset.phase;
-    render(current);
+    round = Math.max(1, round - 1); roundNum.textContent = round;
+    render(document.querySelector('.op-toggle button[aria-pressed="true"]').dataset.phase);
   });
 
   render('night');
+
+  if (window.matchMedia && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('is-in'); });
+  }
 })();
 </script>
 
