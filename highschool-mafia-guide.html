@@ -82,14 +82,6 @@
   .brief .desc{
     font-family:var(--sans);font-size:15px;color:var(--fg-dim);max-width:52ch;line-height:1.7;margin-bottom:22px;
   }
-  .meta-grid{
-    display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);
-    border:1px solid var(--line);
-  }
-  .meta-grid div{background:var(--bg);padding:10px 12px;}
-  .meta-grid dt{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--fg-dim);text-transform:uppercase;margin:0 0 3px;}
-  .meta-grid dd{font-family:var(--mono);font-size:13px;margin:0;color:var(--fg);}
-
   /* ---- reveal on scroll ---- */
   .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s cubic-bezier(0.22,1,0.36,1), transform .7s cubic-bezier(0.22,1,0.36,1);}
   .reveal.is-in{opacity:1;transform:translateY(0);}
@@ -213,7 +205,6 @@
     .wins{grid-template-columns:1fr;}
     .role-entry{grid-template-columns:1fr;gap:6px;}
     .setup-row{grid-template-columns:1fr;gap:4px;}
-    .meta-grid{grid-template-columns:1fr;}
   }
 </style>
 </head>
@@ -233,11 +224,6 @@
     <span class="tag">2026 중고등부 여름캠프 · 1일차 야간작전</span>
     <h1>흑막의<br><span>밤</span></h1>
     <p class="desc">조별 친교 시간에 진행하는 마피아 게임 브리핑입니다. 게임이 진행되는 동안 이 화면을 켜둔 채로 참고하세요.</p>
-    <dl class="meta-grid">
-      <div><dt>장소</dt><dd>달팽이 아지트</dd></div>
-      <div><dt>시각</dt><dd>20:30 - 22:00</dd></div>
-      <div><dt>대상</dt><dd>전원 참여</dd></div>
-    </dl>
   </div>
 </div>
 
