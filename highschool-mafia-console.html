@@ -461,10 +461,10 @@
       voteList.appendChild(empty);
       return;
     }
-    var sorted = candidates.slice().sort(function(a,b){ return b.votes - a.votes; });
-    var top = sorted.length && sorted[0].votes > 0 ? sorted[0].votes : -1;
+    var maxVotes = candidates.reduce(function(m,c){ return Math.max(m, c.votes); }, 0);
+    var top = maxVotes > 0 ? maxVotes : -1;
 
-    sorted.forEach(function(c){
+    candidates.forEach(function(c){
       var row = document.createElement('div');
       row.className = 'vote-row' + (c.votes === top && top > 0 ? ' leader' : '');
 
