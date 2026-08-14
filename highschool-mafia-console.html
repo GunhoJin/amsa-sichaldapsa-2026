@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OPS CONSOLE / 흑막의 밤 진행 보조</title>
+<meta name="description" content="2026 중고등부 여름캠프 마피아 게임 진행 보조 콘솔 (생존자 집계, 토론 스톱워치, 투표 발표)">
+<style>
+  :root{
+    --bg:#0a0a0a;
+    --panel:#111111;
+    --fg:#eaeaea;
+    --fg-dim:#8c8c88;
+    --line:#2a2a26;
+    --red:#e61919;
+    --red-text:#ff4d4d;
+    --green:#4af626;
+    --mono:'IBM Plex Mono','JetBrains Mono','Space Mono',ui-monospace,'Noto Sans Mono','Malgun Gothic',monospace;
+    --grotesk:'Archivo Black','Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+    --sans:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',-apple-system,BlinkMacSystemFont,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);height:100%;}
+  body{
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+    min-height:100dvh;
+    display:flex;flex-direction:column;
+    overflow-x:hidden;
+  }
+  button{font-family:inherit;}
+  input{font-family:inherit;}
+  ::selection{background:var(--red);color:var(--bg);}
+
+  /* ---- status bar ---- */
+  .statusbar{
+    border-bottom:1px solid var(--line);
+    flex:none;
+  }
+  .statusbar .row{
+    padding:14px 24px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    font-family:var(--mono);font-size:16px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-dim);
+  }
+  .statusbar b{color:var(--fg);font-family:var(--grotesk);font-size:20px;letter-spacing:-0.01em;}
+  .statusbar .live{display:flex;align-items:center;gap:8px;color:var(--red-text);}
+  .statusbar .live .pip{width:8px;height:8px;background:var(--red);animation:blink 1.4s steps(1) infinite;}
+  @keyframes blink{50%{opacity:.15;}}
+
+  .phasebar{display:flex;border:1px solid var(--line);}
+  .phasebar button{
+    font-family:var(--mono);font-size:15px;letter-spacing:.08em;font-weight:700;text-transform:uppercase;
+    padding:8px 18px;border:none;background:transparent;color:var(--fg-dim);cursor:pointer;
+  }
+  .phasebar button + button{border-left:1px solid var(--line);}
+  .phasebar button[aria-pressed="true"][data-phase="night"]{background:color-mix(in srgb, var(--red) 85%, black);color:#fff;}
+  .phasebar button[aria-pressed="true"][data-phase="day"]{background:var(--green);color:#04220a;}
+
+  /* ---- console grid ---- */
+  .console{
+    flex:1;
+    display:grid;
+    grid-template-columns:1fr 1.15fr 1fr;
+    gap:1px;background:var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .panel{background:var(--bg);padding:24px 22px;display:flex;flex-direction:column;min-height:0;}
+  .panel .ptitle{font-family:var(--mono);font-size:14px;letter-spacing:.14em;color:var(--red-text);text-transform:uppercase;margin-bottom:18px;}
+  .panel .ptitle::before{content:"[ ";color:var(--fg-dim);}
+  .panel .ptitle::after{content:" ]";color:var(--fg-dim);}
+
+  /* ---- survivors panel ---- */
+  .setup-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;font-family:var(--mono);font-size:14px;color:var(--fg-dim);}
+  .setup-row input{
+    width:64px;background:var(--panel);border:1px solid var(--line);color:var(--fg);
+    font-family:var(--mono);font-size:16px;padding:6px 8px;text-align:center;
+  }
+  .setup-row button{
+    background:transparent;border:1px solid var(--fg-dim);color:var(--fg);font-family:var(--mono);
+    font-size:13px;padding:6px 12px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;
+  }
+
+  .side{border-top:1px solid var(--line);padding:16px 0;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  .side:last-of-type{border-bottom:1px solid var(--line);}
+  .side .label{font-family:var(--mono);font-size:14px;letter-spacing:.06em;color:var(--fg-dim);text-transform:uppercase;}
+  .side.mafia .label{color:var(--red-text);}
+  .side.rest .label{color:var(--green);}
+  .side .stepper{display:flex;align-items:center;gap:14px;}
+  .side .stepper button{
+    width:44px;height:44px;border:1px solid var(--fg-dim);background:transparent;color:var(--fg);
+    font-family:var(--mono);font-size:22px;cursor:pointer;
+  }
+  .side .stepper button:active{background:var(--line);}
+  .side .stepper .n{font-family:var(--grotesk);font-size:34px;min-width:44px;text-align:center;}
+
+  .winbanner{
+    margin-top:16px;padding:16px;border:1px solid var(--fg);text-align:center;
+    font-family:var(--grotesk);font-size:22px;text-transform:uppercase;letter-spacing:-0.01em;
+    display:none;
+  }
+  .winbanner.show{display:block;}
+  .winbanner.mafia{border-color:var(--red);color:var(--red-text);}
+  .winbanner.rest{border-color:var(--green);color:var(--green);}
+
+  .ratio-hint{
+    margin-top:auto;padding-top:16px;font-family:var(--mono);font-size:13px;color:var(--fg-dim);
+    border-top:1px solid var(--line);letter-spacing:.03em;
+  }
+  .ratio-hint b{color:var(--fg);}
+
+  /* ---- timer panel ---- */
+  .timer-display{
+    font-family:var(--grotesk);font-size:clamp(64px,9vw,108px);text-align:center;
+    letter-spacing:-0.01em;margin:8px 0 6px;font-variant-numeric:tabular-nums;
+  }
+  .timer-display.warn{color:var(--red-text);}
+  .timer-sub{text-align:center;font-family:var(--mono);font-size:13px;color:var(--fg-dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:22px;}
+  .timer-presets{display:flex;gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:18px;}
+  .timer-presets button{
+    flex:1;background:var(--bg);border:none;color:var(--fg-dim);font-family:var(--mono);
+    font-size:15px;letter-spacing:.06em;padding:12px 0;cursor:pointer;text-transform:uppercase;
+  }
+  .timer-presets button[aria-pressed="true"]{background:var(--panel);color:var(--fg);font-weight:700;}
+  .timer-controls{display:flex;gap:10px;}
+  .timer-controls button{
+    flex:1;padding:16px 0;border:1px solid var(--fg-dim);background:transparent;color:var(--fg);
+    font-family:var(--mono);font-size:15px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;font-weight:700;
+  }
+  .timer-controls button.primary{border-color:var(--fg);background:var(--fg);color:var(--bg);}
+  .timer-controls button:active{transform:scale(.97);}
+
+  .suggest{
+    margin-top:18px;padding:12px 14px;border:1px solid var(--red);color:var(--red-text);
+    font-family:var(--mono);font-size:13px;letter-spacing:.04em;line-height:1.6;display:none;
+  }
+  .suggest.show{display:block;}
+
+  /* ---- vote panel ---- */
+  .vote-add{display:flex;gap:8px;margin-bottom:16px;}
+  .vote-add input{
+    flex:1;background:var(--panel);border:1px solid var(--line);color:var(--fg);
+    font-family:var(--sans);font-size:16px;padding:10px 12px;min-width:0;
+  }
+  .vote-add button{
+    background:var(--fg);color:var(--bg);border:none;font-family:var(--mono);font-size:14px;
+    padding:0 16px;cursor:pointer;font-weight:700;letter-spacing:.04em;
+  }
+  .vote-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:1px;background:var(--line);border:1px solid var(--line);min-height:0;}
+  .vote-row{background:var(--bg);padding:12px 14px;display:flex;align-items:center;gap:12px;}
+  .vote-row .vname{flex:1;font-family:var(--sans);font-size:17px;min-width:0;overflow-wrap:anywhere;}
+  .vote-row .vcount{font-family:var(--grotesk);font-size:24px;min-width:34px;text-align:center;}
+  .vote-row .vbtn{
+    width:38px;height:38px;border:1px solid var(--fg-dim);background:transparent;color:var(--fg);
+    font-family:var(--mono);font-size:18px;cursor:pointer;
+  }
+  .vote-row .vdel{
+    width:38px;height:38px;border:1px solid var(--line);background:transparent;color:var(--fg-dim);
+    font-family:var(--mono);font-size:14px;cursor:pointer;
+  }
+  .vote-row.leader{outline:1px solid var(--red);}
+  .vote-row.leader .vname{color:var(--red-text);}
+  .vote-empty{padding:20px 14px;font-family:var(--mono);font-size:13px;color:var(--fg-dim);text-align:center;background:var(--bg);}
+
+  .vote-actions{display:flex;gap:10px;margin-top:14px;}
+  .vote-actions button{
+    flex:1;padding:14px 0;border:1px solid var(--fg-dim);background:transparent;color:var(--fg);
+    font-family:var(--mono);font-size:14px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;font-weight:700;
+  }
+  .vote-actions button.announce{border-color:var(--red);background:var(--red-text);color:#1a0303;}
+
+  /* ---- announce overlay ---- */
+  .overlay{
+    position:fixed;inset:0;z-index:80;background:rgba(10,10,10,.96);
+    display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;
+    text-align:center;padding:24px;
+  }
+  .overlay.show{display:flex;}
+  .overlay .ov-tag{font-family:var(--mono);font-size:16px;letter-spacing:.2em;color:var(--red-text);text-transform:uppercase;}
+  .overlay .ov-name{font-family:var(--grotesk);font-size:clamp(48px,10vw,120px);text-transform:uppercase;letter-spacing:-0.02em;}
+  .overlay .ov-count{font-family:var(--mono);font-size:20px;color:var(--fg-dim);}
+  .overlay .ov-close{
+    margin-top:20px;padding:14px 32px;border:1px solid var(--fg);background:transparent;color:var(--fg);
+    font-family:var(--mono);font-size:14px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;
+  }
+
+  @media (max-width:900px){
+    .console{grid-template-columns:1fr;grid-auto-rows:min-content;}
+    .panel{border-bottom:1px solid var(--line);}
+  }
+</style>
+</head>
+<body>
+
+<div class="statusbar">
+  <div class="row">
+    <span><b>OPS CONSOLE</b> · 진행 보조</span>
+    <div class="phasebar">
+      <button type="button" data-phase="night" aria-pressed="true">NIGHT</button>
+      <button type="button" data-phase="day" aria-pressed="false">DAY</button>
+    </div>
+    <span class="live"><span class="pip"></span>진행 중</span>
+    <a href="highschool-mafia-guide.html" style="color:var(--fg-dim);text-decoration:none;border:1px solid var(--line);padding:6px 12px;">가이드 보기</a>
+  </div>
+</div>
+
+<div class="console">
+
+  <div class="panel">
+    <div class="ptitle">생존자</div>
+
+    <div class="setup-row">
+      <span>초기 인원</span>
+      <input type="number" id="totalInput" value="18" min="1">
+      <button type="button" id="applyTotal">적용</button>
+    </div>
+
+    <div class="side mafia">
+      <span class="label">마피아 생존</span>
+      <div class="stepper">
+        <button type="button" data-team="mafia" data-delta="-1">-</button>
+        <span class="n" id="mafiaN">3</span>
+        <button type="button" data-team="mafia" data-delta="1">+</button>
+      </div>
+    </div>
+    <div class="side rest">
+      <span class="label">시민팀 생존</span>
+      <div class="stepper">
+        <button type="button" data-team="rest" data-delta="-1">-</button>
+        <span class="n" id="restN">15</span>
+        <button type="button" data-team="rest" data-delta="1">+</button>
+      </div>
+    </div>
+
+    <div class="winbanner" id="winBanner"></div>
+
+    <div class="ratio-hint" id="ratioHint">전체 <b>18</b>명 중 생존 <b>18</b>명 (<b>100%</b>)</div>
+  </div>
+
+  <div class="panel">
+    <div class="ptitle">토론 스톱워치</div>
+    <div class="timer-display" id="timerDisplay">05:00</div>
+    <div class="timer-sub" id="timerSub">대기 중</div>
+    <div class="timer-presets">
+      <button type="button" data-preset="300" aria-pressed="true">5분</button>
+      <button type="button" data-preset="180" aria-pressed="false">3분</button>
+    </div>
+    <div class="timer-controls">
+      <button type="button" class="primary" id="timerToggle">시작</button>
+      <button type="button" id="timerReset">리셋</button>
+    </div>
+    <div class="suggest" id="timerSuggest">생존자가 50% 이하입니다. 3분 프리셋으로 전환을 권장합니다.</div>
+  </div>
+
+  <div class="panel">
+    <div class="ptitle">투표 결과</div>
+    <div class="vote-add">
+      <input type="text" id="voteNameInput" placeholder="이름 또는 세례명 입력">
+      <button type="button" id="voteAddBtn">추가</button>
+    </div>
+    <div class="vote-list" id="voteList">
+      <div class="vote-empty">후보를 추가하면 이곳에 표시됩니다</div>
+    </div>
+    <div class="vote-actions">
+      <button type="button" id="voteReset">투표 초기화</button>
+      <button type="button" class="announce" id="voteAnnounce">발표</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="overlay" id="announceOverlay">
+  <span class="ov-tag">지목 결과</span>
+  <span class="ov-name" id="ovName">-</span>
+  <span class="ov-count" id="ovCount"></span>
+  <button type="button" class="ov-close" id="ovClose">닫기</button>
+</div>
+
+<script>
+(function(){
+  /* phase toggle (local to this device only) */
+  var phaseButtons = document.querySelectorAll('.phasebar button');
+  phaseButtons.forEach(function(b){
+    b.addEventListener('click', function(){
+      phaseButtons.forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+    });
+  });
+
+  /* ---- survivors ---- */
+  var totalInput = document.getElementById('totalInput');
+  var applyTotal = document.getElementById('applyTotal');
+  var mafiaN = document.getElementById('mafiaN');
+  var restN = document.getElementById('restN');
+  var winBanner = document.getElementById('winBanner');
+  var ratioHint = document.getElementById('ratioHint');
+  var initialTotal = 18;
+
+  var state = { mafia: 3, rest: 15 };
+
+  function renderSurvivors(){
+    mafiaN.textContent = state.mafia;
+    restN.textContent = state.rest;
+    var alive = state.mafia + state.rest;
+    var pct = initialTotal > 0 ? Math.round((alive / initialTotal) * 100) : 0;
+    ratioHint.innerHTML = '전체 <b>' + initialTotal + '</b>명 중 생존 <b>' + alive + '</b>명 (<b>' + pct + '%</b>)';
+
+    winBanner.classList.remove('show','mafia','rest');
+    if (state.mafia <= 0 && state.rest > 0) {
+      winBanner.textContent = '시민팀 승리';
+      winBanner.classList.add('show','rest');
+    } else if (state.mafia > 0 && state.mafia >= state.rest) {
+      winBanner.textContent = '마피아팀 승리';
+      winBanner.classList.add('show','mafia');
+    }
+
+    updateTimerSuggest();
+  }
+
+  document.querySelectorAll('.stepper button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var team = btn.dataset.team;
+      var delta = parseInt(btn.dataset.delta, 10);
+      state[team] = Math.max(0, state[team] + delta);
+      renderSurvivors();
+    });
+  });
+
+  applyTotal.addEventListener('click', function(){
+    var v = parseInt(totalInput.value, 10);
+    if (!v || v < 1) return;
+    initialTotal = v;
+    renderSurvivors();
+  });
+
+  renderSurvivors();
+
+  /* ---- timer ---- */
+  var timerDisplay = document.getElementById('timerDisplay');
+  var timerSub = document.getElementById('timerSub');
+  var timerToggle = document.getElementById('timerToggle');
+  var timerReset = document.getElementById('timerReset');
+  var timerSuggest = document.getElementById('timerSuggest');
+  var presetButtons = document.querySelectorAll('.timer-presets button');
+
+  var presetSeconds = 300;
+  var remaining = 300;
+  var running = false;
+  var tickHandle = null;
+
+  function fmt(sec){
+    var m = Math.floor(sec / 60);
+    var s = sec % 60;
+    return String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  }
+
+  function renderTimer(){
+    timerDisplay.textContent = fmt(remaining);
+    timerDisplay.classList.toggle('warn', remaining <= 10 && remaining > 0);
+    timerSub.textContent = running ? '진행 중' : (remaining === 0 ? '시간 종료' : '대기 중');
+  }
+
+  function tick(){
+    remaining = Math.max(0, remaining - 1);
+    renderTimer();
+    if (remaining === 0) {
+      running = false;
+      clearInterval(tickHandle);
+      timerToggle.textContent = '시작';
+    }
+  }
+
+  timerToggle.addEventListener('click', function(){
+    running = !running;
+    if (running) {
+      if (remaining === 0) remaining = presetSeconds;
+      timerToggle.textContent = '일시정지';
+      tickHandle = setInterval(tick, 1000);
+    } else {
+      timerToggle.textContent = '시작';
+      clearInterval(tickHandle);
+    }
+    renderTimer();
+  });
+
+  timerReset.addEventListener('click', function(){
+    running = false;
+    clearInterval(tickHandle);
+    remaining = presetSeconds;
+    timerToggle.textContent = '시작';
+    renderTimer();
+  });
+
+  presetButtons.forEach(function(b){
+    b.addEventListener('click', function(){
+      presetButtons.forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      presetSeconds = parseInt(b.dataset.preset, 10);
+      running = false;
+      clearInterval(tickHandle);
+      remaining = presetSeconds;
+      timerToggle.textContent = '시작';
+      renderTimer();
+    });
+  });
+
+  function updateTimerSuggest(){
+    var alive = state.mafia + state.rest;
+    var atOrBelowHalf = initialTotal > 0 && alive <= initialTotal / 2;
+    var on3min = presetSeconds === 180;
+    timerSuggest.classList.toggle('show', atOrBelowHalf && !on3min);
+  }
+
+  renderTimer();
+
+  /* ---- vote tally ---- */
+  var voteNameInput = document.getElementById('voteNameInput');
+  var voteAddBtn = document.getElementById('voteAddBtn');
+  var voteList = document.getElementById('voteList');
+  var voteReset = document.getElementById('voteReset');
+  var voteAnnounce = document.getElementById('voteAnnounce');
+  var overlay = document.getElementById('announceOverlay');
+  var ovName = document.getElementById('ovName');
+  var ovCount = document.getElementById('ovCount');
+  var ovClose = document.getElementById('ovClose');
+
+  var candidates = [];
+
+  function renderVotes(){
+    voteList.innerHTML = '';
+    if (candidates.length === 0) {
+      var empty = document.createElement('div');
+      empty.className = 'vote-empty';
+      empty.textContent = '후보를 추가하면 이곳에 표시됩니다';
+      voteList.appendChild(empty);
+      return;
+    }
+    var sorted = candidates.slice().sort(function(a,b){ return b.votes - a.votes; });
+    var top = sorted.length && sorted[0].votes > 0 ? sorted[0].votes : -1;
+
+    sorted.forEach(function(c){
+      var row = document.createElement('div');
+      row.className = 'vote-row' + (c.votes === top && top > 0 ? ' leader' : '');
+
+      var name = document.createElement('span');
+      name.className = 'vname';
+      name.textContent = c.name;
+
+      var minus = document.createElement('button');
+      minus.className = 'vbtn';
+      minus.textContent = '-';
+      minus.addEventListener('click', function(){
+        c.votes = Math.max(0, c.votes - 1);
+        renderVotes();
+      });
+
+      var count = document.createElement('span');
+      count.className = 'vcount';
+      count.textContent = c.votes;
+
+      var plus = document.createElement('button');
+      plus.className = 'vbtn';
+      plus.textContent = '+';
+      plus.addEventListener('click', function(){
+        c.votes += 1;
+        renderVotes();
+      });
+
+      var del = document.createElement('button');
+      del.className = 'vdel';
+      del.textContent = 'X';
+      del.addEventListener('click', function(){
+        candidates = candidates.filter(function(x){ return x !== c; });
+        renderVotes();
+      });
+
+      row.appendChild(name);
+      row.appendChild(minus);
+      row.appendChild(count);
+      row.appendChild(plus);
+      row.appendChild(del);
+      voteList.appendChild(row);
+    });
+  }
+
+  function addCandidate(){
+    var v = voteNameInput.value.trim();
+    if (!v) return;
+    candidates.push({ name: v, votes: 0 });
+    voteNameInput.value = '';
+    renderVotes();
+  }
+
+  voteAddBtn.addEventListener('click', addCandidate);
+  voteNameInput.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') addCandidate();
+  });
+
+  voteReset.addEventListener('click', function(){
+    candidates.forEach(function(c){ c.votes = 0; });
+    renderVotes();
+  });
+
+  voteAnnounce.addEventListener('click', function(){
+    if (candidates.length === 0) return;
+    var sorted = candidates.slice().sort(function(a,b){ return b.votes - a.votes; });
+    var top = sorted[0];
+    var tied = sorted.filter(function(c){ return c.votes === top.votes; });
+    if (tied.length > 1 && top.votes > 0) {
+      ovName.textContent = '동률';
+      ovCount.textContent = tied.map(function(c){ return c.name; }).join(' / ') + ' (' + top.votes + '표)';
+    } else {
+      ovName.textContent = top.name;
+      ovCount.textContent = top.votes + '표';
+    }
+    overlay.classList.add('show');
+  });
+
+  ovClose.addEventListener('click', function(){
+    overlay.classList.remove('show');
+  });
+
+  renderVotes();
+})();
+</script>
+
+</body>
+</html>
