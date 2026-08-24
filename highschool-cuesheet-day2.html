@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2일차 · 프로그램 큐시트</title>
+<link rel="stylesheet" href="cuesheet.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <a class="mark" href="highschool-cuesheet.html">큐<b>시</b>트</a>
+    <span class="crumb">2일차</span>
+    <span class="spacer"></span>
+    <button class="print-btn" onclick="window.print()">인쇄</button>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <p class="eyebrow">9월 6일 · 주일</p>
+    <div class="num-row">
+      <span class="num"><i>2</i></span>
+      <div class="num-label">
+        <p class="title">미사와 귀가</p>
+        <p class="date">기상 07:30 → 암사동성당 도착 및 해산 18:00</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="rail" id="day2-list"></div>
+</main>
+
+<nav class="pager">
+  <a href="highschool-cuesheet-night.html"><span class="dir">Prev</span><span class="lbl">← 야간 큐</span></a>
+  <a class="next" href="highschool-cuesheet-check.html"><span class="dir">Next</span><span class="lbl">총괄 체크 →</span></a>
+</nav>
+<footer class="foot">현장 진행자용 대본 겸 타임라인입니다. 전체 개요·예산·준비물은 워크북, 개인별 담당은 역할 카드를 참고하세요.</footer>
+
+<script src="cuesheet.js"></script>
+<script>
+const D=(t,place,desc,owner)=>({t,place,desc,owner});
+const DAY2 = [
+  D("07:30\n~08:00","달팽이 아지트","기상 및 조식 (조별 진행)","전체 교사(학생관리/인솔 외 보조)"),
+  D("08:00\n~09:00","달팽이 아지트","세면 및 숙소 정리 후 퇴실","전체 교사(학생관리/인솔 외 보조)"),
+  D("09:00\n~10:00","전동성당 이동 중","숙소 퇴실 및 이동, 10:00까지 성당 앞 집결","총괄(진건호)"),
+  D("10:30\n~11:30","전동성당","교중미사 참례 (단정한 복장·시간 엄수)","총괄 / 전체 교사"),
+  D("11:30\n~13:00","전동떡갈비","전체 중식(11:50 예약, 29명), 통합 결제","결제: 진건호 · 영수증 회수: 손기훈"),
+  D("13:00~","전주역 이동 중","SRT 탑승 인원 점검 후 해산 준비","학생관리/인솔(이민경·서혜정)"),
+  D("17:30\n~18:00","암사동성당","도착 및 해산","총괄(진건호)"),
+];
+renderRail(DAY2,"day2-list");
+</script>
+</body>
+</html>
