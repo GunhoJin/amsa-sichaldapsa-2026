@@ -75,8 +75,8 @@
   .timer-ring.live{color:var(--accent)}
   .timer-ring.done{color:var(--ink)}
   .timer-bar{
-    position:absolute; left:0; bottom:0; height:5px; background:var(--accent);
-    width:0%; transition:width .1s linear;
+    position:absolute; left:0; bottom:0; width:100%; height:5px; background:var(--accent);
+    transform:scaleX(0); transform-origin:left; transition:transform .1s linear;
   }
   .score{
     position:absolute; top:22px; left:26px;
@@ -252,9 +252,9 @@ function startWordTimer(sec){
       clearInterval(wordTimerId); wordTimerId=null;
       box.classList.remove("live"); box.classList.add("done");
       document.getElementById("wordEl").classList.add("flash");
-      bar.style.width="0%";
+      bar.style.transform="scaleX(0)";
     } else {
-      bar.style.width = (wordTimerLeft/total*100)+"%";
+      bar.style.transform = "scaleX("+(wordTimerLeft/total)+")";
     }
     renderTimerBox();
   }, 100);
@@ -262,7 +262,7 @@ function startWordTimer(sec){
 function stopWordTimer(){
   if(wordTimerId){ clearInterval(wordTimerId); wordTimerId=null; }
   wordTimerLeft=0;
-  document.getElementById("timerBar").style.width="0%";
+  document.getElementById("timerBar").style.transform="scaleX(0)";
   const box=document.getElementById("timerBox");
   if(box){ box.classList.remove("live"); box.classList.remove("done"); }
 }
