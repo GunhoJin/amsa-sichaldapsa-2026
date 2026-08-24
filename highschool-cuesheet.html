@@ -3,329 +3,55 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>중고등부 여름캠프 · 프로그램 큐시트</title>
-<style>
-  :root{
-    --bg:#f4f5f7; --surface:#ffffff; --surface-2:#eef0f4;
-    --ink:#1c2029; --muted:#5b6270; --faint:#8b93a3;
-    --line:#e1e4ea;
-    --accent:#3452e0; --accent-ink:#2739a8; --accent-soft:#e8ebfc;
-    --ok:#1f9d63;
-    --d-1:#3452e0; --d-dinner:#c0631b; --d-night:#7b3fd1; --d-2:#c0631b;
-    --shadow:0 1px 2px rgba(20,24,40,.05),0 8px 24px rgba(20,24,40,.06);
-  }
-  @media (prefers-color-scheme:dark){
-    :root{
-      --bg:#12141c; --surface:#1a1d28; --surface-2:#20232f;
-      --ink:#eef0f6; --muted:#a4abbd; --faint:#6d7488;
-      --line:#2b2f3e;
-      --accent:#7d93ff; --accent-ink:#c2ccff; --accent-soft:#242a49;
-      --ok:#4ad393;
-      --d-1:#7d93ff; --d-dinner:#ff9d52; --d-night:#c298ff; --d-2:#ff9d52;
-      --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 28px rgba(0,0,0,.4);
-    }
-  }
-  :root[data-theme="light"]{
-    --bg:#f4f5f7; --surface:#ffffff; --surface-2:#eef0f4; --ink:#1c2029; --muted:#5b6270; --faint:#8b93a3;
-    --line:#e1e4ea; --accent:#3452e0; --accent-ink:#2739a8; --accent-soft:#e8ebfc; --ok:#1f9d63;
-    --d-1:#3452e0; --d-dinner:#c0631b; --d-night:#7b3fd1; --d-2:#c0631b;
-    --shadow:0 1px 2px rgba(20,24,40,.05),0 8px 24px rgba(20,24,40,.06);
-  }
-  :root[data-theme="dark"]{
-    --bg:#12141c; --surface:#1a1d28; --surface-2:#20232f; --ink:#eef0f6; --muted:#a4abbd; --faint:#6d7488;
-    --line:#2b2f3e; --accent:#7d93ff; --accent-ink:#c2ccff; --accent-soft:#242a49; --ok:#4ad393;
-    --d-pre:#4ad393; --d-1:#7d93ff; --d-dinner:#ff9d52; --d-night:#c298ff; --d-2:#ff9d52;
-    --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 28px rgba(0,0,0,.4);
-  }
-
-  :root{ --fs-1:11px; --fs-2:13px; --fs-3:16px; --fs-4:20px; }
-
-  *{box-sizing:border-box}
-  body{
-    margin:0; background:var(--bg); color:var(--ink);
-    font-family:"Pretendard",-apple-system,"Apple SD Gothic Neo","Malgun Gothic","맑은 고딕",system-ui,sans-serif;
-    font-feature-settings:"tnum";
-    -webkit-print-color-adjust:exact; print-color-adjust:exact;
-  }
-
-  header.top{
-    position:sticky; top:0; z-index:20; background:var(--surface);
-    border-bottom:1px solid var(--line);
-  }
-  .top-inner{max-width:960px; margin:0 auto; padding:14px 18px 0}
-  .top-inner h1{font-size:var(--fs-3); margin:0 0 2px; font-weight:800; letter-spacing:-.01em}
-  .top-inner .sub{font-size:var(--fs-1); color:var(--muted); margin-bottom:10px}
-  .top-row{display:flex; align-items:center; gap:10px}
-  .btn{
-    font:inherit; font-size:var(--fs-2); font-weight:700; cursor:pointer;
-    color:#fff; background:var(--accent); border:none; border-radius:8px;
-    padding:7px 13px; white-space:nowrap;
-  }
-  .btn:focus-visible{outline:2px solid var(--accent-ink); outline-offset:2px}
-  nav.tabs{
-    display:flex; gap:6px; overflow-x:auto; padding:10px 18px 10px;
-    max-width:960px; margin:0 auto; scrollbar-width:none;
-  }
-  nav.tabs::-webkit-scrollbar{display:none}
-  nav.tabs a{
-    flex:0 0 auto; font-size:var(--fs-2); font-weight:700; text-decoration:none;
-    color:var(--muted); background:var(--surface-2); border:1px solid var(--line);
-    border-radius:999px; padding:7px 13px; white-space:nowrap;
-  }
-  nav.tabs a:hover{color:var(--ink)}
-
-  main{max-width:960px; margin:0 auto; padding:22px 18px 70px}
-
-  section.block{margin:0 0 34px; scroll-margin-top:112px}
-  .block-head{display:flex; align-items:baseline; gap:10px; margin:0 0 12px; flex-wrap:wrap}
-  .block-head h2{font-size:var(--fs-4); margin:0; font-weight:800; letter-spacing:-.01em}
-  .block-head .meta{font-size:var(--fs-1); color:var(--muted)}
-  .block-note{
-    font-size:var(--fs-2); color:var(--muted); background:var(--surface-2);
-    border:1px solid var(--line); border-radius:10px; padding:10px 13px; margin:0 0 14px;
-  }
-
-  .item{
-    display:grid; grid-template-columns:96px 1fr; gap:0;
-    background:var(--surface); border:1px solid var(--line); border-radius:12px;
-    box-shadow:var(--shadow); margin:0 0 9px; overflow:hidden;
-  }
-  .item .badge{
-    display:flex; align-items:center; justify-content:center; text-align:center;
-    font-size:var(--fs-2); font-weight:800; color:#fff; padding:10px 6px;
-    font-variant-numeric:tabular-nums;
-  }
-  .item .body{padding:10px 14px 11px}
-  .item .place{font-size:var(--fs-1); font-weight:700; letter-spacing:.02em; color:var(--faint); text-transform:uppercase; margin:0 0 3px}
-  .item .desc{font-size:var(--fs-3); color:var(--ink); line-height:1.5; margin:0 0 5px}
-  .item .owner{font-size:var(--fs-1); color:var(--accent-ink); font-weight:600}
-
-  .item.d1 .badge{background:var(--d-1)}
-  .item.dinner .badge{background:var(--d-dinner)}
-  .item.night .badge{background:var(--d-night)}
-  .item.d2 .badge{background:var(--d-2)}
-
-  @media (max-width:520px){
-    .item{grid-template-columns:76px 1fr}
-    .item .badge{font-size:var(--fs-1); padding:9px 4px}
-  }
-
-  details.expand{
-    background:var(--surface-2); border:1px solid var(--line); border-radius:12px;
-    margin:14px 0 0; overflow:hidden;
-  }
-  details.expand summary{
-    cursor:pointer; list-style:none; padding:12px 15px; font-size:var(--fs-3); font-weight:700;
-    display:flex; align-items:center; gap:8px; color:var(--ink);
-  }
-  details.expand summary::-webkit-details-marker{display:none}
-  details.expand summary::before{content:"▸"; color:var(--accent); font-size:var(--fs-1); transition:transform .15s}
-  details.expand[open] summary::before{transform:rotate(90deg)}
-  details.expand .expand-body{padding:0 15px 14px}
-
-  .rules{font-size:var(--fs-2); color:var(--muted); line-height:1.6}
-  .rules h4{font-size:var(--fs-2); color:var(--ink); margin:12px 0 4px}
-  .rules h4:first-child{margin-top:2px}
-
-  .check-list{display:flex; flex-direction:column; gap:7px}
-  .check-row{
-    display:flex; align-items:flex-start; gap:10px; background:var(--surface);
-    border:1px solid var(--line); border-radius:10px; padding:11px 13px; box-shadow:var(--shadow);
-  }
-  .check-row input{margin-top:2px; width:16px; height:16px; accent-color:var(--accent); flex:0 0 auto}
-  .check-row label{font-size:var(--fs-3); line-height:1.5; color:var(--ink)}
-  .check-row.done{opacity:.5}
-  .check-row.done label{text-decoration:line-through}
-  .check-reset{font-size:var(--fs-1); color:var(--muted); background:none; border:none; text-decoration:underline; cursor:pointer; padding:0; margin:10px 0 0}
-
-  footer.foot{max-width:960px; margin:0 auto; padding:0 18px 30px; color:var(--faint); font-size:var(--fs-1)}
-
-  @media print{
-    :root{--bg:#fff; --surface:#fff; --surface-2:#f7f7f8}
-    header.top{position:static}
-    nav.tabs, .btn, footer.foot, .check-reset{display:none}
-    section.block{break-inside:avoid}
-    details.expand{border:1px solid #ccc}
-    details.expand:not([open]) .expand-body{display:block !important}
-    .item{box-shadow:none; border:1px solid #ccc}
-  }
-  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-</style>
+<title>프로그램 큐시트 · 중고등부 여름캠프</title>
+<link rel="stylesheet" href="cuesheet.css">
 </head>
 <body>
 
 <header class="top">
   <div class="top-inner">
-    <h1>📋 중고등부 여름캠프 · 프로그램 큐시트</h1>
-    <div class="sub">본행사 2026.9.5(토) 09:00 ~ 9.6(주일) 18:00 · 전주 자유여행 &amp; 흑백요리사</div>
-    <div class="top-row" style="padding-bottom:10px">
-      <span class="sub" style="margin:0">현장 진행자용 대본 겸 타임라인 — 전체 정보는 워크북, 담당은 역할 카드 참고</span>
-      <span style="flex:1"></span>
-      <button class="btn" onclick="window.print()">인쇄 / PDF 저장</button>
-    </div>
+    <a class="mark" href="highschool-cuesheet.html">큐<b>시</b>트</a>
+    <span class="spacer"></span>
   </div>
-  <nav class="tabs">
-    <a href="#day1">🔵 1일차</a>
-    <a href="#dinner">🍳 석식 큐</a>
-    <a href="#night">🎲 야간 큐</a>
-    <a href="#day2">🟠 2일차</a>
-    <a href="#check">✅ 총괄 체크</a>
-  </nav>
 </header>
 
 <main>
+  <div class="hero plain">
+    <p class="date">2026.9.5(토) 09:00 — 9.6(주일) 18:00 · 전주 자유여행 &amp; 흑백요리사</p>
+    <h1 class="title">📋 프로그램 큐시트</h1>
+    <p class="desc">현장 진행자용 대본 겸 타임라인입니다. 순서대로 다섯 구간으로 나눠뒀습니다 — 필요한 구간만 열어서 인쇄하세요. 전체 개요·예산·준비물은 워크북, 개인별 담당은 역할 카드를 참고하세요.</p>
+  </div>
 
-  <section class="block" id="day1">
-    <div class="block-head"><h2>1일차 — 9월 5일(토)</h2><span class="meta">전주역 도착 → 자유여행 → 숙소 → 흑백요리사 → 취침</span></div>
-    <div id="day1-list"></div>
-  </section>
-
-  <section class="block" id="dinner">
-    <div class="block-head"><h2>🍳 석식 큐 — 흑백요리사 요리대회</h2><span class="meta">18:30~20:30 · 담당: 최미진 마리아T · 김아래미 세실리아T</span></div>
-    <div class="block-note">⚠️ 볏단가리 미션은 철회되었습니다. 요리대회 미션 주제는 확정되었으나 학생 발표 전까지 비공개 유지 — 오프닝 멘트는 현장에서 진행자가 재량껏 진행합니다. 심사기준: 맛 40%·독창성 30%·협동/정리 30%.</div>
-    <div id="dinner-list"></div>
-  </section>
-
-  <section class="block" id="night">
-    <div class="block-head"><h2>🎲 야간 프로그램 큐 — 조별 대항전 &amp; 마피아</h2><span class="meta">20:30~22:00 · MC: 진건호 토마스T</span></div>
-    <div class="block-note">조원 5명 미만인 조(3·4조)는 교사·봉사자 중 원하는 사람을 용병으로 지명해 5명을 완성합니다.</div>
-    <div id="night-list"></div>
-    <details class="expand">
-      <summary>게임별 상세 규정 펼쳐보기</summary>
-      <div class="expand-body rules">
-        <h4>CUE0. 딸기바나나사과 — 출전순서 결정 (채널십오야 방식)</h4>
-        조장 4명이 대표로 참가하는 미니게임입니다. "딸기, 바나나, 사과!" 인트로 동작 후 진행자가 무작위로 외치는 단어에 맞춰 동작(딸기: 손 모아 앞으로 점프 / 바나나: 엉덩이 빼고 뒤로 점프 / 사과: 왼발 들고 오른손 뻗기)을 수행합니다. 직전과 같은 단어가 연속되면 가만히 있어야 하는 함정 있음. 탈락 순서를 기록해 최후 생존자부터 원하는 출전번호를 드래프트로 선택합니다.
-        <h4>CUE1. 음악 1초 듣기</h4>
-        해당 조가 시대(2000·2010·2020년대) → 연도를 선택하면 그 해 곡을 1초만 재생(애플뮤직 실시간 검색)하고 곡명을 맞힙니다.
-        <h4>CUE2. 이심전심 (5문제)</h4>
-        제시어 공개 후 5초 안에 조원 전원이 사전 맞춤 없이 동시에 같은 동작을 취해야 득점합니다.
-        <h4>CUE3. 몸으로 말해요 (10문제·5분, 순차 전달식)</h4>
-        조원이 한 줄로 서서 첫 사람만 진행자를 보고 나머지는 뒤돌아 대기합니다. 진행자가 맨 앞사람에게만 제시어를 보여주면, 뒷사람을 돌려세워 말 없이 몸짓으로만 전달 — 전달받은 사람은 이해한 대로 다음 사람에게 다시 몸짓으로 재전달하며 줄 끝까지 릴레이합니다. 마지막 사람이 정답을 외치면 득점. 소리 내기·입모양으로 말하기는 금지, 5분 안에 최대한 많은 문제를 진행합니다(문제마다 줄 순서를 회전 권장).
-        <h4>CUE4. 뒷정리 덩어리 선택</h4>
-        3라운드 종합 1위 조부터 순서대로 뒷정리 항목(①설거지 ②분리수거 ③그릴정리 ④테이블·바닥청소)을 선택합니다.
-        <h4>CUE5. 마피아 게임</h4>
-        남은 시간 진행 — 참가자용 <a href="https://gunhojin.github.io/amsa-sichaldapsa-2026/highschool-mafia-guide.html">안내 페이지</a>, 진행보조용 <a href="https://gunhojin.github.io/amsa-sichaldapsa-2026/highschool-mafia-console.html">콘솔</a> 참고.
-      </div>
-    </details>
-  </section>
-
-  <section class="block" id="day2">
-    <div class="block-head"><h2>2일차 — 9월 6일(주일)</h2><span class="meta">기상 → 전동성당 → 중식 → 복귀 → 해산</span></div>
-    <div id="day2-list"></div>
-  </section>
-
-  <section class="block" id="check">
-    <div class="block-head"><h2>✅ 총괄 체크 (진건호 토마스T)</h2><span class="meta">진행 중 수시 확인 · 이 기기에 체크 상태 저장됨</span></div>
-    <div class="check-list" id="check-list"></div>
-    <button class="check-reset" onclick="resetChecks()">체크 전체 초기화</button>
-  </section>
-
+  <div class="toc">
+    <a href="highschool-cuesheet-day1.html">
+      <span class="n"><i>1</i></span>
+      <span class="tt"><span class="ttl">1일차 — 전주 자유여행</span><span class="sub">전주역 도착부터 숙소 도착까지 이동·자유여행 타임라인</span></span>
+      <span class="time">9.5 토<br>~22:00</span>
+    </a>
+    <a href="highschool-cuesheet-dinner.html">
+      <span class="n"><i>2</i></span>
+      <span class="tt"><span class="ttl">🍳 석식 큐 — 흑백요리사 요리대회</span><span class="sub">미스터리박스 공개부터 포상 발표까지 CUE 진행 대본</span></span>
+      <span class="time">18:30<br>~20:30</span>
+    </a>
+    <a href="highschool-cuesheet-night.html">
+      <span class="n"><i>3</i></span>
+      <span class="tt"><span class="ttl">🎲 야간 큐 — 조별 대항전 &amp; 마피아</span><span class="sub">딸기바나나사과부터 마피아 게임까지, 게임별 상세 규정 포함</span></span>
+      <span class="time">20:30<br>~22:00</span>
+    </a>
+    <a href="highschool-cuesheet-day2.html">
+      <span class="n"><i>4</i></span>
+      <span class="tt"><span class="ttl">2일차 — 미사와 귀가</span><span class="sub">기상부터 전동성당 교중미사·중식·해산까지</span></span>
+      <span class="time">9.6 주일<br>~18:00</span>
+    </a>
+    <a href="highschool-cuesheet-check.html">
+      <span class="n"><i>5</i></span>
+      <span class="tt"><span class="ttl">✅ 총괄 체크</span><span class="sub">진건호 토마스T가 진행 중 수시로 확인하는 체크리스트</span></span>
+      <span class="time">상시</span>
+    </a>
+  </div>
 </main>
 
-<footer class="foot">현장 진행자가 인쇄해서 사용하는 대본 겸 타임라인입니다. 전체 개요·예산·준비물은 워크북, 개인별 담당은 역할 카드를 참고하세요. (2026.8.24 갱신 — 2일차 중식 전동떡갈비 반영)</footer>
+<footer class="foot">각 구간은 별도 페이지입니다 — 담당자는 본인이 필요한 구간만 열어 인쇄하세요. (2026.8.24 갱신 — 2일차 중식 전동떡갈비, 몸으로 말해요 순차 전달식 반영)</footer>
 
-<script>
-const D=(t,place,desc,owner,cls)=>({t,place,desc,owner,cls});
-
-const DAY1 = [
-  D("~09:00","전주역","선발대 전주역 도착, 조별 인원 출발/도착 인증샷 수집","학생관리/인솔(이민경·서혜정)","d1"),
-  D("09:00~10:00","전주역","KTX 도착 (조별 진행)","안전/위치 관리(진건호·이준용)","d1"),
-  D("10:00~18:00","전주 시내","자유여행(조별 진행), 위치공유 앱 1시간 간격 모니터링, 체크포인트 확인","안전/위치 관리(진건호·이준용)","d1"),
-  D("11:30~12:30","조점례남문피순대","교사·봉사자 중식","결제: 진건호 · 영수증 회수: 손기훈","d1"),
-  D("14:30~15:30","달팽이 아지트","선발대 숙소 도착","총괄(진건호)","d1"),
-  D("15:30~17:30","달팽이 아지트","교사·봉사자 전원 숙소 집결","전체","d1"),
-  D("18:00~18:30","달팽이 아지트","숙소 집결 및 방 배정","학생관리/인솔(이민경·서혜정)","d1"),
-  D("18:30~20:30","달팽이 아지트","석식: 흑백요리사 요리대회 (조별 조리·심사, 아래 🍳 석식 큐 참고)","요리대회 진행(최미진·김아래미)","d1"),
-  D("20:30~22:00","달팽이 아지트","조별 친교 시간 및 자유 정비 (아래 🎲 야간 큐 참고)","전체 교사","d1"),
-  D("22:00~","달팽이 아지트","취침 준비 및 소등, 야간 순찰","전체 교사","d1"),
-];
-
-const DINNER = [
-  D("0","최미진 마리아T","오프닝 내레이션(미스터리박스 리빙) — 오늘의 미션 재료/주제를 극적으로 공개, 학생 리액션 유도","","dinner"),
-  D("1","최미진 마리아T","미션 공지 — 대회 규칙 및 심사 기준 안내(맛 40%·독창성 30%·협동/정리 30%)","","dinner"),
-  D("2","김아래미 세실리아T","조별 식재료 구매 영수증 회수 및 재료 구매액 확인","","dinner"),
-  D("3","진건호·이준용","심사실·거실 화상회의(노트북·마이크) 세팅","","dinner"),
-  D("4","김아래미 세실리아T","신부님·분과장님 안대 착용 안내","","dinner"),
-  D("5","진건호·이준용","조별 요리 순서대로 블라인드 테스트 진행, 타이머로 시간 관리","","dinner"),
-  D("6","진건호·이준용","시식 도우미 — 숟가락으로 심사위원에게 떠먹이기","","dinner"),
-  D("7","최미진·김아래미","심사 집계 — 맛 40% / 독창성 30% / 협동·정리 30% 합산","","dinner"),
-  D("8","김아래미 세실리아T","포상 발표(카운트다운 톤) — 2등 → 3등 → 1등 → 4등 순","","dinner"),
-  D("9","전체 교사","뒷정리 및 그릴·조리도구 회수 안내","","dinner"),
-];
-
-const NIGHT = [
-  D("0","진건호 토마스T","출전순서 결정 — 딸기바나나사과 대표선발전(조장 4명 자동 출전) → 생존 순위로 드래프트","","night"),
-  D("1","진건호 토마스T","음악 1초 듣기 — 시대·연도 선택 받고 1초 재생, 곡명 맞히기","","night"),
-  D("2","진건호 토마스T","이심전심 (5문제) — 제시어 공개, 5초 내 전원 동작 일치 판정","","night"),
-  D("3","진건호 토마스T","몸으로 말해요 (10문제·5분, 순차 전달식)","","night"),
-  D("4","진건호 토마스T","뒷정리 덩어리 선택 — 종합 1위 조부터 순서대로 선택권 안내","","night"),
-  D("5","진건호 토마스T","마피아 게임 — 안내페이지·콘솔 활용해 진행","","night"),
-];
-
-const DAY2 = [
-  D("07:30~08:00","달팽이 아지트","기상 및 조식 (조별 진행)","전체 교사(학생관리/인솔 외 보조)","d2"),
-  D("08:00~09:00","달팽이 아지트","세면 및 숙소 정리 후 퇴실","전체 교사(학생관리/인솔 외 보조)","d2"),
-  D("09:00~10:00","전동성당 이동 중","숙소 퇴실 및 이동, 10:00까지 성당 앞 집결","총괄(진건호)","d2"),
-  D("10:30~11:30","전동성당","교중미사 참례 (단정한 복장·시간 엄수)","총괄 / 전체 교사","d2"),
-  D("11:30~13:00","전동떡갈비","전체 중식(11:50 예약, 29명), 통합 결제","결제: 진건호 · 영수증 회수: 손기훈","d2"),
-  D("13:00~","전주역 이동 중","SRT 탑승 인원 점검 후 해산 준비","학생관리/인솔(이민경·서혜정)","d2"),
-  D("17:30~18:00","암사동성당","도착 및 해산","총괄(진건호)","d2"),
-];
-
-const CHECKS = [
-  "시간 체크 — 1일차 자유여행 09:00 출발, 18:00 숙소 정시 도착 준수",
-  "안전/위치 관리(진건호·이준용) 실시간 위치공유 앱 1시간 간격 모니터링 여부",
-  "체크포인트별 조별 인증샷 단톡방 공유 확인 (1차 점심, 2차 17:00 숙소이동, 3차 18:00 도착)",
-  "미도착/이탈 학생 즉시 재확인",
-  "흑백요리사 요리대회 안전(그릴·가스버너 화상 주의) 확인",
-  "김아래미 세실리아T 개별 합류(암사동성당 14:00경 출발) 도착 확인 — 예상 17:30~17:50",
-  "2일차 교중미사 단체 참여 시간 엄수, 복장 점검",
-  "손기훈 야고보 영수증 회수·취합 확인, 진건호 토마스 결제(1일차 조점례남문피순대·2일차 전동떡갈비) 확인",
-  "여행수첩 작성 확인 (카메라는 회수하지 않음 — 조별 보관 후 각자 현상)",
-  "조별 추가경비 요청 발생 시 대응 — 총괄에게 먼저 보고 → 영수증 제출 후 사후 정산",
-  "야간프로그램(3라운드 대항전) 진행 확인 — 출전순서 결정, 종합 1위 조 뒷정리 선택 반영 여부",
-];
-
-function esc(s){return (s||"").replace(/&(?!\w+;|#)/g,"&amp;")}
-function renderList(arr, elId){
-  const html = arr.map(d=>`
-    <div class="item ${d.cls}">
-      <div class="badge">${esc(d.t)}</div>
-      <div class="body">
-        ${d.place?`<p class="place">${esc(d.place)}</p>`:""}
-        <p class="desc">${esc(d.desc)}</p>
-        ${d.owner?`<p class="owner">${esc(d.owner)}</p>`:""}
-      </div>
-    </div>`).join("");
-  document.getElementById(elId).innerHTML = html;
-}
-renderList(DAY1,"day1-list");
-renderList(DINNER,"dinner-list");
-renderList(NIGHT,"night-list");
-renderList(DAY2,"day2-list");
-
-const STORE_KEY="camp2026-master-checklist";
-function loadState(){ try{ return JSON.parse(localStorage.getItem(STORE_KEY))||{}; }catch(e){ return {}; } }
-function saveState(s){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(s)); }catch(e){} }
-function renderChecks(){
-  const state = loadState();
-  const html = CHECKS.map((txt,i)=>{
-    const id="chk"+i, on=!!state[i];
-    return `<div class="check-row ${on?'done':''}" id="row${i}">
-      <input type="checkbox" id="${id}" ${on?"checked":""} onchange="toggleCheck(${i})">
-      <label for="${id}">${esc(txt)}</label>
-    </div>`;
-  }).join("");
-  document.getElementById("check-list").innerHTML = html;
-}
-function toggleCheck(i){
-  const state = loadState();
-  state[i] = !state[i];
-  saveState(state);
-  document.getElementById("row"+i).classList.toggle("done", !!state[i]);
-}
-function resetChecks(){ saveState({}); renderChecks(); }
-renderChecks();
-</script>
 </body>
 </html>
