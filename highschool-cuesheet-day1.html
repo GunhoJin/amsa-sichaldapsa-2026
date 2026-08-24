@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1일차 · 프로그램 큐시트</title>
+<link rel="stylesheet" href="cuesheet.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <a class="mark" href="highschool-cuesheet.html">큐<b>시</b>트</a>
+    <span class="crumb">1일차</span>
+    <span class="spacer"></span>
+    <button class="print-btn" onclick="window.print()">인쇄</button>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <p class="eyebrow">9월 5일 · 토요일</p>
+    <div class="num-row">
+      <span class="num"><i>1</i></span>
+      <div class="num-label">
+        <p class="title">전주 자유여행</p>
+        <p class="date">전주역 도착 ~09:00 → 취침·야간순찰 22:00~</p>
+      </div>
+    </div>
+    <p class="desc">석식(흑백요리사)과 조별 친교 시간은 별도 페이지(석식 큐 / 야간 큐)에 상세 대본이 있습니다.</p>
+  </div>
+
+  <div class="rail" id="day1-list"></div>
+</main>
+
+<nav class="pager">
+  <a href="highschool-cuesheet.html"><span class="dir">Index</span><span class="lbl">큐시트 목차</span></a>
+  <a class="next" href="highschool-cuesheet-dinner.html"><span class="dir">Next</span><span class="lbl">석식 큐 →</span></a>
+</nav>
+<footer class="foot">현장 진행자용 대본 겸 타임라인입니다. 전체 개요·예산·준비물은 워크북, 개인별 담당은 역할 카드를 참고하세요.</footer>
+
+<script src="cuesheet.js"></script>
+<script>
+const D=(t,place,desc,owner)=>({t,place,desc,owner});
+const DAY1 = [
+  D("~09:00","전주역","선발대 전주역 도착, 조별 인원 출발/도착 인증샷 수집","학생관리/인솔(이민경·서혜정)"),
+  D("09:00\n~10:00","전주역","KTX 도착 (조별 진행)","안전/위치 관리(진건호·이준용)"),
+  D("10:00\n~18:00","전주 시내","자유여행(조별 진행), 위치공유 앱 1시간 간격 모니터링, 체크포인트 확인","안전/위치 관리(진건호·이준용)"),
+  D("11:30\n~12:30","조점례남문피순대","교사·봉사자 중식","결제: 진건호 · 영수증 회수: 손기훈"),
+  D("14:30\n~15:30","달팽이 아지트","선발대 숙소 도착","총괄(진건호)"),
+  D("15:30\n~17:30","달팽이 아지트","교사·봉사자 전원 숙소 집결","전체"),
+  D("18:00\n~18:30","달팽이 아지트","숙소 집결 및 방 배정","학생관리/인솔(이민경·서혜정)"),
+  D("18:30\n~20:30","달팽이 아지트","석식: 흑백요리사 요리대회 — 상세 대본은 다음 페이지(석식 큐) 참고","요리대회 진행(최미진·김아래미)"),
+  D("20:30\n~22:00","달팽이 아지트","조별 친교 시간 및 자유 정비 — 상세 대본은 야간 큐 페이지 참고","전체 교사"),
+  D("22:00~","달팽이 아지트","취침 준비 및 소등, 야간 순찰","전체 교사"),
+];
+renderRail(DAY1,"day1-list");
+</script>
+</body>
+</html>
