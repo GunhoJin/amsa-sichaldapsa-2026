@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>제시어 공개 · 야간 프로그램</title>
+<style>
+  :root{
+    --bg:#0a0a0b; --panel:#151516; --line:#28282a;
+    --ink:#f5f4f0; --muted:#8d8c88; --faint:#575653;
+    --accent:#ff6b62; --accent-dim:#4a1d1a;
+    --sans:"Pretendard",-apple-system,"Apple SD Gothic Neo","Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+    --mono:ui-monospace,"SF Mono","Cascadia Code","Consolas",monospace;
+  }
+  /* 무대 상영용 도구 — 투영/TV 화면 전용이라 라이트모드 없이 어두운 단일 테마로 고정합니다 */
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--sans); font-feature-settings:"tnum";
+    display:flex; flex-direction:column; overflow:hidden;
+    user-select:none; -webkit-user-select:none;
+  }
+
+  header.top{
+    flex:0 0 auto; display:flex; align-items:center; gap:14px;
+    padding:12px 18px; border-bottom:1px solid var(--line);
+    flex-wrap:wrap;
+  }
+  .seg{display:flex; gap:4px; background:var(--panel); border-radius:8px; padding:3px}
+  .seg button{
+    font:inherit; font-family:var(--mono); font-size:12px; font-weight:700; letter-spacing:.03em;
+    color:var(--muted); background:none; border:none; border-radius:6px;
+    padding:7px 12px; cursor:pointer;
+  }
+  .seg button.on{background:var(--accent); color:#1a0a08}
+  header.top .spacer{flex:1}
+  .fs-btn{
+    font:inherit; font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.03em;
+    color:var(--muted); background:none; border:1px solid var(--line); border-radius:6px;
+    padding:7px 12px; cursor:pointer;
+  }
+  .fs-btn:hover{color:var(--ink); border-color:var(--muted)}
+
+  .progress{display:flex; gap:6px; padding:0 18px; flex:0 0 auto; margin:10px 0 0}
+  .dot{
+    flex:1; height:5px; border-radius:3px; background:var(--panel);
+  }
+  .dot.done{background:var(--muted)}
+  .dot.cur{background:var(--accent)}
+
+  main{
+    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:20px; position:relative; text-align:center;
+    min-height:0;
+  }
+  .eyebrow{
+    font-family:var(--mono); font-size:clamp(11px,1.6vw,15px); font-weight:700; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--muted); margin:0 0 18px;
+  }
+  .word{
+    font-size:clamp(38px,10vw,132px); font-weight:800; letter-spacing:-.02em; line-height:1.08;
+    margin:0; text-wrap:balance; max-width:92vw;
+    transition:opacity .15s, transform .15s;
+  }
+  .word.flash{color:var(--accent)}
+  .hint{font-size:clamp(12px,1.4vw,16px); color:var(--faint); margin:18px 0 0}
+
+  .timer-ring{
+    position:absolute; top:22px; right:26px;
+    font-family:var(--mono); font-variant-numeric:tabular-nums;
+    font-size:clamp(20px,3vw,40px); font-weight:700; color:var(--muted);
+    display:flex; align-items:center; gap:10px;
+  }
+  .timer-ring.live{color:var(--accent)}
+  .timer-ring.done{color:var(--ink)}
+  .timer-bar{
+    position:absolute; left:0; bottom:0; height:5px; background:var(--accent);
+    width:0%; transition:width .1s linear;
+  }
+  .score{
+    position:absolute; top:22px; left:26px;
+    font-family:var(--mono); font-size:clamp(14px,2vw,22px); color:var(--muted);
+  }
+  .score b{color:var(--ink); font-size:1.3em}
+
+  footer.ctrl{
+    flex:0 0 auto; display:flex; align-items:center; gap:10px;
+    padding:14px 18px; border-top:1px solid var(--line); flex-wrap:wrap;
+  }
+  .btn{
+    font:inherit; font-family:var(--mono); font-size:13px; font-weight:700; letter-spacing:.02em;
+    cursor:pointer; color:var(--ink); background:var(--panel); border:1px solid var(--line);
+    border-radius:8px; padding:11px 18px;
+  }
+  .btn:hover{border-color:var(--muted)}
+  .btn.primary{background:var(--accent); color:#1a0a08; border-color:var(--accent)}
+  .btn:disabled{opacity:.35; cursor:default}
+  footer.ctrl .spacer{flex:1}
+  .kbd-hint{font-family:var(--mono); font-size:11px; color:var(--faint)}
+
+  @media (max-width:640px){
+    header.top{gap:8px}
+    footer.ctrl{gap:6px}
+    .kbd-hint{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="seg" id="gameSeg"></div>
+  <div class="seg" id="turnSeg"></div>
+  <span class="spacer"></span>
+  <button class="fs-btn" onclick="toggleFullscreen()">전체화면</button>
+</header>
+<div class="progress" id="progress"></div>
+
+<main>
+  <div class="score" id="score"></div>
+  <div class="timer-ring" id="timerBox"></div>
+  <p class="eyebrow" id="eyebrow"></p>
+  <p class="word" id="wordEl">시작하려면 아래 [다음 제시어]</p>
+  <p class="hint" id="hint"></p>
+  <div class="timer-bar" id="timerBar"></div>
+</main>
+
+<footer class="ctrl">
+  <button class="btn" id="prevBtn" onclick="prevWord()">← 이전</button>
+  <button class="btn primary" id="nextBtn" onclick="nextWord()">다음 제시어 →</button>
+  <button class="btn" id="roundBtn" onclick="toggleRoundTimer()" style="display:none">5분 타이머 시작</button>
+  <span class="spacer"></span>
+  <span class="kbd-hint">스페이스/→ 다음 · ← 이전 · R 리셋</span>
+  <button class="btn" onclick="resetAll()">리셋</button>
+</footer>
+
+<script>
+const GAMES = {
+  telepathy: {
+    label: "이심전심",
+    hint: "제시어 공개 즉시 5초 판정 — 전원 동작 일치 여부 확인",
+    perWordTimer: 5,
+    sets: [
+      ["브이","하트","만세","배고파요","졸려요"],
+      ["최고예요","화이팅","더워요","깜짝이야","조용히해요(쉿)"],
+      ["안녕(인사)","박수","추워요","부끄러워요","화났어요"],
+      ["사랑해요","짱이에요","거절(손사래)","힘들어요","궁금해요"],
+    ],
+  },
+  charades: {
+    label: "몸으로 말해요",
+    hint: "첫 사람에게만 보여주고 순차 전달 — 5분 라운드 타이머 사용",
+    perWordTimer: 0,
+    roundTimer: 300,
+    sets: [
+      ["비빔밥 비비기","원숭이 흉내","로봇처럼 걷기","축구 골 세리머니","야구 홈런 치기","낮잠 자기","캐리어 끌고 뛰기","이 닦기","딸꾹질하기","응원하며 박수치기"],
+      ["기차(KTX) 타기","강아지 흉내","좀비처럼 걷기","농구 슛하기","골프 스윙","계단 오르기","무거운 짐 들기","머리 감기","재채기하기","하이파이브하기"],
+      ["마피아 범인 지목하기","고양이 흉내","닭 흉내","볼링 치기","팔씨름하기","우산 쓰기","전화 받기","셀카 찍기","잠꼬대하기","수영하기"],
+      ["계란후라이 뒤집기","오리 흉내","줄넘기하기","요가하기","매운 음식 먹기","아이스크림 녹아서 먹기","막춤 추기","계단에서 넘어질 뻔하기","부채질하기","낚시하기"],
+    ],
+  },
+};
+const TURN_LABELS = ["1번째 순서","2번째 순서","3번째 순서","4번째 순서"];
+
+let state = { game:"telepathy", turn:0, idx:-1, correct:0 };
+let wordTimerId=null, wordTimerLeft=0;
+let roundTimerId=null, roundTimerLeft=0, roundRunning=false;
+
+function esc(s){return (s||"").replace(/&(?!\w+;|#)/g,"&amp;")}
+
+function buildSegs(){
+  const gameSeg = document.getElementById("gameSeg");
+  gameSeg.innerHTML = Object.keys(GAMES).map(k=>
+    `<button data-g="${k}" class="${k===state.game?'on':''}" onclick="setGame('${k}')">${esc(GAMES[k].label)}</button>`
+  ).join("");
+  const turnSeg = document.getElementById("turnSeg");
+  turnSeg.innerHTML = TURN_LABELS.map((t,i)=>
+    `<button data-t="${i}" class="${i===state.turn?'on':''}" onclick="setTurn(${i})">${i+1}</button>`
+  ).join("");
+}
+
+function setGame(g){
+  state.game=g; state.turn=0; state.idx=-1; state.correct=0;
+  stopWordTimer(); stopRoundTimer();
+  buildSegs(); render();
+}
+function setTurn(t){
+  state.turn=t; state.idx=-1; state.correct=0;
+  stopWordTimer(); stopRoundTimer();
+  buildSegs(); render();
+}
+
+function currentSet(){ return GAMES[state.game].sets[state.turn]; }
+
+function render(){
+  const g = GAMES[state.game];
+  const set = currentSet();
+  document.getElementById("eyebrow").textContent = `${g.label} · ${TURN_LABELS[state.turn]}`;
+  document.getElementById("hint").textContent = g.hint;
+  document.getElementById("score").innerHTML = state.idx>=0 ? `문제 <b>${state.idx+1}</b> / ${set.length}` : `총 ${set.length}문제`;
+
+  const wordEl = document.getElementById("wordEl");
+  wordEl.classList.remove("flash");
+  if(state.idx<0){
+    wordEl.textContent = "시작하려면 아래 [다음 제시어]";
+  } else {
+    wordEl.textContent = set[state.idx];
+  }
+
+  const dots = set.map((_,i)=>{
+    const cls = i<state.idx ? "done" : (i===state.idx ? "cur" : "");
+    return `<span class="dot ${cls}"></span>`;
+  }).join("");
+  document.getElementById("progress").innerHTML = dots;
+
+  document.getElementById("prevBtn").disabled = state.idx<=0;
+  document.getElementById("nextBtn").textContent = state.idx>=set.length-1 && state.idx>=0 ? "완료" : (state.idx<0 ? "시작" : "다음 제시어 →");
+  document.getElementById("nextBtn").disabled = state.idx>=set.length-1;
+
+  document.getElementById("roundBtn").style.display = g.perWordTimer===0 ? "" : "none";
+  updateRoundBtnLabel();
+  renderTimerBox();
+}
+
+function nextWord(){
+  const set = currentSet();
+  if(state.idx>=set.length-1) return;
+  state.idx++;
+  stopWordTimer();
+  render();
+  const g = GAMES[state.game];
+  if(g.perWordTimer>0) startWordTimer(g.perWordTimer);
+}
+function prevWord(){
+  if(state.idx<=0) return;
+  state.idx--;
+  stopWordTimer();
+  render();
+}
+
+function startWordTimer(sec){
+  wordTimerLeft = sec;
+  const box=document.getElementById("timerBox");
+  const bar=document.getElementById("timerBar");
+  box.classList.add("live"); box.classList.remove("done");
+  const total=sec;
+  renderTimerBox();
+  wordTimerId = setInterval(()=>{
+    wordTimerLeft -= 0.1;
+    if(wordTimerLeft<=0){
+      wordTimerLeft=0;
+      clearInterval(wordTimerId); wordTimerId=null;
+      box.classList.remove("live"); box.classList.add("done");
+      document.getElementById("wordEl").classList.add("flash");
+      bar.style.width="0%";
+    } else {
+      bar.style.width = (wordTimerLeft/total*100)+"%";
+    }
+    renderTimerBox();
+  }, 100);
+}
+function stopWordTimer(){
+  if(wordTimerId){ clearInterval(wordTimerId); wordTimerId=null; }
+  wordTimerLeft=0;
+  document.getElementById("timerBar").style.width="0%";
+  const box=document.getElementById("timerBox");
+  if(box){ box.classList.remove("live"); box.classList.remove("done"); }
+}
+function renderTimerBox(){
+  const box=document.getElementById("timerBox");
+  const g=GAMES[state.game];
+  if(g.perWordTimer>0){
+    box.textContent = wordTimerId || wordTimerLeft>0 ? Math.ceil(wordTimerLeft)+"s" : "";
+  } else if(g.roundTimer){
+    const m=Math.floor(roundTimerLeft/60), s=Math.floor(roundTimerLeft%60);
+    box.textContent = (roundRunning || roundTimerLeft>0 || roundTimerLeft===g.roundTimer) ?
+      `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}` : "";
+    box.classList.toggle("live", roundRunning);
+    box.classList.toggle("done", !roundRunning && roundTimerLeft===0 && roundTimerLeft!==g.roundTimer);
+  } else {
+    box.textContent="";
+  }
+}
+
+function toggleRoundTimer(){
+  const g=GAMES[state.game];
+  if(!g.roundTimer) return;
+  if(roundRunning){ stopRoundTimer(); return; }
+  if(roundTimerLeft<=0) roundTimerLeft = g.roundTimer;
+  roundRunning=true;
+  updateRoundBtnLabel();
+  roundTimerId = setInterval(()=>{
+    roundTimerLeft -= 1;
+    if(roundTimerLeft<=0){
+      roundTimerLeft=0;
+      stopRoundTimer();
+      document.getElementById("wordEl").classList.add("flash");
+    }
+    renderTimerBox();
+  },1000);
+  renderTimerBox();
+}
+function stopRoundTimer(){
+  if(roundTimerId){ clearInterval(roundTimerId); roundTimerId=null; }
+  roundRunning=false;
+  updateRoundBtnLabel();
+  renderTimerBox();
+}
+function updateRoundBtnLabel(){
+  const btn=document.getElementById("roundBtn");
+  if(!btn) return;
+  btn.textContent = roundRunning ? "일시정지" : (roundTimerLeft>0 && roundTimerLeft<300 ? "이어서 진행" : "5분 타이머 시작");
+}
+
+function resetAll(){
+  state.idx=-1; state.correct=0;
+  stopWordTimer(); stopRoundTimer();
+  roundTimerLeft=0;
+  render();
+}
+
+function toggleFullscreen(){
+  if(!document.fullscreenElement){ document.documentElement.requestFullscreen().catch(()=>{}); }
+  else { document.exitFullscreen(); }
+}
+
+document.addEventListener("keydown",(e)=>{
+  if(e.code==="Space" || e.code==="ArrowRight"){ e.preventDefault(); nextWord(); }
+  else if(e.code==="ArrowLeft"){ e.preventDefault(); prevWord(); }
+  else if(e.key==="r" || e.key==="R"){ resetAll(); }
+});
+
+buildSegs();
+render();
+</script>
+</body>
+</html>
