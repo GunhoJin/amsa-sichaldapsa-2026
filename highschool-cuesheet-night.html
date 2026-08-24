@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>야간 큐 · 프로그램 큐시트</title>
+<link rel="stylesheet" href="cuesheet.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <a class="mark" href="highschool-cuesheet.html">큐<b>시</b>트</a>
+    <span class="crumb">야간 큐</span>
+    <span class="spacer"></span>
+    <button class="print-btn" onclick="window.print()">인쇄</button>
+  </div>
+</header>
+
+<main>
+  <div class="hero plain">
+    <p class="date">20:30 — 22:00 · 1일차 · MC: 진건호 토마스T</p>
+    <h1 class="title">🎲 야간 큐 — 조별 대항전 &amp; 마피아</h1>
+    <p class="desc">조원 5명 미만인 조(3·4조)는 교사·봉사자 중 원하는 사람을 용병으로 지명해 5명을 완성합니다.</p>
+  </div>
+
+  <div class="rail" id="night-list"></div>
+
+  <details class="rules-toggle">
+    <summary>게임별 상세 규정</summary>
+    <div class="rules-body">
+      <h4>CUE 0 — 딸기바나나사과 (출전순서 결정)</h4>
+      채널십오야 방식. 조장 4명이 대표로 참가하는 미니게임입니다. "딸기, 바나나, 사과!" 인트로 동작 후 진행자가 무작위로 외치는 단어에 맞춰 동작(딸기: 손 모아 앞으로 점프 / 바나나: 엉덩이 빼고 뒤로 점프 / 사과: 왼발 들고 오른손 뻗기)을 수행합니다. 직전과 같은 단어가 연속되면 가만히 있어야 하는 함정이 있습니다. 탈락 순서를 기록해 최후 생존자부터 원하는 출전번호를 드래프트로 선택합니다.
+      <h4>CUE 1 — 음악 1초 듣기</h4>
+      해당 조가 시대(2000·2010·2020년대) → 연도를 선택하면 그 해 곡을 1초만 재생(애플뮤직 실시간 검색)하고 곡명을 맞힙니다.
+      <h4>CUE 2 — 이심전심 (5문제)</h4>
+      제시어 공개 후 5초 안에 조원 전원이 사전 맞춤 없이 동시에 같은 동작을 취해야 득점합니다.
+      <h4>CUE 3 — 몸으로 말해요 (10문제·5분, 순차 전달식 · 2026.8.24 규칙 변경)</h4>
+      조원이 한 줄로 서서 첫 사람만 진행자를 보고 나머지는 뒤돌아 대기합니다. 진행자가 맨 앞사람에게만 제시어를 보여주면, 뒷사람을 돌려세워 말 없이 몸짓으로만 전달 — 전달받은 사람은 이해한 대로 다음 사람에게 다시 몸짓으로 재전달하며 줄 끝까지 릴레이합니다. 마지막 사람이 정답을 외치면 득점. 소리 내기·입모양으로 말하기는 금지, 5분 안에 최대한 많은 문제를 진행합니다(문제마다 줄 순서를 회전 권장).
+      <h4>CUE 4 — 뒷정리 덩어리 선택</h4>
+      3라운드 종합 1위 조부터 순서대로 뒷정리 항목(①설거지 ②분리수거 ③그릴정리 ④테이블·바닥청소)을 선택합니다.
+      <h4>CUE 5 — 마피아 게임</h4>
+      남은 시간 진행 — 참가자용 <a href="https://gunhojin.github.io/amsa-sichaldapsa-2026/highschool-mafia-guide.html">안내 페이지</a>, 진행보조용 <a href="https://gunhojin.github.io/amsa-sichaldapsa-2026/highschool-mafia-console.html">콘솔</a> 참고.
+    </div>
+  </details>
+</main>
+
+<nav class="pager">
+  <a href="highschool-cuesheet-dinner.html"><span class="dir">Prev</span><span class="lbl">← 석식 큐</span></a>
+  <a class="next" href="highschool-cuesheet-day2.html"><span class="dir">Next</span><span class="lbl">2일차 →</span></a>
+</nav>
+<footer class="foot">현장 진행자용 대본 겸 타임라인입니다. 전체 개요·예산·준비물은 워크북, 개인별 담당은 역할 카드를 참고하세요.</footer>
+
+<script src="cuesheet.js"></script>
+<script>
+const D=(t,place,desc,owner)=>({t,place,desc,owner});
+const NIGHT = [
+  D("CUE 0","진건호 토마스T","출전순서 결정 — 딸기바나나사과 대표선발전(조장 4명 자동 출전) → 생존 순위로 드래프트"),
+  D("CUE 1","진건호 토마스T","음악 1초 듣기 — 시대·연도 선택 받고 1초 재생, 곡명 맞히기"),
+  D("CUE 2","진건호 토마스T","이심전심 (5문제) — 제시어 공개, 5초 내 전원 동작 일치 판정"),
+  D("CUE 3","진건호 토마스T","몸으로 말해요 (10문제·5분, 순차 전달식)"),
+  D("CUE 4","진건호 토마스T","뒷정리 덩어리 선택 — 종합 1위 조부터 순서대로 선택권 안내"),
+  D("CUE 5","진건호 토마스T","마피아 게임 — 안내페이지·콘솔 활용해 진행"),
+];
+renderRail(NIGHT,"night-list");
+</script>
+</body>
+</html>
