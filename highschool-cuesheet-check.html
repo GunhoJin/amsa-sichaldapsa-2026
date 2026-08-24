@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>총괄 체크 · 프로그램 큐시트</title>
+<link rel="stylesheet" href="cuesheet.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <a class="mark" href="highschool-cuesheet.html">큐<b>시</b>트</a>
+    <span class="crumb">총괄 체크</span>
+    <span class="spacer"></span>
+    <button class="print-btn" onclick="window.print()">인쇄</button>
+  </div>
+</header>
+
+<main>
+  <div class="hero plain">
+    <p class="date">진건호 토마스T · 진행 중 수시 확인</p>
+    <h1 class="title">✅ 총괄 체크</h1>
+    <p class="desc">체크 상태는 이 기기의 브라우저에만 저장됩니다(다른 사람과 공유되지 않음).</p>
+  </div>
+
+  <div class="check-list" id="check-list"></div>
+  <button class="check-reset" onclick="resetChecks(CHECKS,'check-list')">체크 전체 초기화</button>
+</main>
+
+<nav class="pager">
+  <a href="highschool-cuesheet-day2.html"><span class="dir">Prev</span><span class="lbl">← 2일차</span></a>
+  <a class="next" href="highschool-cuesheet.html"><span class="dir">Index</span><span class="lbl">큐시트 목차</span></a>
+</nav>
+<footer class="foot">현장 진행자용 대본 겸 타임라인입니다. 전체 개요·예산·준비물은 워크북, 개인별 담당은 역할 카드를 참고하세요.</footer>
+
+<script src="cuesheet.js"></script>
+<script>
+const CHECKS = [
+  "시간 체크 — 1일차 자유여행 09:00 출발, 18:00 숙소 정시 도착 준수",
+  "안전/위치 관리(진건호·이준용) 실시간 위치공유 앱 1시간 간격 모니터링 여부",
+  "체크포인트별 조별 인증샷 단톡방 공유 확인 (1차 점심, 2차 17:00 숙소이동, 3차 18:00 도착)",
+  "미도착/이탈 학생 즉시 재확인",
+  "흑백요리사 요리대회 안전(그릴·가스버너 화상 주의) 확인",
+  "김아래미 세실리아T 개별 합류(암사동성당 14:00경 출발) 도착 확인 — 예상 17:30~17:50",
+  "2일차 교중미사 단체 참여 시간 엄수, 복장 점검",
+  "손기훈 야고보 영수증 회수·취합 확인, 진건호 토마스 결제(1일차 조점례남문피순대·2일차 전동떡갈비) 확인",
+  "여행수첩 작성 확인 (카메라는 회수하지 않음 — 조별 보관 후 각자 현상)",
+  "조별 추가경비 요청 발생 시 대응 — 총괄에게 먼저 보고 → 영수증 제출 후 사후 정산",
+  "야간프로그램(3라운드 대항전) 진행 확인 — 출전순서 결정, 종합 1위 조 뒷정리 선택 반영 여부",
+];
+renderChecklist(CHECKS, "check-list");
+</script>
+</body>
+</html>
