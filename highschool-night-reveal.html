@@ -176,8 +176,10 @@ function buildSegs(){
     `<button data-g="${k}" class="${k===state.game?'on':''}" onclick="setGame('${k}')">${esc(GAMES[k].label)}</button>`
   ).join("");
   const turnSeg = document.getElementById("turnSeg");
-  turnSeg.innerHTML = TURN_LABELS.map((t,i)=>
-    `<button data-t="${i}" class="${i===state.turn?'on':''}" onclick="setTurn(${i})">${i+1}</button>`
+  const g = GAMES[state.game];
+  const labels = g.setTopics || TURN_LABELS;
+  turnSeg.innerHTML = labels.map((t,i)=>
+    `<button data-t="${i}" class="${i===state.turn?'on':''}" onclick="setTurn(${i})">${esc(t)}</button>`
   ).join("");
 }
 
@@ -197,8 +199,10 @@ function currentSet(){ return GAMES[state.game].sets[state.turn]; }
 function render(){
   const g = GAMES[state.game];
   const set = currentSet();
-  const topic = g.setTopics ? ` · 주제: ${g.setTopics[state.turn]}` : "";
-  document.getElementById("eyebrow").textContent = `${g.label} · ${TURN_LABELS[state.turn]}${topic}`;
+  const turnLabel = g.setTopics
+    ? `${g.setTopics[state.turn]} (${TURN_LABELS[state.turn]})`
+    : TURN_LABELS[state.turn];
+  document.getElementById("eyebrow").textContent = `${g.label} · ${turnLabel}`;
   document.getElementById("hint").textContent = g.hint;
   document.getElementById("score").innerHTML = state.idx>=0 ? `문제 <b>${state.idx+1}</b> / ${set.length}` : `총 ${set.length}문제`;
 
