@@ -11,7 +11,7 @@
     --line:#e1e4ea;
     --accent:#3452e0; --accent-ink:#2739a8; --accent-soft:#e8ebfc;
     --ok:#1f9d63;
-    --d-pre:#1f9d63; --d-1:#3452e0; --d-dinner:#c0631b; --d-night:#7b3fd1; --d-2:#c0631b;
+    --d-1:#3452e0; --d-dinner:#c0631b; --d-night:#7b3fd1; --d-2:#c0631b;
     --shadow:0 1px 2px rgba(20,24,40,.05),0 8px 24px rgba(20,24,40,.06);
   }
   @media (prefers-color-scheme:dark){
@@ -21,14 +21,14 @@
       --line:#2b2f3e;
       --accent:#7d93ff; --accent-ink:#c2ccff; --accent-soft:#242a49;
       --ok:#4ad393;
-      --d-pre:#4ad393; --d-1:#7d93ff; --d-dinner:#ff9d52; --d-night:#c298ff; --d-2:#ff9d52;
+      --d-1:#7d93ff; --d-dinner:#ff9d52; --d-night:#c298ff; --d-2:#ff9d52;
       --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 28px rgba(0,0,0,.4);
     }
   }
   :root[data-theme="light"]{
     --bg:#f4f5f7; --surface:#ffffff; --surface-2:#eef0f4; --ink:#1c2029; --muted:#5b6270; --faint:#8b93a3;
     --line:#e1e4ea; --accent:#3452e0; --accent-ink:#2739a8; --accent-soft:#e8ebfc; --ok:#1f9d63;
-    --d-pre:#1f9d63; --d-1:#3452e0; --d-dinner:#c0631b; --d-night:#7b3fd1; --d-2:#c0631b;
+    --d-1:#3452e0; --d-dinner:#c0631b; --d-night:#7b3fd1; --d-2:#c0631b;
     --shadow:0 1px 2px rgba(20,24,40,.05),0 8px 24px rgba(20,24,40,.06);
   }
   :root[data-theme="dark"]{
@@ -37,6 +37,8 @@
     --d-pre:#4ad393; --d-1:#7d93ff; --d-dinner:#ff9d52; --d-night:#c298ff; --d-2:#ff9d52;
     --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 28px rgba(0,0,0,.4);
   }
+
+  :root{ --fs-1:11px; --fs-2:13px; --fs-3:16px; --fs-4:20px; }
 
   *{box-sizing:border-box}
   body{
@@ -51,11 +53,11 @@
     border-bottom:1px solid var(--line);
   }
   .top-inner{max-width:960px; margin:0 auto; padding:14px 18px 0}
-  .top-inner h1{font-size:16px; margin:0 0 2px; font-weight:800; letter-spacing:-.01em}
-  .top-inner .sub{font-size:12px; color:var(--muted); margin-bottom:10px}
+  .top-inner h1{font-size:var(--fs-3); margin:0 0 2px; font-weight:800; letter-spacing:-.01em}
+  .top-inner .sub{font-size:var(--fs-1); color:var(--muted); margin-bottom:10px}
   .top-row{display:flex; align-items:center; gap:10px}
   .btn{
-    font:inherit; font-size:12.5px; font-weight:700; cursor:pointer;
+    font:inherit; font-size:var(--fs-2); font-weight:700; cursor:pointer;
     color:#fff; background:var(--accent); border:none; border-radius:8px;
     padding:7px 13px; white-space:nowrap;
   }
@@ -66,7 +68,7 @@
   }
   nav.tabs::-webkit-scrollbar{display:none}
   nav.tabs a{
-    flex:0 0 auto; font-size:12.5px; font-weight:700; text-decoration:none;
+    flex:0 0 auto; font-size:var(--fs-2); font-weight:700; text-decoration:none;
     color:var(--muted); background:var(--surface-2); border:1px solid var(--line);
     border-radius:999px; padding:7px 13px; white-space:nowrap;
   }
@@ -76,10 +78,10 @@
 
   section.block{margin:0 0 34px; scroll-margin-top:112px}
   .block-head{display:flex; align-items:baseline; gap:10px; margin:0 0 12px; flex-wrap:wrap}
-  .block-head h2{font-size:18px; margin:0; font-weight:800; letter-spacing:-.01em}
-  .block-head .meta{font-size:12px; color:var(--muted)}
+  .block-head h2{font-size:var(--fs-4); margin:0; font-weight:800; letter-spacing:-.01em}
+  .block-head .meta{font-size:var(--fs-1); color:var(--muted)}
   .block-note{
-    font-size:12.5px; color:var(--muted); background:var(--surface-2);
+    font-size:var(--fs-2); color:var(--muted); background:var(--surface-2);
     border:1px solid var(--line); border-radius:10px; padding:10px 13px; margin:0 0 14px;
   }
 
@@ -90,15 +92,14 @@
   }
   .item .badge{
     display:flex; align-items:center; justify-content:center; text-align:center;
-    font-size:12px; font-weight:800; color:#fff; padding:10px 6px;
+    font-size:var(--fs-2); font-weight:800; color:#fff; padding:10px 6px;
     font-variant-numeric:tabular-nums;
   }
   .item .body{padding:10px 14px 11px}
-  .item .place{font-size:11px; font-weight:700; letter-spacing:.02em; color:var(--faint); text-transform:uppercase; margin:0 0 3px}
-  .item .desc{font-size:13.5px; color:var(--ink); line-height:1.5; margin:0 0 5px}
-  .item .owner{font-size:12px; color:var(--accent-ink); font-weight:600}
+  .item .place{font-size:var(--fs-1); font-weight:700; letter-spacing:.02em; color:var(--faint); text-transform:uppercase; margin:0 0 3px}
+  .item .desc{font-size:var(--fs-3); color:var(--ink); line-height:1.5; margin:0 0 5px}
+  .item .owner{font-size:var(--fs-1); color:var(--accent-ink); font-weight:600}
 
-  .item.pre .badge{background:var(--d-pre)}
   .item.d1 .badge{background:var(--d-1)}
   .item.dinner .badge{background:var(--d-dinner)}
   .item.night .badge{background:var(--d-night)}
@@ -106,7 +107,7 @@
 
   @media (max-width:520px){
     .item{grid-template-columns:76px 1fr}
-    .item .badge{font-size:10.5px; padding:9px 4px}
+    .item .badge{font-size:var(--fs-1); padding:9px 4px}
   }
 
   details.expand{
@@ -114,16 +115,16 @@
     margin:14px 0 0; overflow:hidden;
   }
   details.expand summary{
-    cursor:pointer; list-style:none; padding:12px 15px; font-size:13.5px; font-weight:700;
+    cursor:pointer; list-style:none; padding:12px 15px; font-size:var(--fs-3); font-weight:700;
     display:flex; align-items:center; gap:8px; color:var(--ink);
   }
   details.expand summary::-webkit-details-marker{display:none}
-  details.expand summary::before{content:"▸"; color:var(--accent); font-size:11px; transition:transform .15s}
+  details.expand summary::before{content:"▸"; color:var(--accent); font-size:var(--fs-1); transition:transform .15s}
   details.expand[open] summary::before{transform:rotate(90deg)}
   details.expand .expand-body{padding:0 15px 14px}
 
-  .rules{font-size:12.5px; color:var(--muted); line-height:1.6}
-  .rules h4{font-size:12.5px; color:var(--ink); margin:12px 0 4px}
+  .rules{font-size:var(--fs-2); color:var(--muted); line-height:1.6}
+  .rules h4{font-size:var(--fs-2); color:var(--ink); margin:12px 0 4px}
   .rules h4:first-child{margin-top:2px}
 
   .check-list{display:flex; flex-direction:column; gap:7px}
@@ -132,12 +133,12 @@
     border:1px solid var(--line); border-radius:10px; padding:11px 13px; box-shadow:var(--shadow);
   }
   .check-row input{margin-top:2px; width:16px; height:16px; accent-color:var(--accent); flex:0 0 auto}
-  .check-row label{font-size:13.5px; line-height:1.5; color:var(--ink)}
+  .check-row label{font-size:var(--fs-3); line-height:1.5; color:var(--ink)}
   .check-row.done{opacity:.5}
   .check-row.done label{text-decoration:line-through}
-  .check-reset{font-size:11.5px; color:var(--muted); background:none; border:none; text-decoration:underline; cursor:pointer; padding:0; margin:10px 0 0}
+  .check-reset{font-size:var(--fs-1); color:var(--muted); background:none; border:none; text-decoration:underline; cursor:pointer; padding:0; margin:10px 0 0}
 
-  footer.foot{max-width:960px; margin:0 auto; padding:0 18px 30px; color:var(--faint); font-size:11.5px}
+  footer.foot{max-width:960px; margin:0 auto; padding:0 18px 30px; color:var(--faint); font-size:var(--fs-1)}
 
   @media print{
     :root{--bg:#fff; --surface:#fff; --surface-2:#f7f7f8}
@@ -156,7 +157,7 @@
 <header class="top">
   <div class="top-inner">
     <h1>📋 중고등부 여름캠프 · 프로그램 큐시트</h1>
-    <div class="sub">사전 모임 2026.8.9(주일) · 본행사 2026.9.5(토) 09:00 ~ 9.6(주일) 18:00 · 전주 자유여행 &amp; 흑백요리사</div>
+    <div class="sub">본행사 2026.9.5(토) 09:00 ~ 9.6(주일) 18:00 · 전주 자유여행 &amp; 흑백요리사</div>
     <div class="top-row" style="padding-bottom:10px">
       <span class="sub" style="margin:0">현장 진행자용 대본 겸 타임라인 — 전체 정보는 워크북, 담당은 역할 카드 참고</span>
       <span style="flex:1"></span>
@@ -164,7 +165,6 @@
     </div>
   </div>
   <nav class="tabs">
-    <a href="#pre">🟢 사전모임</a>
     <a href="#day1">🔵 1일차</a>
     <a href="#dinner">🍳 석식 큐</a>
     <a href="#night">🎲 야간 큐</a>
@@ -174,12 +174,6 @@
 </header>
 
 <main>
-
-  <section class="block" id="pre">
-    <div class="block-head"><h2>0. 사전 모임 큐시트</h2><span class="meta">2026.8.9(주일) 가정미사 이후 · 만남의 방 · 약 65분</span></div>
-    <div class="block-note">참가 신청 마감일과 같은 날 진행 — 마감 즉시 조 편성까지 연속 진행. 진행자료: <b>2026 중고등부 여름캠프 사전모임.pptx</b>(14슬라이드). 조장 확정: 1조 이서영·2조 김가빈·3조 정윤서·4조 손윤호(간우진 학생 포함 18명 전원 배정 완료).</div>
-    <div id="pre-list"></div>
-  </section>
 
   <section class="block" id="day1">
     <div class="block-head"><h2>1일차 — 9월 5일(토)</h2><span class="meta">전주역 도착 → 자유여행 → 숙소 → 흑백요리사 → 취침</span></div>
@@ -232,17 +226,6 @@
 
 <script>
 const D=(t,place,desc,owner,cls)=>({t,place,desc,owner,cls});
-
-const PRE = [
-  D("1~2","진건호 토마스","인사 & 캠프 소개 — 표지(캠프 성구 코헬렛 4,9), 오늘의 목적 안내(① 조편성 완료→KTX/SRT 단체예매 가능 ② 일정·안전수칙 확인)","5분","pre"),
-  D("3~5","진건호 토마스","조 편성 시드 추첨 — 4개 시드풀(남중·남고·여중·여고) 3단계 추첨 규칙 설명 → 조편성 웹 도구로 실제 추첨 진행","20분","pre"),
-  D("6","진건호 토마스","조장 선출(조별 1명) — ① 카드 발급받아 진행비 관리 ② 주간모임 후 카톡 즉시 보고","5분","pre"),
-  D("7","진건호 토마스","조별 진행비 안내 — 1인당 46,000원 내역표, 조장 명의 카드로 지급, 추가경비는 총괄 사전보고 후 정산","5분","pre"),
-  D("8~9","진건호 토마스","캠프 일정 & 미사 복장 안내 — 1박2일 일정 요약, 전동성당 교중미사 복장 금지/필수 항목","5분","pre"),
-  D("10~12","진건호 토마스","안전수칙 & 카카오맵 위치공유 — 조장 4명만 그 자리에서 설치·공유 시작 실습","15분","pre"),
-  D("13","진건호 토마스","주간모임 안내 — 사전모임 이후 4주간 조별 모임 일정, 조장 카톡 보고 양식","3분","pre"),
-  D("14","전체","질의응답(Q&A) 및 마무리","7분","pre"),
-];
 
 const DAY1 = [
   D("~09:00","전주역","선발대 전주역 도착, 조별 인원 출발/도착 인증샷 수집","학생관리/인솔(이민경·서혜정)","d1"),
@@ -316,7 +299,6 @@ function renderList(arr, elId){
     </div>`).join("");
   document.getElementById(elId).innerHTML = html;
 }
-renderList(PRE,"pre-list");
 renderList(DAY1,"day1-list");
 renderList(DINNER,"dinner-list");
 renderList(NIGHT,"night-list");
