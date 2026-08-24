@@ -1,0 +1,197 @@
+/* ===== 2026 중고등부 여름캠프 · 큐시트 — 공용 스타일 =====
+   컨셉: 흑백요리사(제작 콜시트) — 흑백 대비 종이 위에 붉은 교정지 색 하나만.
+   카드/그림자 없음. 세로 타임라인 레일 + 헤어라인으로 구획. */
+
+@font-face{
+  font-family:"CueSerif";
+  src:local("Georgia"), local("Times New Roman");
+}
+
+:root{
+  --paper:#faf9f5; --paper-2:#f1efe6;
+  --ink:#17160f; --muted:#6f6a5a; --faint:#a39d8a;
+  --line:#e2ddd0; --line-strong:#cfc9b8;
+  --accent:#d7263d; --accent-ink:#a01b2d;
+  --serif:Georgia,"Times New Roman",ui-serif,serif;
+  --sans:"Pretendard",-apple-system,"Apple SD Gothic Neo","Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Code","Consolas",monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --paper:#131209; --paper-2:#1b1a10;
+    --ink:#f1efe2; --muted:#aca795; --faint:#726d58;
+    --line:#2c2919; --line-strong:#3d3823;
+    --accent:#ff6b62; --accent-ink:#ffb3ae;
+  }
+}
+:root[data-theme="light"]{
+  --paper:#faf9f5; --paper-2:#f1efe6; --ink:#17160f; --muted:#6f6a5a; --faint:#a39d8a;
+  --line:#e2ddd0; --line-strong:#cfc9b8; --accent:#d7263d; --accent-ink:#a01b2d;
+}
+:root[data-theme="dark"]{
+  --paper:#131209; --paper-2:#1b1a10; --ink:#f1efe2; --muted:#aca795; --faint:#726d58;
+  --line:#2c2919; --line-strong:#3d3823; --accent:#ff6b62; --accent-ink:#ffb3ae;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--sans); font-feature-settings:"tnum";
+  -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  line-height:1.5;
+}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+/* ---- top bar ---- */
+header.top{
+  position:sticky; top:0; z-index:20; background:var(--paper);
+  border-bottom:1px solid var(--line);
+}
+.top-inner{
+  max-width:680px; margin:0 auto; padding:13px 20px;
+  display:flex; align-items:center; gap:14px;
+}
+.top-inner .mark{
+  font-family:var(--mono); font-size:12px; font-weight:700; letter-spacing:.02em;
+  text-decoration:none; color:var(--ink); flex:0 0 auto;
+}
+.top-inner .mark b{color:var(--accent)}
+.top-inner .crumb{font-size:12px; color:var(--faint)}
+.top-inner .spacer{flex:1}
+.print-btn{
+  font:inherit; font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.03em;
+  cursor:pointer; color:var(--ink); background:none; border:1px solid var(--line-strong);
+  border-radius:3px; padding:6px 11px; white-space:nowrap; text-transform:uppercase;
+}
+.print-btn:hover{border-color:var(--accent); color:var(--accent-ink)}
+
+main{max-width:680px; margin:0 auto; padding:0 20px 90px}
+
+/* ---- page hero (day divider) ---- */
+.hero{padding:46px 0 30px; border-bottom:1px solid var(--line)}
+.hero .eyebrow{
+  font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--accent-ink); margin:0 0 10px;
+}
+.hero .num-row{display:flex; align-items:flex-end; gap:16px}
+.hero .num{
+  font-family:var(--serif); font-size:88px; line-height:.85; font-weight:400;
+  color:var(--ink); font-style:italic;
+}
+.hero .num-label{padding-bottom:10px}
+.hero .num-label .title{font-size:20px; font-weight:800; letter-spacing:-.01em; margin:0 0 3px; text-wrap:balance}
+.hero .num-label .date{font-size:13px; color:var(--muted)}
+.hero .desc{font-size:14px; color:var(--muted); margin:16px 0 0; max-width:52ch}
+
+/* section (non-day) hero without big numeral */
+.hero.plain .title{font-size:24px; font-weight:800; letter-spacing:-.01em; margin:0 0 6px; text-wrap:balance}
+.hero.plain .date{font-family:var(--mono); font-size:12.5px; color:var(--muted)}
+.hero.plain .desc{font-size:14px; color:var(--muted); margin:14px 0 0; max-width:52ch}
+
+/* ---- callout (blockquote style, no box) ---- */
+.callout{
+  border-left:2px solid var(--accent); padding:2px 0 2px 15px; margin:26px 0;
+  font-size:13px; color:var(--muted); max-width:56ch;
+}
+.callout b{color:var(--ink)}
+
+/* ---- timeline rail ---- */
+.rail{margin:8px 0 0}
+.rail .row{
+  display:grid; grid-template-columns:84px 1fr; column-gap:16px;
+  padding:15px 0; border-top:1px solid var(--line);
+}
+.rail .row:last-child{border-bottom:1px solid var(--line)}
+.rail .t{
+  font-family:var(--mono); font-size:12px; color:var(--muted); padding-top:1px;
+  font-variant-numeric:tabular-nums; white-space:pre-line;
+}
+.rail .place{
+  font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--faint); margin:0 0 4px;
+}
+.rail .desc{font-size:14px; color:var(--ink); margin:0 0 5px; line-height:1.55}
+.rail .owner{font-size:12px; color:var(--accent-ink); font-weight:600}
+
+@media (max-width:460px){
+  .rail .row{grid-template-columns:64px 1fr; column-gap:10px}
+  .hero .num{font-size:64px}
+}
+
+/* ---- expandable rules ---- */
+details.rules-toggle{border-top:1px solid var(--line); margin:28px 0 0}
+details.rules-toggle summary{
+  cursor:pointer; list-style:none; padding:14px 0; font-size:13px; font-weight:700;
+  display:flex; align-items:center; gap:8px; color:var(--ink);
+}
+details.rules-toggle summary::-webkit-details-marker{display:none}
+details.rules-toggle summary::after{content:"+"; margin-left:auto; color:var(--accent); font-family:var(--mono); font-size:15px}
+details.rules-toggle[open] summary::after{content:"–"}
+.rules-body{padding:0 0 22px; font-size:13px; color:var(--muted); line-height:1.7; max-width:58ch}
+.rules-body h4{font-family:var(--mono); font-size:12px; color:var(--ink); letter-spacing:.02em; margin:16px 0 4px}
+.rules-body h4:first-child{margin-top:0}
+.rules-body a{color:var(--accent-ink)}
+
+/* ---- checklist ---- */
+.check-list{margin:8px 0 0}
+.check-row{
+  position:relative; display:flex; align-items:flex-start; gap:12px; padding:13px 0; border-top:1px solid var(--line);
+}
+.check-row:last-child{border-bottom:1px solid var(--line)}
+.check-row input{position:absolute; opacity:0; width:19px; height:19px}
+.check-row .box{
+  flex:0 0 auto; width:17px; height:17px; margin-top:2px; border:1.5px solid var(--line-strong);
+  border-radius:3px; position:relative; cursor:pointer;
+}
+.check-row input:checked + .box{background:var(--accent); border-color:var(--accent)}
+.check-row input:checked + .box::after{
+  content:""; position:absolute; left:4px; top:1px; width:5px; height:9px;
+  border:solid #fff; border-width:0 2px 2px 0; transform:rotate(40deg);
+}
+.check-row input:focus-visible + .box{outline:2px solid var(--accent); outline-offset:2px}
+.check-row label{font-size:14px; line-height:1.55; color:var(--ink); cursor:pointer}
+.check-row.done label{color:var(--faint); text-decoration:line-through}
+.check-reset{
+  font-family:var(--mono); font-size:11px; letter-spacing:.03em; color:var(--muted);
+  background:none; border:none; text-decoration:underline; cursor:pointer; padding:0; margin:16px 0 0;
+}
+
+/* ---- prev/next footer nav ---- */
+nav.pager{
+  max-width:680px; margin:50px auto 0; padding:20px 20px 0; border-top:1px solid var(--line);
+  display:flex; justify-content:space-between; gap:14px; font-size:13px;
+}
+nav.pager a{text-decoration:none; max-width:47%}
+nav.pager .dir{display:block; font-family:var(--mono); font-size:10.5px; color:var(--faint); text-transform:uppercase; letter-spacing:.06em; margin-bottom:3px}
+nav.pager .lbl{font-weight:700; color:var(--ink)}
+nav.pager a:hover .lbl{color:var(--accent-ink)}
+nav.pager .next{text-align:right; margin-left:auto}
+
+footer.foot{max-width:680px; margin:0 auto; padding:26px 20px 40px; color:var(--faint); font-size:11.5px}
+
+/* ---- index page contents list ---- */
+.toc{margin:10px 0 0}
+.toc a{
+  display:grid; grid-template-columns:40px 1fr auto; align-items:baseline; gap:14px;
+  text-decoration:none; padding:20px 0; border-top:1px solid var(--line);
+  color:var(--ink);
+}
+.toc a:last-child{border-bottom:1px solid var(--line)}
+.toc .n{font-family:var(--serif); font-style:italic; font-size:26px; color:var(--faint)}
+.toc .tt{min-width:0}
+.toc .tt .ttl{font-size:16px; font-weight:800; letter-spacing:-.005em}
+.toc .tt .sub{font-size:12.5px; color:var(--muted); margin-top:3px}
+.toc .time{font-family:var(--mono); font-size:11.5px; color:var(--muted); white-space:nowrap; padding-top:3px}
+.toc a:hover .ttl{color:var(--accent-ink)}
+
+@media print{
+  :root{--paper:#fff; --paper-2:#fdfdfc}
+  header.top{position:static}
+  .print-btn, .check-reset, nav.pager, footer.foot{display:none}
+  .rail .row, .check-row{break-inside:avoid}
+  details.rules-toggle:not([open]) .rules-body{display:block !important}
+  details.rules-toggle summary::after{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
