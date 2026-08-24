@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>석식 큐 · 프로그램 큐시트</title>
+<link rel="stylesheet" href="cuesheet.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <a class="mark" href="highschool-cuesheet.html">큐<b>시</b>트</a>
+    <span class="crumb">석식 큐</span>
+    <span class="spacer"></span>
+    <button class="print-btn" onclick="window.print()">인쇄</button>
+  </div>
+</header>
+
+<main>
+  <div class="hero plain">
+    <p class="date">18:30 — 20:30 · 1일차 · 담당: 최미진 마리아T · 김아래미 세실리아T</p>
+    <h1 class="title">🍳 석식 큐 — 흑백요리사 요리대회</h1>
+    <p class="desc">조별 조리·심사 진행 대본입니다. 큐 번호 순서대로 진행하세요.</p>
+  </div>
+
+  <div class="callout">⚠️ 볏단가리 미션은 철회되었습니다. 요리대회 미션 주제는 확정되었으나 학생 발표 전까지 비공개 유지 — 오프닝 멘트는 현장에서 진행자가 재량껏 진행합니다. 심사기준: <b>맛 40% · 독창성 30% · 협동/정리 30%</b>.</div>
+
+  <div class="rail" id="dinner-list"></div>
+</main>
+
+<nav class="pager">
+  <a href="highschool-cuesheet-day1.html"><span class="dir">Prev</span><span class="lbl">← 1일차</span></a>
+  <a class="next" href="highschool-cuesheet-night.html"><span class="dir">Next</span><span class="lbl">야간 큐 →</span></a>
+</nav>
+<footer class="foot">현장 진행자용 대본 겸 타임라인입니다. 전체 개요·예산·준비물은 워크북, 개인별 담당은 역할 카드를 참고하세요.</footer>
+
+<script src="cuesheet.js"></script>
+<script>
+const D=(t,place,desc,owner)=>({t,place,desc,owner});
+const DINNER = [
+  D("CUE 0","최미진 마리아T","오프닝 내레이션(미스터리박스 리빙) — 오늘의 미션 재료/주제를 극적으로 공개, 학생 리액션 유도"),
+  D("CUE 1","최미진 마리아T","미션 공지 — 대회 규칙 및 심사 기준 안내(맛 40%·독창성 30%·협동/정리 30%)"),
+  D("CUE 2","김아래미 세실리아T","조별 식재료 구매 영수증 회수 및 재료 구매액 확인"),
+  D("CUE 3","진건호·이준용","심사실·거실 화상회의(노트북·마이크) 세팅"),
+  D("CUE 4","김아래미 세실리아T","신부님·분과장님 안대 착용 안내"),
+  D("CUE 5","진건호·이준용","조별 요리 순서대로 블라인드 테스트 진행, 타이머로 시간 관리"),
+  D("CUE 6","진건호·이준용","시식 도우미 — 숟가락으로 심사위원에게 떠먹이기"),
+  D("CUE 7","최미진·김아래미","심사 집계 — 맛 40% / 독창성 30% / 협동·정리 30% 합산"),
+  D("CUE 8","김아래미 세실리아T","포상 발표(카운트다운 톤) — 2등 → 3등 → 1등 → 4등 순"),
+  D("CUE 9","전체 교사","뒷정리 및 그릴·조리도구 회수 안내"),
+];
+renderRail(DINNER,"dinner-list");
+</script>
+</body>
+</html>
