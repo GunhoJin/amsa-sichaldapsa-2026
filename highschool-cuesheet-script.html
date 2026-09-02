@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MISSION 볏단가리 / 흑백요리사 진행 대본</title>
+<meta name="description" content="2026 중고등부 여름캠프 1일차 석식 흑백요리사 요리대회 진행 대본 및 BGM 가이드">
+<style>
+  @font-face{
+    font-family:'Pretendard';
+    src:local('Pretendard');
+  }
+  :root{
+    --bg:#0a0a0a;
+    --panel:#111111;
+    --fg:#eaeaea;
+    --fg-dim:#8c8c88;
+    --line:#2a2a26;
+    --red:#e61919;
+    --red-text:#ff4d4d;
+    --green:#4af626;
+    --mono:'IBM Plex Mono','JetBrains Mono','Space Mono',ui-monospace,'Noto Sans Mono','Malgun Gothic',monospace;
+    --grotesk:'Archivo Black','Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+    --sans:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',-apple-system,BlinkMacSystemFont,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);}
+  body{
+    font-family:var(--sans);
+    font-size:24px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:60px;
+    position:relative;
+  }
+  a{color:inherit;}
+  ::selection{background:var(--red);color:var(--bg);}
+
+  .scanlines{
+    position:fixed;inset:0;z-index:60;pointer-events:none;
+    background:repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.018) 2px, rgba(255,255,255,0.018) 4px);
+    mix-blend-mode:overlay;
+  }
+
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px;}
+
+  .statusbar{
+    position:sticky;top:0;z-index:30;
+    background:color-mix(in srgb, var(--bg) 90%, transparent);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .statusbar .row{
+    max-width:760px;margin:0 auto;padding:10px 20px;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    font-family:var(--mono);font-size:16px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-dim);
+  }
+  .statusbar .live{display:flex;align-items:center;gap:6px;color:var(--red);}
+  .statusbar .live .pip{width:6px;height:6px;background:var(--red);animation:blink 1.4s steps(1) infinite;}
+  @keyframes blink{50%{opacity:.15;}}
+
+  .brief{padding:56px 0 34px;border-bottom:1px solid var(--line);}
+  .brief .tag{
+    font-family:var(--mono);font-size:16.5px;letter-spacing:.14em;color:var(--red-text);text-transform:uppercase;
+    display:block;margin-bottom:18px;
+  }
+  .brief .tag::before{content:"[ ";color:var(--fg-dim);}
+  .brief .tag::after{content:" ]";color:var(--fg-dim);}
+  .brief h1{
+    font-family:var(--grotesk);
+    font-size:clamp(60px,13vw,114px);
+    line-height:.92;
+    letter-spacing:-0.02em;
+    text-transform:uppercase;
+    margin:0 0 18px;
+  }
+  .brief h1 span{color:var(--red);}
+  .brief .desc{
+    font-family:var(--sans);font-size:22.5px;color:var(--fg-dim);max-width:52ch;line-height:1.7;margin-bottom:22px;
+  }
+
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s cubic-bezier(0.22,1,0.36,1), transform .7s cubic-bezier(0.22,1,0.36,1);}
+  .reveal.is-in{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .reveal{opacity:1;transform:none;transition:none;}
+  }
+
+  .opspanel{
+    position:relative;margin:36px 0 0;border:1px solid var(--red);padding:22px 20px 24px;
+    background:var(--panel);
+  }
+  .opspanel::before,.opspanel::after,
+  .opspanel .cr-tl,.opspanel .cr-br{
+    content:"+";position:absolute;font-family:var(--mono);font-size:21px;color:var(--fg-dim);line-height:1;
+  }
+  .opspanel::before{content:"+";top:-10px;left:-10px;}
+  .opspanel::after{content:"+";top:-10px;right:-10px;}
+  .opspanel .cr-tl{bottom:-10px;left:-10px;}
+  .opspanel .cr-br{bottom:-10px;right:-10px;}
+
+  .op-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;}
+  .op-top .label{font-family:var(--mono);font-size:16px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-dim);}
+
+  .op-status{font-family:var(--mono);font-size:16px;color:var(--fg-dim);letter-spacing:.08em;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+  .op-status .dot{width:7px;height:7px;display:inline-block;flex:none;background:var(--red);}
+  .op-title{font-family:var(--grotesk);font-size:39px;text-transform:uppercase;letter-spacing:-0.01em;margin-bottom:16px;}
+  .op-steps{margin:0;padding:0;list-style:none;display:grid;gap:9px;counter-reset:step-counter;}
+  .op-steps li{
+    font-family:var(--sans);font-size:21px;color:var(--fg);padding-left:22px;position:relative;line-height:1.6;
+  }
+  .op-steps li::before{
+    content:counter(step-counter,decimal-leading-zero);counter-increment:step-counter;
+    position:absolute;left:0;top:1px;font-family:var(--mono);font-size:16.5px;color:var(--fg-dim);
+  }
+
+  section{padding:44px 0;border-bottom:1px solid var(--line);}
+  section:last-of-type{border-bottom:none;}
+  .head{margin-bottom:22px;}
+  .head .tag{font-family:var(--mono);font-size:16px;letter-spacing:.12em;color:var(--red-text);text-transform:uppercase;display:block;margin-bottom:8px;}
+  .head .tag::before{content:"[ ";color:var(--fg-dim);}
+  .head .tag::after{content:" ]";color:var(--fg-dim);}
+  .head h2{font-family:var(--grotesk);font-size:39px;text-transform:uppercase;letter-spacing:-0.01em;}
+
+  .roles{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);}
+  .role-entry{background:var(--bg);padding:16px 16px;display:grid;grid-template-columns:1fr 2fr;gap:14px;align-items:start;}
+  .role-entry dt{font-family:var(--grotesk);font-size:24px;text-transform:uppercase;margin:0;}
+  .role-entry dt small{display:block;font-family:var(--mono);font-size:14px;letter-spacing:.1em;color:var(--fg-dim);margin-top:4px;text-transform:uppercase;font-weight:400;}
+  .role-entry dd{margin:0;font-size:20px;color:var(--fg-dim);line-height:1.65;}
+
+  .setup{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);}
+  .setup-row{background:var(--bg);padding:14px 16px;display:grid;grid-template-columns:140px 1fr;gap:14px;font-family:var(--mono);font-size:19.5px;align-items:center;}
+  .setup-row .k{color:var(--fg-dim);letter-spacing:.03em;}
+  .setup-row .v{color:var(--fg);}
+
+  .flow{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);}
+  .flow-item{background:var(--bg);}
+  .flow-item summary{
+    list-style:none;cursor:pointer;padding:15px 16px;
+    display:flex;align-items:baseline;gap:12px;
+    font-family:var(--mono);font-size:19px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;
+  }
+  .flow-item summary::-webkit-details-marker{display:none;}
+  .flow-item summary .step-n{color:var(--red-text);flex:none;}
+  .flow-item summary .who{margin-left:auto;color:var(--fg-dim);font-size:15px;text-align:right;}
+  .flow-item summary .chev{margin-left:8px;color:var(--fg-dim);font-size:16.5px;transition:transform .25s cubic-bezier(0.22,1,0.36,1);}
+  .flow-item[open] summary .chev{transform:rotate(180deg);}
+  .flow-body{padding:0 16px 18px 44px;font-family:var(--sans);font-size:21px;color:var(--fg-dim);line-height:1.75;}
+  .flow-body .line{display:block;margin-bottom:7px;}
+  .flow-body .line b{color:var(--fg);font-weight:600;}
+  .flow-body .bgm{display:inline-block;margin-top:2px;font-family:var(--mono);font-size:15.5px;letter-spacing:.06em;color:var(--red-text);text-transform:uppercase;}
+  .flow-body .bgm::before{content:"♪ ";}
+
+  .wins{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);}
+  .win{background:var(--bg);padding:18px 18px;}
+  .win .t{font-family:var(--mono);font-size:16px;letter-spacing:.1em;color:var(--fg-dim);text-transform:uppercase;margin-bottom:8px;}
+  .win.a .t{color:var(--green);}
+  .win.b .t{color:var(--red-text);}
+  .win .d{font-family:var(--sans);font-size:20px;line-height:1.65;color:var(--fg);}
+
+  .tips{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);}
+  .tip-row{background:var(--bg);display:flex;gap:14px;padding:15px 16px;font-size:20px;color:var(--fg-dim);}
+  .tip-row .num{font-family:var(--mono);color:var(--red-text);flex:none;font-weight:700;}
+
+  footer{padding:24px 0 40px;font-family:var(--mono);font-size:16px;letter-spacing:.06em;color:var(--fg-dim);text-transform:uppercase;}
+  footer a{color:var(--red-text);}
+
+  @media (max-width:600px){
+    .wins{grid-template-columns:1fr;}
+    .role-entry{grid-template-columns:1fr;gap:6px;}
+    .setup-row{grid-template-columns:1fr;gap:4px;}
+    .flow-item summary{flex-wrap:wrap;}
+    .flow-item summary .who{margin-left:0;text-align:left;}
+  }
+</style>
+</head>
+<body>
+
+<div class="scanlines"></div>
+
+<div class="statusbar">
+  <div class="row">
+    <span>MISSION 볏단가리 // OPS BRIEF</span>
+    <span class="live"><span class="pip"></span>LIVE</span>
+  </div>
+</div>
+
+<div class="brief">
+  <div class="wrap">
+    <span class="tag">2026 중고등부 여름캠프 · 1일차 석식 작전</span>
+    <h1>흑백<br><span>요리사</span></h1>
+    <p class="desc">요리대회 진행 대본과 BGM 큐 가이드입니다. 요리대회가 진행되는 동안 이 화면을 켜둔 채로 참고하세요.</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="opspanel">
+    <span class="cr-tl"></span><span class="cr-br"></span>
+    <div class="op-top">
+      <span class="label">미션 개요</span>
+    </div>
+    <span class="op-status"><span class="dot"></span>18:30 - 20:30 / 조별 조리 및 심사</span>
+    <h3 class="op-title">볏단가리쌀</h3>
+    <ol class="op-steps">
+      <li>미션 재료 볏단가리쌀을 주재료 또는 베이스로 반드시 사용</li>
+      <li>조리 제한시간 90분, 조별 재료비로 부재료 자유 구성</li>
+      <li>심사 기준: 맛 40% / 독창성 30% / 협동·정리 30%</li>
+      <li>포상 발표 순서는 2등 → 3등 → 1등 → 4등 고정</li>
+    </ol>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section class="reveal">
+    <div class="head">
+      <span class="tag">personnel</span>
+      <h2>진행 배정</h2>
+    </div>
+    <dl class="roles">
+      <div class="role-entry">
+        <dt>최윤하 마리아T<small>오프닝 · 진행</small></dt>
+        <dd>미스터리박스 리빙, 미션 공지 및 규칙 안내, 심사 집계</dd>
+      </div>
+      <div class="role-entry">
+        <dt>김아래미 세실리아T<small>안내 · 집계 · 발표</small></dt>
+        <dd>재료비 영수증 회수, 블라인드 테스트 안대 안내, 심사 집계, 포상 발표</dd>
+      </div>
+      <div class="role-entry">
+        <dt>진건호 토마스T<br>이준용 베드로T<small>화상세팅 · 진행 · 도우미</small></dt>
+        <dd>심사실·거실 화상회의 세팅, 블라인드 테스트 진행, 타이머 관리, 시식 도우미</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="reveal">
+    <div class="head">
+      <span class="tag">script</span>
+      <h2>진행 대본</h2>
+    </div>
+    <div class="flow">
+      <details class="flow-item" open>
+        <summary><span class="step-n">CUE 0</span>오프닝 리빙<span class="who">최윤하</span><span class="chev">▾</span></summary>
+        <div class="flow-body">
+          <span class="line"><b>대사</b> "여러분, 지금부터 2026 중고등부 여름캠프 특별 미션, 흑백요리사 볏단가리 미션을 시작하겠습니다. 이 안에 오늘의 재료가 들어있습니다. 과연 무엇일까요?"</span>
+          <span class="line">(상자를 열며) <b>대사</b> "짜잔! 오늘의 미션 재료는 볏단가리쌀입니다!"</span>
+          <span class="bgm">BGM 1 미스터리박스 등장 → BGM 2 재료 공개(임팩트)</span>
+        </div>
+      </details>
+      <details class="flow-item">
+        <summary><span class="step-n">CUE 1</span>미션 공지<span class="who">최윤하</span><span class="chev">▾</span></summary>
+        <div class="flow-body">
+          <span class="line"><b>대사</b> "지금부터 여러분은 흑백요리사입니다. 오늘의 미션 재료 볏단가리쌀을 주재료 또는 베이스로 반드시 사용해서, 나만의 한 그릇을 완성해주세요."</span>
+          <span class="line"><b>대사</b> "심사 기준은 세 가지입니다. 맛 40퍼센트, 독창성 30퍼센트, 협동과 정리 30퍼센트입니다. 제한시간은 90분, 그럼 지금부터 미션 시작!"</span>
+          <span class="bgm">BGM 3 조리 시작</span>
+        </div>
+      </details>
+      <details class="flow-item">
+        <summary><span class="step-n">CUE 2</span>영수증 회수<span class="who">김아래미</span><span class="chev">▾</span></summary>
+        <div class="flow-body">
+          <span class="line">(조리 진행 중 순회하며) <b>대사</b> "영수증 챙기셨죠? 구매액 확인하겠습니다. 예산 초과분은 사후 정산 안 되니 미리 체크해주세요."</span>
+        </div>
+      </details>
+      <details class="flow-item">
+        <summary><span class="step-n">CUE 3</span>화상 세팅<span class="who">진건호 · 이준용</span><span class="chev">▾</span></summary>
+        <div class="flow-body">
+          <span class="line">(조리 종료 5분 전) <b>대사</b> "심사위원분들 계신 방과 이곳을 화면으로 연결하겠습니다. 완성된 요리는 심사실로 옮겨주세요."</span>
+        </div>
+      </details>
+      <details class="flow-item">
+        <summary><span class="step-n">CUE 4</span>블라인드 안내<span class="who">김아래미</span><span class="chev">▾</span></summary>
+        <div class="flow-body">
+          <span class="line">(신부님·분과장님께) <b>대사</b> "블라인드 테스트를 위해 안대를 착용해주시겠어요?"</span>
+        </div>
+      </details>
+      <details class="flow-item">
+        <summary><span class="step-n">CUE 5</span>블라인드 진행<span class="who">진건호 · 이준용</span><span class="chev">▾</span></summary>
+        <div class="flow-body">
+          <span class="line"><b>대사</b> "지금부터 1조부터 순서대로 시식하겠습니다. 과연 어느 조가 이번 미션을 가장 잘 살렸을까요?"</span>
+          <span class="line">(조별 순서마다) <b>대사</b> "다음은 O조입니다." (타이머로 조별 시식시간 관리)</span>
+          <span class="bgm">BGM 4 블라인드 테이스팅</span>
+        </div>
+      </details>
+      <details class="flow-item">
+        <summary><span class="step-n">CUE 6</span>시식 도우미<span class="who">진건호 · 이준용</span><span class="chev">▾</span></summary>
+        <div class="flow-body">
+          <span class="line">(숟가락으로 떠먹이며) <b>대사</b> "표정을 숨기지 말아주세요. 첫 느낌이 중요합니다."</span>
+          <span class="bgm">BGM 5 심사위원 반응</span>
+        </div>
+      </details>
+      <details class="flow-item">
+        <summary><span class="step-n">CUE 7</span>심사 집계<span class="who">최윤하 · 김아래미</span><span class="chev">▾</span></summary>
+        <div class="flow-body">
+          <span class="line">(무대 뒤에서 조용히 합산) 맛 40점, 독창성 30점, 협동과 정리 30점을 더해 조별 총점 계산</span>
+        </div>
+      </details>
+      <details class="flow-item">
+        <summary><span class="step-n">CUE 8</span>포상 발표<span class="who">김아래미</span><span class="chev">▾</span></summary>
+        <div class="flow-body">
+          <span class="line"><b>대사</b> "결과를 발표하겠습니다!"</span>
+          <span class="line"><b>대사</b> "먼저 2등입니다." (박수) "3등입니다." (박수) "그리고 1등입니다. 축하합니다!" "마지막 4등입니다. 다음 기회에!"</span>
+          <span class="line">2등 → 3등 → 1등 → 4등 순서 고정, "4등부터" 로 부르지 않도록 주의</span>
+          <span class="bgm">BGM 6 발표 직전(드럼롤) → BGM 7 1등 발표(팡파레)</span>
+        </div>
+      </details>
+      <details class="flow-item">
+        <summary><span class="step-n">CUE 9</span>뒷정리 안내<span class="who">전체 교사</span><span class="chev">▾</span></summary>
+        <div class="flow-body">
+          <span class="line"><b>대사</b> "종합 1위 조부터 순서대로 뒷정리 구역을 선택하겠습니다. 설거지, 분리수거와 음식물쓰레기, 그릴과 가스버너 정리, 테이블과 바닥청소 중 골라주세요."</span>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="head">
+      <span class="tag">audio ops</span>
+      <h2>BGM 가이드</h2>
+    </div>
+    <p style="font-family:var(--sans);font-size:20px;color:var(--fg-dim);line-height:1.7;margin:0 0 20px;">흑백요리사(넷플릭스, 2024년) 공식 OST 개별 트랙 리스트는 확인되지 않아, 원작의 장면별 연출 방식을 정리했습니다. 이 분위기에 맞는 음원을 직접 골라 쓰세요.</p>
+    <div class="flow">
+      <details class="flow-item">
+        <summary><span class="step-n">BGM 1</span>미스터리박스 등장<span class="chev">▾</span></summary>
+        <div class="flow-body">
+          <span class="line">낮고 무거운 현악기 소리가 서서히 깔리며 긴장감을 조성, 대사 없이 음악만으로 기대감을 유도</span>
+          <span class="line"><b>추천</b> 서스펜스 오케스트라 인트로</span>
+        </div>
+      </details>
+      <details class="flow-item">
+        <summary><span class="step-n">BGM 2</span>재료 공개<span class="chev">▾</span></summary>
+        <div class="flow-body">
+          <span class="line">박스를 여는 순간 강한 타격음 하나로 임팩트를 강조</span>
+          <span class="line"><b>추천</b> 드라마틱 효과음(1초에서 2초 임팩트음)</span>
+        </div>
+      </details>
+      <details class="flow-item">
+        <summary><span class="step-n">BGM 3</span>미션·조리 시작<span class="chev">▾</span></summary>
+        <div class="flow-body">
+          <span class="line">빠른 템포의 타악기 비트, 초침처럼 반복되는 리듬으로 시간 압박감을 조성, 조리 90분 내내 반복 재생</span>
+          <span class="line"><b>추천</b> 타임어택 느낌의 리듬 위주 타악기 트랙, 가사 없는 곡</span>
+        </div>
+      </details>
+      <details class="flow-item">
+        <summary><span class="step-n">BGM 4</span>블라인드 테이스팅<span class="chev">▾</span></summary>
+        <div class="flow-body">
+          <span class="line">대사와 소음을 최소화하고 피아노 솔로 등 단순한 곡으로 긴장을 극대화, 정적을 의도적으로 활용</span>
+          <span class="line"><b>추천</b> 잔잔한 피아노나 현악 솔로, 볼륨은 낮게</span>
+        </div>
+      </details>
+      <details class="flow-item">
+        <summary><span class="step-n">BGM 5</span>심사위원 반응<span class="chev">▾</span></summary>
+        <div class="flow-body">
+          <span class="line">표정 클로즈업에 감정을 고조시키는 현악기 상승 구간을 삽입</span>
+          <span class="line"><b>추천</b> 짧게 고조되는 현악기 구간</span>
+        </div>
+      </details>
+      <details class="flow-item">
+        <summary><span class="step-n">BGM 6</span>발표 직전<span class="chev">▾</span></summary>
+        <div class="flow-body">
+          <span class="line">정적 또는 낮은 저음으로 긴장을 최고조로 끌어올리고, 드럼롤로 카운트다운</span>
+          <span class="line"><b>추천</b> 드럼롤이나 스네어롤 효과음</span>
+        </div>
+      </details>
+      <details class="flow-item">
+        <summary><span class="step-n">BGM 7</span>1등 발표<span class="chev">▾</span></summary>
+        <div class="flow-body">
+          <span class="line">밝고 웅장한 팡파레로 전환, 승자 등장 특유의 상승하는 금관악기 소리</span>
+          <span class="line"><b>추천</b> 승리와 축하를 나타내는 짧은 팡파레(5초 안팎)</span>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="head">
+      <span class="tag">field notes</span>
+      <h2>TIP</h2>
+    </div>
+    <div class="tips">
+      <div class="tip-row"><span class="num">01</span>포상 발표는 반드시 2등 → 3등 → 1등 → 4등 순서로 진행합니다.</div>
+      <div class="tip-row"><span class="num">02</span>BGM 참고용 팬 편집본은 개인 재생용으로만 사용하고, 녹화나 재배포는 피하세요.</div>
+      <div class="tip-row"><span class="num">03</span>블라인드 테스트 시식은 조별 순서를 미리 확정해두면 진행이 매끄럽습니다.</div>
+      <div class="tip-row"><span class="num">04</span>화상회의 연결은 CUE 3 전에 미리 테스트해두는 것을 권장합니다.</div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="head">
+      <span class="tag">reference</span>
+      <h2>BGM 소스</h2>
+    </div>
+    <div class="wins">
+      <div class="win a">
+        <div class="t">참고 음원</div>
+        <div class="d"><a href="https://m.youtube.com/watch?v=yo5jCcavQJs">넷플릭스 흑백요리사 BGM 브금 1시간 반복</a> — 개인 재생용 참고, 비상업적 사내 행사 한정</div>
+      </div>
+      <div class="win b">
+        <div class="t">연결 문서</div>
+        <div class="d"><a href="highschool-cuesheet-dinner.html">석식 큐시트(1일차)</a>로 돌아가기</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">문의 진건호 토마스T / REV 2026.09.02</div>
+</footer>
+
+<script>
+(function(){
+  if (window.matchMedia && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('is-in'); });
+  }
+})();
+</script>
+
+</body>
+</html>
