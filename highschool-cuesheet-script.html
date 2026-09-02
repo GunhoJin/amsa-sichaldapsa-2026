@@ -150,6 +150,8 @@
   .flow-body .line b{color:var(--fg);font-weight:600;}
   .flow-body .bgm{display:inline-block;margin-top:2px;font-family:var(--mono);font-size:15.5px;letter-spacing:.06em;color:var(--red-text);text-transform:uppercase;}
   .flow-body .bgm::before{content:"♪ ";}
+  .flow-body .warn{display:block;margin:8px 0;padding:10px 12px;border:1px solid var(--red);background:color-mix(in srgb, var(--red) 12%, transparent);color:var(--red-text);font-weight:700;font-size:19px;}
+  .flow-body .warn::before{content:"⚠ ";}
 
   .wins{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);}
   .win{background:var(--bg);padding:18px 18px;}
@@ -199,13 +201,13 @@
     <div class="op-top">
       <span class="label">미션 개요</span>
     </div>
-    <span class="op-status"><span class="dot"></span>18:30 - 20:30 / 조별 조리 및 심사</span>
+    <span class="op-status"><span class="dot"></span>18:00 - 20:30 / 조별 조리·시식·심사·포상</span>
     <h3 class="op-title">볏단가리쌀</h3>
     <ol class="op-steps">
-      <li>미션 재료 볏단가리쌀을 주재료 또는 베이스로 반드시 사용</li>
-      <li>조리 제한시간 90분, 조별 재료비로 부재료 자유 구성</li>
+      <li>18:00 도착 즉시 조리 시작, 저녁 7시(19:00) 제출 마감</li>
       <li>심사 기준: 맛 40% / 독창성 30% / 협동·정리 30%</li>
-      <li>포상 발표 순서는 2등 → 3등 → 1등 → 4등 고정</li>
+      <li>포상 발표 순서는 2등 → 3등 → 1등 → 4등 고정(1~4조만 대상)</li>
+      <li>히든 요리사(교사·봉사자팀) 깜짝 참가 — 총 5접시 평가, 순위 없음</li>
     </ol>
   </div>
 </div>
@@ -220,11 +222,15 @@
     <dl class="roles">
       <div class="role-entry">
         <dt>김아래미 세실리아T<small>전체 진행 · 2026.9.2 확정</small></dt>
-        <dd>미스터리박스 리빙, 미션 공지 및 규칙 안내, 재료비 영수증 회수, 블라인드 테스트 안대 안내, 심사 집계, 포상 발표</dd>
+        <dd>미션 시작 안내, 재료비 영수증 회수, 히든 요리사 깜짝 공개, 블라인드 테스트 안대 안내, 심사 집계, 포상 발표</dd>
       </div>
       <div class="role-entry">
         <dt>진건호 토마스T<br>이준용 베드로T<small>화상세팅 · 진행 · 도우미</small></dt>
         <dd>심사실·거실 화상회의 세팅, 블라인드 테스트 진행, 타이머 관리, 시식 도우미</dd>
+      </div>
+      <div class="role-entry">
+        <dt>서혜정 스텔라T<small>히든 요리사 팀 주도 · 비공개</small></dt>
+        <dd>교사·봉사자팀 깜짝 참가 요리 준비 — 심사위원(신부님·분과장 손기훈 야고보T)에게는 시식 직전까지 절대 비밀</dd>
       </div>
     </dl>
   </section>
@@ -236,31 +242,34 @@
     </div>
     <div class="flow">
       <details class="flow-item" open>
-        <summary><span class="step-n">CUE 0</span>오프닝 리빙<span class="who">김아래미</span><span class="chev">▾</span></summary>
+        <summary><span class="step-n">CUE 0</span>미션 시작 안내<span class="who">김아래미</span><span class="chev">▾</span></summary>
         <div class="flow-body">
-          <span class="line"><b>대사</b> "여러분, 지금부터 2026 중고등부 여름캠프 특별 미션, 흑백요리사 볏단가리 미션을 시작하겠습니다. 이 안에 오늘의 재료가 들어있습니다. 과연 무엇일까요?"</span>
-          <span class="line">(상자를 열며) <b>대사</b> "짜잔! 오늘의 미션 재료는 볏단가리쌀입니다!"</span>
-          <span class="bgm">BGM 1 미스터리박스 등장 → BGM 2 재료 공개(임팩트)</span>
+          <span class="line"><b>대사</b> "자, 지금부터 흑백요리사 미션을 시작하겠습니다!"</span>
+          <span class="line"><b>대사</b> "지금부터 저녁 7시까지 각 조는 오늘의 재료로 만든 한 접시를 완성해서 제출해주세요."</span>
+          <span class="line"><b>대사</b> "심사 기준은 맛 40퍼센트, 독창성 30퍼센트, 협동과 정리 30퍼센트입니다."</span>
+          <span class="line"><b>대사</b> "그럼 지금부터 조리 시작!"</span>
+          <span class="bgm">BGM 1 조리 시작</span>
         </div>
       </details>
       <details class="flow-item">
-        <summary><span class="step-n">CUE 1</span>미션 공지<span class="who">김아래미</span><span class="chev">▾</span></summary>
-        <div class="flow-body">
-          <span class="line"><b>대사</b> "지금부터 여러분은 흑백요리사입니다. 오늘의 미션 재료 볏단가리쌀을 주재료 또는 베이스로 반드시 사용해서, 나만의 한 그릇을 완성해주세요."</span>
-          <span class="line"><b>대사</b> "심사 기준은 세 가지입니다. 맛 40퍼센트, 독창성 30퍼센트, 협동과 정리 30퍼센트입니다. 제한시간은 90분, 그럼 지금부터 미션 시작!"</span>
-          <span class="bgm">BGM 3 조리 시작</span>
-        </div>
-      </details>
-      <details class="flow-item">
-        <summary><span class="step-n">CUE 2</span>영수증 회수<span class="who">김아래미</span><span class="chev">▾</span></summary>
+        <summary><span class="step-n">CUE 1</span>영수증 회수<span class="who">김아래미</span><span class="chev">▾</span></summary>
         <div class="flow-body">
           <span class="line">(조리 진행 중 순회하며) <b>대사</b> "영수증 챙기셨죠? 구매액 확인하겠습니다. 예산 초과분은 사후 정산 안 되니 미리 체크해주세요."</span>
         </div>
       </details>
       <details class="flow-item">
-        <summary><span class="step-n">CUE 3</span>화상 세팅<span class="who">진건호 · 이준용</span><span class="chev">▾</span></summary>
+        <summary><span class="step-n">CUE 2</span>화상 세팅<span class="who">진건호 · 이준용</span><span class="chev">▾</span></summary>
         <div class="flow-body">
           <span class="line">(조리 종료 5분 전) <b>대사</b> "심사위원분들 계신 방과 이곳을 화면으로 연결하겠습니다. 완성된 요리는 심사실로 옮겨주세요."</span>
+        </div>
+      </details>
+      <details class="flow-item">
+        <summary><span class="step-n">CUE 3</span>히든 요리사 깜짝 공개<span class="who">김아래미</span><span class="chev">▾</span></summary>
+        <div class="flow-body">
+          <span class="warn">심사위원(신부님·분과장님)에게만, 여기서 처음 공개 — 학생들이 있는 곳에서 말하지 않기</span>
+          <span class="line">(신부님·분과장님께 조용히) <b>대사</b> "사실 오늘 미션에는 깜짝 참가팀이 하나 더 있습니다."</span>
+          <span class="line"><b>대사</b> "교사·봉사자팀도 깜짝 참가로 한 접시를 준비했어요. 오늘은 총 다섯 접시를 평가하시게 됩니다."</span>
+          <span class="bgm">BGM 2 깜짝 공개(임팩트)</span>
         </div>
       </details>
       <details class="flow-item">
@@ -273,20 +282,22 @@
         <summary><span class="step-n">CUE 5</span>블라인드 진행<span class="who">진건호 · 이준용</span><span class="chev">▾</span></summary>
         <div class="flow-body">
           <span class="line"><b>대사</b> "지금부터 순서대로 시식하겠습니다. 과연 어느 조가 이번 미션을 가장 잘 살렸을까요?"</span>
-          <span class="line">(그릇마다, 조 번호는 절대 언급하지 않음) <b>대사</b> "다음 요리 준비됐습니다. 드셔보세요." (조 순서는 진행자가 별도 기록지로만 관리 — 심사위원에게는 몇 조인지 알리지 않아야 진짜 블라인드 테스트가 됩니다, 타이머로 시식시간 관리)</span>
-          <span class="bgm">BGM 4 블라인드 테이스팅</span>
+          <span class="warn">시식하는 동안 조 번호를 절대 말하지 않기 — 순서는 기록지로만 관리</span>
+          <span class="line">(그릇마다) <b>대사</b> "다음 요리 준비됐습니다. 드셔보세요."</span>
+          <span class="bgm">BGM 3 블라인드 테이스팅</span>
         </div>
       </details>
       <details class="flow-item">
         <summary><span class="step-n">CUE 6</span>시식 도우미<span class="who">진건호 · 이준용</span><span class="chev">▾</span></summary>
         <div class="flow-body">
           <span class="line">(숟가락으로 떠먹이며) <b>대사</b> "표정을 숨기지 말아주세요. 첫 느낌이 중요합니다."</span>
-          <span class="bgm">BGM 5 심사위원 반응</span>
+          <span class="bgm">BGM 4 심사위원 반응</span>
         </div>
       </details>
       <details class="flow-item">
         <summary><span class="step-n">CUE 7</span>심사 집계<span class="who">김아래미</span><span class="chev">▾</span></summary>
         <div class="flow-body">
+          <span class="line">1~4조는 순위 산정용, 히든 요리사는 순위 외 별도 평가(재미용)</span>
           <span class="line">(무대 뒤에서 조용히 합산) 맛 40점, 독창성 30점, 협동과 정리 30점을 더해 조별 총점 계산</span>
         </div>
       </details>
@@ -295,9 +306,10 @@
         <div class="flow-body">
           <span class="line"><b>대사</b> "결과를 발표하겠습니다!"</span>
           <span class="line"><b>대사</b> "먼저 2등입니다." (박수) "3등입니다." (박수) "그리고 1등입니다. 축하합니다!" "마지막 4등입니다. 다음 기회에!"</span>
-          <span class="line">2등 → 3등 → 1등 → 4등 순서 고정, "4등부터" 로 부르지 않도록 주의</span>
-          <span class="line">상품: 1등 한우 구이용 선물세트 · 2등 한돈선물세트 · 3등 한돈 삼겹살 · 4등 구이용 소시지 세트</span>
-          <span class="bgm">BGM 6 발표 직전(드럼롤) → BGM 7 1등 발표(팡파레)</span>
+          <span class="warn">순서는 반드시 2등 → 3등 → 1등 → 4등 고정 — "4등부터"로 부르지 않기</span>
+          <span class="line">상품(1~4조만): 1등 한우 구이용 선물세트 · 2등 한돈선물세트 · 3등 한돈 삼겹살 · 4등 구이용 소시지 세트</span>
+          <span class="line">이어서 <b>대사</b> "오늘의 깜짝 참가자! 히든 요리사, 교사·봉사자팀도 공개합니다!" (서혜정 스텔라T팀, 재미 코멘트만 — 순위·상품 없음)</span>
+          <span class="bgm">BGM 5 발표 직전(드럼롤) → BGM 6 1등 발표(팡파레)</span>
         </div>
       </details>
       <details class="flow-item">
@@ -317,49 +329,42 @@
     <p style="font-family:var(--sans);font-size:20px;color:var(--fg-dim);line-height:1.7;margin:0 0 20px;">흑백요리사(넷플릭스, 2024년) 공식 OST 개별 트랙 리스트는 확인되지 않아, 원작의 장면별 연출 방식을 정리했습니다. 이 분위기에 맞는 음원을 직접 골라 쓰세요.</p>
     <div class="flow">
       <details class="flow-item">
-        <summary><span class="step-n">BGM 1</span>미스터리박스 등장<span class="chev">▾</span></summary>
+        <summary><span class="step-n">BGM 1</span>조리 시작<span class="chev">▾</span></summary>
         <div class="flow-body">
-          <span class="line">낮고 무거운 현악기 소리가 서서히 깔리며 긴장감을 조성, 대사 없이 음악만으로 기대감을 유도</span>
-          <span class="line"><b>추천</b> 서스펜스 오케스트라 인트로</span>
-        </div>
-      </details>
-      <details class="flow-item">
-        <summary><span class="step-n">BGM 2</span>재료 공개<span class="chev">▾</span></summary>
-        <div class="flow-body">
-          <span class="line">박스를 여는 순간 강한 타격음 하나로 임팩트를 강조</span>
-          <span class="line"><b>추천</b> 드라마틱 효과음(1초에서 2초 임팩트음)</span>
-        </div>
-      </details>
-      <details class="flow-item">
-        <summary><span class="step-n">BGM 3</span>미션·조리 시작<span class="chev">▾</span></summary>
-        <div class="flow-body">
-          <span class="line">빠른 템포의 타악기 비트, 초침처럼 반복되는 리듬으로 시간 압박감을 조성, 조리 90분 내내 반복 재생</span>
+          <span class="line">빠른 템포의 타악기 비트, 초침처럼 반복되는 리듬으로 시간 압박감을 조성, 조리 내내 반복 재생</span>
           <span class="line"><b>추천</b> 타임어택 느낌의 리듬 위주 타악기 트랙, 가사 없는 곡</span>
         </div>
       </details>
       <details class="flow-item">
-        <summary><span class="step-n">BGM 4</span>블라인드 테이스팅<span class="chev">▾</span></summary>
+        <summary><span class="step-n">BGM 2</span>히든 요리사 깜짝 공개<span class="chev">▾</span></summary>
+        <div class="flow-body">
+          <span class="line">강한 타격음 하나로 반전의 임팩트를 강조</span>
+          <span class="line"><b>추천</b> 드라마틱 효과음(1초에서 2초 임팩트음)</span>
+        </div>
+      </details>
+      <details class="flow-item">
+        <summary><span class="step-n">BGM 3</span>블라인드 테이스팅<span class="chev">▾</span></summary>
         <div class="flow-body">
           <span class="line">대사와 소음을 최소화하고 피아노 솔로 등 단순한 곡으로 긴장을 극대화, 정적을 의도적으로 활용</span>
           <span class="line"><b>추천</b> 잔잔한 피아노나 현악 솔로, 볼륨은 낮게</span>
         </div>
       </details>
       <details class="flow-item">
-        <summary><span class="step-n">BGM 5</span>심사위원 반응<span class="chev">▾</span></summary>
+        <summary><span class="step-n">BGM 4</span>심사위원 반응<span class="chev">▾</span></summary>
         <div class="flow-body">
           <span class="line">표정 클로즈업에 감정을 고조시키는 현악기 상승 구간을 삽입</span>
           <span class="line"><b>추천</b> 짧게 고조되는 현악기 구간</span>
         </div>
       </details>
       <details class="flow-item">
-        <summary><span class="step-n">BGM 6</span>발표 직전<span class="chev">▾</span></summary>
+        <summary><span class="step-n">BGM 5</span>발표 직전<span class="chev">▾</span></summary>
         <div class="flow-body">
           <span class="line">정적 또는 낮은 저음으로 긴장을 최고조로 끌어올리고, 드럼롤로 카운트다운</span>
           <span class="line"><b>추천</b> 드럼롤이나 스네어롤 효과음</span>
         </div>
       </details>
       <details class="flow-item">
-        <summary><span class="step-n">BGM 7</span>1등 발표<span class="chev">▾</span></summary>
+        <summary><span class="step-n">BGM 6</span>1등 발표<span class="chev">▾</span></summary>
         <div class="flow-body">
           <span class="line">밝고 웅장한 팡파레로 전환, 승자 등장 특유의 상승하는 금관악기 소리</span>
           <span class="line"><b>추천</b> 승리와 축하를 나타내는 짧은 팡파레(5초 안팎)</span>
@@ -374,10 +379,11 @@
       <h2>TIP</h2>
     </div>
     <div class="tips">
-      <div class="tip-row"><span class="num">01</span>포상 발표는 반드시 2등 → 3등 → 1등 → 4등 순서로 진행합니다.</div>
-      <div class="tip-row"><span class="num">02</span>BGM 참고용 팬 편집본은 개인 재생용으로만 사용하고, 녹화나 재배포는 피하세요.</div>
-      <div class="tip-row"><span class="num">03</span>블라인드 테스트 시식은 조별 순서를 미리 확정해두면 진행이 매끄럽습니다.</div>
-      <div class="tip-row"><span class="num">04</span>화상회의 연결은 CUE 3 전에 미리 테스트해두는 것을 권장합니다.</div>
+      <div class="tip-row"><span class="num">01</span>히든 요리사(교사·봉사자팀)의 존재는 CUE 3 전까지 신부님·분과장님이 절대 몰라야 합니다. 진행팀끼리도 그 두 분 앞에서는 언급하지 마세요.</div>
+      <div class="tip-row"><span class="num">02</span>포상 발표는 반드시 2등 → 3등 → 1등 → 4등 순서로 진행합니다.</div>
+      <div class="tip-row"><span class="num">03</span>BGM 참고용 팬 편집본은 개인 재생용으로만 사용하고, 녹화나 재배포는 피하세요.</div>
+      <div class="tip-row"><span class="num">04</span>블라인드 테스트 시식은 조 순서를 미리 기록지에 적어두고, 시식 중에는 절대 입 밖으로 조 번호를 내지 마세요.</div>
+      <div class="tip-row"><span class="num">05</span>화상회의 연결은 CUE 2 전에 미리 테스트해두는 것을 권장합니다.</div>
     </div>
   </section>
 
