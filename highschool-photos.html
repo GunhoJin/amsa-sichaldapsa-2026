@@ -4,33 +4,101 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>사진으로 보는 여름캠프 · 2026 중고등부</title>
-<link rel="stylesheet" href="cuesheet.css">
 <style>
-  .gallery-wrap{margin:14px 0 0; border:1px solid var(--line); border-radius:6px; overflow:hidden; background:var(--paper-2)}
-  .gallery-wrap iframe{display:block; width:100%; border:0; background:var(--paper-2)}
+  :root{
+    --sky-top:#bfe6f7; --sky-bottom:#79c4e8;
+    --card:#ffffff; --card-2:#f4f9fd;
+    --ink:#122a4d; --muted:#5c6c86; --faint:#93a3ba;
+    --navy:#1b3a6b; --green:#2f9e63; --orange:#e8804a; --purple:#6c6fdb; --yellow:#f6c445; --pink:#ff6f91;
+    --radius:20px;
+    --shadow:0 10px 26px rgba(18,42,77,.14);
+    --sans:"Pretendard",-apple-system,"Apple SD Gothic Neo","Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+    --mono:ui-monospace,"SF Mono","Cascadia Code","Consolas",monospace;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; color:var(--ink); font-family:var(--sans); line-height:1.55;
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, #ffffff55, transparent 60%),
+      linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 340px, #eaf6fb 340px, #eaf6fb 100%);
+    background-attachment:fixed;
+  }
+  a{color:inherit}
+
+  header.top{
+    position:sticky; top:0; z-index:20; backdrop-filter:blur(8px);
+    background:rgba(255,255,255,.72); border-bottom:1px solid #ffffff88;
+  }
+  .top-inner{max-width:760px; margin:0 auto; padding:14px 20px; display:flex; align-items:center; gap:10px}
+  .top-inner .badge{
+    font-size:11px; font-weight:800; letter-spacing:.02em; color:#fff;
+    background:var(--green); padding:5px 11px; border-radius:999px;
+  }
+  .top-inner .mark{font-weight:900; font-size:14px; text-decoration:none; color:var(--navy)}
+  .top-inner .spacer{flex:1}
+
+  main{max-width:760px; margin:0 auto; padding:26px 20px 90px}
+
+  .hero{
+    background:var(--card); border-radius:28px; box-shadow:var(--shadow);
+    padding:34px 30px; text-align:center; position:relative; overflow:hidden;
+  }
+  .hero::before{
+    content:"⛺"; position:absolute; font-size:120px; opacity:.07; right:-18px; top:-24px; transform:rotate(12deg);
+  }
+  .hero .badge{
+    display:inline-block; font-size:12px; font-weight:800; color:#fff; background:var(--navy);
+    padding:6px 14px; border-radius:999px; margin-bottom:14px; letter-spacing:.02em;
+  }
+  .hero h1{font-size:26px; font-weight:900; letter-spacing:-.02em; margin:0 0 8px; text-wrap:balance}
+  .hero .sub{font-size:14px; font-weight:700; color:var(--muted); margin:0 0 16px}
+  .hero .desc{font-size:13.5px; color:var(--muted); margin:0; max-width:52ch; margin:0 auto; line-height:1.7}
+  .hero .desc a{color:var(--navy); font-weight:700; text-decoration:underline; text-decoration-color:var(--yellow); text-decoration-thickness:2px}
+
+  .toc{
+    display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:22px 0 0;
+  }
+  .toc a{
+    display:block; text-decoration:none; background:var(--card); border-radius:16px; padding:16px;
+    box-shadow:var(--shadow); color:var(--ink);
+  }
+  .toc a:hover{transform:translateY(-2px); transition:transform .15s ease}
+  .toc .icon{
+    width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:15px; font-weight:900; color:#fff; margin-bottom:10px;
+  }
+  .toc .ttl{font-size:14px; font-weight:800; margin:0 0 3px; text-wrap:balance}
+  .toc .time{font-family:var(--mono); font-size:11px; color:var(--faint); font-weight:700}
+
+  .section{
+    background:var(--card); border-radius:24px; box-shadow:var(--shadow);
+    padding:26px 24px; margin-top:16px;
+  }
+  .section .icon{
+    width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:17px; font-weight:900; color:#fff; margin-bottom:14px;
+  }
+  .section .eyebrow{font-family:var(--mono); font-size:11px; font-weight:800; color:var(--faint); margin:0 0 4px; letter-spacing:.04em}
+  .section .title{font-size:19px; font-weight:900; letter-spacing:-.01em; margin:0 0 8px}
+  .section .desc{font-size:13.5px; color:var(--muted); margin:0; line-height:1.7}
+
+  .gallery-wrap{margin:16px 0 0; border-radius:16px; overflow:hidden; background:var(--card-2); border:1px solid #e4eef7}
+  .gallery-wrap iframe{display:block; width:100%; border:0; background:var(--card-2)}
   .gallery-wrap.sm iframe{height:300px}
   .gallery-wrap.md iframe{height:460px}
   .gallery-wrap.lg iframe{height:640px}
-  .section{padding:40px 0; border-top:1px solid var(--line)}
-  .section:first-of-type{border-top:none}
-  .section .eyebrow{
-    font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.08em;
-    text-transform:uppercase; color:var(--accent-ink); margin:0 0 8px;
-  }
-  .section .title{font-size:21px; font-weight:800; letter-spacing:-.01em; margin:0 0 8px; text-wrap:balance}
-  .section .desc{font-size:14px; color:var(--muted); margin:0; max-width:60ch; line-height:1.65}
-  .top-link{
-    display:inline-block; margin-top:44px; font-family:var(--mono); font-size:12px;
-    color:var(--muted); text-decoration:none; border-bottom:1px dotted var(--line-strong);
-  }
-  .top-link:hover{color:var(--accent-ink); border-color:var(--accent)}
 
-  /* 이 페이지는 어두운 시스템 테마와 무관하게 밝은 톤 고정 */
-  :root{
-    --paper:#fffdf9; --paper-2:#fff6ea;
-    --ink:#241f14; --muted:#8a8168; --faint:#c2b99e;
-    --line:#efe8d6; --line-strong:#e0d6ba;
-    --accent:#ff5c4d; --accent-ink:#e2432f;
+  .top-link{
+    display:inline-block; margin-top:30px; font-size:12px; font-weight:800; color:var(--navy);
+    text-decoration:none; background:var(--card); padding:8px 16px; border-radius:999px; box-shadow:var(--shadow);
+  }
+
+  footer.foot{max-width:760px; margin:26px auto 0; padding:0 20px 40px; color:#ffffffcc; font-size:11.5px; text-align:center}
+
+  @media (max-width:480px){
+    .toc{grid-template-columns:1fr}
+    .hero h1{font-size:22px}
   }
 </style>
 </head>
@@ -38,31 +106,32 @@
 
 <header class="top">
   <div class="top-inner">
-    <a class="mark" href="highschool-ot.html">여름<b>캠프</b></a>
-    <span class="crumb">사진 아카이브</span>
+    <span class="badge">암사동성당</span>
+    <a class="mark" href="highschool-ot.html">중고등부 여름캠프</a>
     <span class="spacer"></span>
   </div>
 </header>
 
 <main>
-  <div class="hero plain">
-    <p class="eyebrow">2026.9.5(토) ~ 9.6(주일) · 전주 1박2일</p>
-    <p class="title">📸 사진으로 보는 중고등부 여름캠프</p>
-    <p class="date">흑백요리사 · 전주 한옥마을 · 전동성당</p>
+  <div class="hero">
+    <span class="badge">📸 사진 아카이브</span>
+    <h1>사진으로 보는<br>중고등부 여름캠프</h1>
+    <p class="sub">2026.9.5(토) ~ 9.6(주일) · 전주 1박2일 · 흑백요리사</p>
     <p class="desc">캠프 중 여러 선생님이 보내주신 사진을 촬영 시각·장소 기준으로 7개 구간으로 정리했습니다. 원본 전체(182장)는 <a href="https://drive.google.com/drive/folders/1E19mEZme8lbSarFS8iatbl1HVplUYg5X" target="_blank" rel="noopener">Google Drive 폴더</a>에서 내려받을 수 있습니다.</p>
   </div>
 
   <div class="toc">
-    <a href="#depart"><span class="n">1</span><span class="tt"><span class="ttl">이동 · 출발</span><span class="sub">암사동성당 → 용산역 → 전주역</span></span><span class="time">9.5 새벽</span></a>
-    <a href="#hanok"><span class="n">2</span><span class="tt"><span class="ttl">전동성당 · 한옥마을</span><span class="sub">전주 도착 직후 방문 & 자유여행</span></span><span class="time">9.5 오전</span></a>
-    <a href="#jeondong1"><span class="n">3</span><span class="tt"><span class="ttl">전주 시내 스냅</span><span class="sub">자유여행 중 조별 스냅샷</span></span><span class="time">9.5</span></a>
-    <a href="#lodge"><span class="n">4</span><span class="tt"><span class="ttl">숙소 · 흑백요리사</span><span class="sub">달팽이 아지트 · 요리대회 · 야간 프로그램</span></span><span class="time">9.5 저녁~밤</span></a>
-    <a href="#morning"><span class="n">5</span><span class="tt"><span class="ttl">2일차 아침</span><span class="sub">기상·조식·숙소 정리</span></span><span class="time">9.6 아침</span></a>
-    <a href="#jeondong2"><span class="n">6</span><span class="tt"><span class="ttl">전동성당 교중미사 · 중식</span><span class="sub">단체사진 · 전동떡갈비</span></span><span class="time">9.6 오전</span></a>
-    <a href="#return"><span class="n">7</span><span class="tt"><span class="ttl">복귀</span><span class="sub">전주역 → KTX → 암사동성당</span></span><span class="time">9.6 오후</span></a>
+    <a href="#depart"><span class="icon" style="background:var(--navy)">1</span><p class="ttl">이동 · 출발</p><p class="time">9.5 새벽</p></a>
+    <a href="#hanok"><span class="icon" style="background:var(--green)">2</span><p class="ttl">전동성당 · 한옥마을</p><p class="time">9.5 오전</p></a>
+    <a href="#jeondong1"><span class="icon" style="background:#4bb3d4">3</span><p class="ttl">전주 시내 스냅</p><p class="time">9.5</p></a>
+    <a href="#lodge"><span class="icon" style="background:var(--orange)">4</span><p class="ttl">숙소 · 흑백요리사</p><p class="time">9.5 저녁~밤</p></a>
+    <a href="#morning"><span class="icon" style="background:var(--purple)">5</span><p class="ttl">2일차 아침</p><p class="time">9.6 아침</p></a>
+    <a href="#jeondong2"><span class="icon" style="background:var(--green)">6</span><p class="ttl">전동성당 미사 · 중식</p><p class="time">9.6 오전</p></a>
+    <a href="#return"><span class="icon" style="background:var(--pink)">7</span><p class="ttl">복귀</p><p class="time">9.6 오후</p></a>
   </div>
 
   <div class="section" id="depart">
+    <span class="icon" style="background:var(--navy)">🚉</span>
     <p class="eyebrow">1 · 9.5(토) 새벽</p>
     <p class="title">이동 · 출발</p>
     <p class="desc">암사동성당에 모여 주임신부님 강복을 받고 용산역에서 KTX에 올랐습니다. 09:52 전주역에 도착하며 1박2일 여정이 시작됐습니다.</p>
@@ -72,6 +141,7 @@
   </div>
 
   <div class="section" id="hanok">
+    <span class="icon" style="background:var(--green)">⛪</span>
     <p class="eyebrow">2 · 9.5(토) 오전</p>
     <p class="title">전동성당 · 한옥마을</p>
     <p class="desc">전주 도착 직후 전체 인원이 함께 전동성당을 방문했고, 이후 조별로 한옥마을 일대 자유여행을 시작했습니다.</p>
@@ -81,6 +151,7 @@
   </div>
 
   <div class="section" id="jeondong1">
+    <span class="icon" style="background:#4bb3d4">📷</span>
     <p class="eyebrow">3 · 9.5(토)</p>
     <p class="title">전주 시내 스냅</p>
     <p class="desc">자유여행 중 조별로 남긴 전주 시내 스냅샷입니다.</p>
@@ -90,6 +161,7 @@
   </div>
 
   <div class="section" id="lodge">
+    <span class="icon" style="background:var(--orange)">🍚</span>
     <p class="eyebrow">4 · 9.5(토) 저녁~밤</p>
     <p class="title">숙소 · 흑백요리사</p>
     <p class="desc">18:00 숙소(달팽이 아지트) 도착과 동시에 방 배정 및 흑백요리사 요리대회 조리가 시작됐습니다. 볏단가리를 주재료로 한 조별 요리를 신부님과 분과장님이 블라인드로 심사했고, 이후 조별 대항전과 마피아 게임으로 밤을 보냈습니다.</p>
@@ -99,6 +171,7 @@
   </div>
 
   <div class="section" id="morning">
+    <span class="icon" style="background:var(--purple)">🌤️</span>
     <p class="eyebrow">5 · 9.6(주일) 아침</p>
     <p class="title">2일차 아침</p>
     <p class="desc">기상과 조식, 숙소 정리를 마치고 전동성당으로 이동했습니다.</p>
@@ -108,6 +181,7 @@
   </div>
 
   <div class="section" id="jeondong2">
+    <span class="icon" style="background:var(--green)">✝️</span>
     <p class="eyebrow">6 · 9.6(주일) 오전</p>
     <p class="title">전동성당 교중미사 · 중식</p>
     <p class="desc">전동성당 교중미사에 참례하고 확정 인원 단체사진을 남겼습니다. 이후 전동떡갈비에서 전체 인원이 함께 점심을 먹었습니다.</p>
@@ -117,6 +191,7 @@
   </div>
 
   <div class="section" id="return">
+    <span class="icon" style="background:var(--pink)">🚆</span>
     <p class="eyebrow">7 · 9.6(주일) 오후</p>
     <p class="title">복귀</p>
     <p class="desc">전주역에서 KTX에 올라 서울로 돌아오며 1박2일 여정을 마쳤습니다.</p>
@@ -125,7 +200,9 @@
     </div>
   </div>
 
-  <a class="top-link" href="#">↑ 맨 위로</a>
+  <div style="text-align:center">
+    <a class="top-link" href="#">↑ 맨 위로</a>
+  </div>
 </main>
 
 <footer class="foot">사진은 Google Drive 폴더에 계속 추가/정리될 수 있습니다 — 이 페이지는 폴더를 실시간으로 그대로 보여주므로 별도 갱신이 필요 없습니다. 전체 원본·고화질 다운로드는 상단 Drive 링크를 이용하세요.</footer>
